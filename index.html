@@ -2,56 +2,75 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GUDANG LABBAIK V9</title>
+<title>GUDANG LABBAIK V10</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
 <div class="max-w-md mx-auto bg-white min-h-screen pb-20">
-  <div class="bg-green-700 text-white p-4">
-    <h1 class="font-black text-xl text-center">GUDANG LABBAIK V9</h1>
-    <p id="status" class="text-center text-[11px] text-yellow-200 mt-1">Menyambung...</p>
+  <div class="bg-green-700 text-white p-4 sticky top-0 z-20">
+    <h1 class="font-black text-xl text-center">GUDANG LABBAIK</h1>
+    <h2 id="judulToko" class="text-center font-bold text-yellow-300">KATAPANG</h2>
+    <select id="toko" onchange="gantiToko()" class="w-full mt-2 p-2.5 rounded-xl text-black font-bold text-sm">
+      <option value="KATAPANG">🏪 KATAPANG</option>
+      <option value="ALFATHU">🏪 ALFATHU</option>
+      <option value="GATUK">🏪 GATUK</option>
+      <option value="CIWIDEY">🏪 CIWIDEY</option>
+    </select>
+    <p id="status" class="text-center text-[10px] text-yellow-200 mt-2">✅ Terhubung</p>
   </div>
-  <div class="p-3 bg-yellow-50 border-b flex gap-1">
-    <input id="nama" placeholder="Nama barang" class="flex-1 p-2 border rounded-lg text-sm">
-    <input id="stok" type="number" placeholder="Stok" class="w-16 p-2 border rounded-lg text-sm font-bold text-center">
-    <select id="sat" class="w-16 p-2 border rounded-lg text-xs font-bold"><option>kg</option><option>gr</option><option selected>pcs</option><option>ekor</option></select>
-    <button onclick="tambah()" class="bg-green-700 text-white px-4 rounded-lg font-black">+</button>
+
+  <div class="p-3 bg-yellow-50 border-b space-y-2">
+    <div class="flex gap-1">
+      <input id="nama" placeholder="Nama barang baru" class="flex-1 p-2 border rounded-lg text-sm">
+      <input id="stok" type="number" placeholder="Stok" class="w-16 p-2 border rounded-lg text-sm font-bold text-center">
+      <select id="sat" class="w-16 p-2 border rounded-lg text-xs font-bold"><option>kg</option><option>gr</option><option selected>pcs</option><option>ekor</option><option>karung</option></select>
+      <button onclick="tambah()" class="bg-green-700 text-white px-4 rounded-lg font-black">+</button>
+    </div>
+    <input id="cari" oninput="load()" placeholder="🔍 Cari barang (ayam, daging...)" class="w-full p-2.5 border rounded-xl text-sm">
   </div>
+
   <div id="list" class="p-3 space-y-2">Loading...</div>
 </div>
+
 <script>
 const URL="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
 const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
 const HEAD={"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json"};
+let tokoAktif=localStorage.getItem('toko_labbaik')||'KATAPANG';
+document.getElementById('toko').value=tokoAktif;
+document.getElementById('judulToko').innerText=tokoAktif;
+function gantiToko(){tokoAktif=document.getElementById('toko').value;localStorage.setItem('toko_labbaik',tokoAktif);document.getElementById('judulToko').innerText=tokoAktif;load();}
 
 async function load(){
-  try{
-    document.getElementById('status').innerText='Load stok...';
-    let r=await fetch(URL+"?select=*&order=id.desc",{headers:HEAD});
-    if(!r.ok){let t=await r.text();throw new Error(t);}
-    let data=await r.json();
-    document.getElementById('status').innerText='✅ Terhubung - '+data.length+' barang';
-    let html='';
-    data.forEach(it=>{
-      let s=parseFloat(it.stok)||0; let p=parseFloat(it.terpakai)||0; let sisa=s-p; let sat=it.satuan||'pcs';
-      html+=`<div class="bg-white p-3 rounded-xl shadow border-l-4 ${sisa<=2?'border-red-600 bg-red-50':sisa<=5?'border-yellow-500 bg-yellow-50':'border-green-500'}">
-        <div class="flex justify-between"><b class="text-sm">${it.nama_barang}</b><button onclick="hapus(${it.id})" class="text-xs">🗑️</button></div>
-        <div class="text-[11px] mt-1">Stok Awal: ${s} | Terpakai: ${p} | <b class="text-green-700">SISA: ${sisa} ${sat}</b></div>
-        <div class="flex gap-1 mt-2">
-          <input type="number" value="${s}" onchange="upd(${it.id},'stok',this.value)" class="w-14 p-1 border rounded text-center text-xs font-bold">
-          <input type="number" value="${p}" onchange="upd(${it.id},'terpakai',this.value)" class="w-14 p-1 border-2 border-red-200 bg-red-50 rounded text-center text-xs font-bold">
-          <button onclick="pakai(${it.id},${p},1)" class="bg-red-600 text-white px-2 rounded text-xs">-1 Pakai</button>
-          <button onclick="pakai(${it.id},${p},-1)" class="bg-green-600 text-white px-2 rounded text-xs">+1 Balik</button>
-          <select onchange="upd(${it.id},'satuan',this.value)" class="flex-1 p-1 border rounded text-xs font-bold"><option ${sat=='kg'?'selected':''}>kg</option><option ${sat=='gr'?'selected':''}>gr</option><option ${sat=='pcs'?'selected':''}>pcs</option><option ${sat=='ekor'?'selected':''}>ekor</option></select>
-        </div>
-      </div>`;
-    });
-    document.getElementById('list').innerHTML=html||'Kosong';
-  }catch(e){document.getElementById('list').innerHTML='<div class="bg-red-100 p-3 rounded text-xs">❌ GAGAL: '+e.message+'<br><br>1. Buka Supabase > SQL > Run:<br>ALTER TABLE public.stok DISABLE ROW LEVEL SECURITY;</div>';}
+  let r=await fetch(URL+"?select=*&order=id.desc",{headers:HEAD});
+  let data=await r.json();
+  let q=(document.getElementById('cari').value||'').toLowerCase();
+  let filtered=data.filter(it=>{
+    let cocokCari=!q || (it.nama_barang||'').toLowerCase().includes(q);
+    let cocokToko=!it.toko || it.toko==tokoAktif || it.toko==''; // kalau belum ada kolom toko, tampilkan semua
+    return cocokCari && cocokToko;
+  });
+  document.getElementById('status').innerText=`✅ Terhubung - ${filtered.length} barang di ${tokoAktif}`;
+  let html='';
+  filtered.forEach(it=>{
+    let s=parseFloat(it.stok)||0; let p=parseFloat(it.terpakai)||0; let sisa=s-p; let sat=it.satuan||'pcs';
+    html+=`<div class="bg-white p-3 rounded-xl shadow border-l-4 ${sisa<=2?'border-red-600 bg-red-50':sisa<=5?'border-yellow-500 bg-yellow-50':'border-green-500'}">
+      <div class="flex justify-between"><b class="text-sm">${it.nama_barang}</b><button onclick="hapus(${it.id})" class="text-xs">🗑️</button></div>
+      <div class="text-[11px] mt-1">Stok: ${s} | Pakai: ${p} | <b class="text-green-700">SISA: ${sisa} ${sat}</b></div>
+      <div class="flex gap-1 mt-2">
+        <input type="number" value="${s}" onchange="upd(${it.id},'stok',this.value)" class="w-14 p-1 border rounded text-center text-xs font-bold">
+        <input type="number" value="${p}" onchange="upd(${it.id},'terpakai',this.value)" class="w-14 p-1 border-2 border-red-200 bg-red-50 rounded text-center text-xs font-bold">
+        <button onclick="pakai(${it.id},${p},1)" class="bg-red-600 text-white px-2 rounded text-xs font-bold">-1</button>
+        <button onclick="pakai(${it.id},${p},-1)" class="bg-green-600 text-white px-2 rounded text-xs font-bold">+1</button>
+        <select onchange="upd(${it.id},'satuan',this.value)" class="flex-1 p-1 border rounded text-xs font-bold"><option ${sat=='kg'?'selected':''}>kg</option><option ${sat=='gr'?'selected':''}>gr</option><option ${sat=='pcs'?'selected':''}>pcs</option><option ${sat=='ekor'?'selected':''}>ekor</option><option ${sat=='karung'?'selected':''}>karung</option></select>
+      </div>
+    </div>`;
+  });
+  document.getElementById('list').innerHTML=html||'<div class="text-center text-sm p-5">Tidak ada barang di '+tokoAktif+'<br>atau tidak cocok pencarian "'+q+'"</div>';
 }
 async function upd(id,k,v){let b={};b[k]=k=='satuan'?v:parseFloat(v);await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify(b)});load();}
-async function pakai(id,now,delta){let baru=now+delta;if(baru<0)baru=0;await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify({terpakai:baru})});load();}
-async function tambah(){let n=document.getElementById('nama').value.trim();let s=document.getElementById('stok').value||0;let sa=document.getElementById('sat').value;if(!n)return alert('Isi nama!');await fetch(URL,{method:'POST',headers:HEAD,body:JSON.stringify({nama_barang:n,stok:parseFloat(s),terpakai:0,satuan:sa})});document.getElementById('nama').value='';load();}
+async function pakai(id,now,d){let baru=now+d;if(baru<0)baru=0;await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify({terpakai:baru})});load();}
+async function tambah(){let n=document.getElementById('nama').value.trim();let s=document.getElementById('stok').value||0;let sa=document.getElementById('sat').value;if(!n)return alert('Isi nama!');await fetch(URL,{method:'POST',headers:HEAD,body:JSON.stringify({nama_barang:n,stok:parseFloat(s),terpakai:0,satuan:sa,toko:tokoAktif})});document.getElementById('nama').value='';load();}
 async function hapus(id){if(confirm('Hapus?')){await fetch(URL+"?id=eq."+id,{method:'DELETE',headers:HEAD});load();}}
 load();
 </script>
