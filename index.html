@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GUDANG LABBAIK KATAPANG</title>
-<link rel="icon" href="icon.png"><link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#111111">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
 <style>
 body{font-family:system-ui;padding:12px;background:#f2f2f2;margin:0}
 .header{display:flex;align-items:center;gap:12px;background:#111;padding:12px 16px;border-radius:16px;color:#fff}
-.header img{width:52px;height:52px;border-radius:12px;background:#FFB800;object-fit:cover}
+.header img{width:52px;height:52px;border-radius:12px;background:#FFB800}
 .status{background:#fff;padding:12px;border-radius:12px;font-weight:700;border:1px solid #ddd;margin-bottom:10px}
 .row{display:flex;gap:6px;margin-bottom:10px}
 input{flex:1;padding:14px;border-radius:12px;border:1px solid #ddd;background:#fff}
@@ -27,85 +27,35 @@ button.main{width:100%;padding:16px;background:#FFB800;border:0;border-radius:12
 </head>
 <body>
 <div class="header">
-<img src="icon.png" alt="logo" onerror="this.style.display='none'">
+<img src="https://placehold.co/52x52/FFB800/111111/png?text=GL" alt="logo">
 <div><b style="font-size:20px">GUDANG LABBAIK</b><br><small style="letter-spacing:3px">KATAPANG</small></div>
 </div>
 <div class="status" id="status">⏳ Connecting...</div>
 <div class="row">
-<input id="nama" placeholder="Nama barang cth: Ayam pot besar">
+<input id="nama" placeholder="Nama barang">
 <input id="stok" class="small" type="number" placeholder="Stok">
 <input id="pakai" class="small" type="number" placeholder="Pakai">
 </div>
 <button class="main" onclick="tambah()">+ Tambah Barang</button>
 <div id="list"></div>
-
 <script>
 const client=supabase.createClient("https://lgunwtgwlzggfmfjzxqm.supabase.co","sb_publishable_9cBL507qhMKrDzofjIow-A_Y0d4Tesk");
-
 async function load(){
  let r=await client.from('stok').select('*').order('id',{ascending:false});
  document.getElementById('status').innerHTML='✅ GUDANG LABBAIK - '+(r.data?.length||0)+' barang';
- let h='';
- (r.data||[]).forEach(x=>{
+ let h='';(r.data||[]).forEach(x=>{
   let sisa=(x.stok||0)-(x.terpakai||0);
-  h+=`<div class="item">
-   <div class="top"><div><b>${x.nama_barang}</b><br><small>Stok: ${x.stok} | Pakai: ${x.terpakai} | <span class="sisa">Sisa: ${sisa}</span></small></div><button class="btn btn-del" onclick="hapus(${x.id})">Hapus</button></div>
-   <div class="controls">
-     <span class="label-qty">QTY:</span>
-     <input class="qty" id="qty-${x.id}" type="number" value="1" min="1">
-     <button class="btn btn-plus" onclick="tambahStok(${x.id},${x.stok})">+ Stok</button>
-     <button class="btn btn-minus" onclick="kurangStok(${x.id},${x.stok})">- Stok</button>
-     <button class="btn btn-plus" onclick="tambahPakai(${x.id},${x.terpakai})">+ Pakai</button>
-     <button class="btn btn-minus" onclick="kurangPakai(${x.id},${x.terpakai})">- Pakai</button>
-     <button class="btn btn-edit" onclick="editQty(${x.id})">Edit Angka</button>
-   </div>
-  </div>`;
- });
- document.getElementById('list').innerHTML=h || "<p style='text-align:center;color:#888;margin-top:20px'>Belum ada barang</p>";
+  h+=`<div class="item"><div class="top"><div><b>${x.nama_barang}</b><br><small>Stok:${x.stok} Pakai:${x.terpakai} <b class="sisa">Sisa:${sisa}</b></small></div><button class="btn btn-del" onclick="hapus(${x.id})">Hapus</button></div><div class="controls"><span class="label-qty">QTY:</span><input class="qty" id="qty-${x.id}" type="number" value="1" min="1"><button class="btn btn-plus" onclick="tambahStok(${x.id},${x.stok})">+ Stok</button><button class="btn btn-minus" onclick="kurangStok(${x.id},${x.stok})">- Stok</button><button class="btn btn-plus" onclick="tambahPakai(${x.id},${x.terpakai})">+ Pakai</button><button class="btn btn-minus" onclick="kurangPakai(${x.id},${x.terpakai})">- Pakai</button><button class="btn btn-edit" onclick="editQty(${x.id})">Edit Angka</button></div></div>`;
+ });document.getElementById('list').innerHTML=h||"<p style='text-align:center;color:#888'>Belum ada barang</p>";
 }
-
-function getQty(id){
- let v=parseInt(document.getElementById('qty-'+id).value||1);
- if(v<1) v=1;
- return v;
-}
-
-async function tambahStok(id,cur){
- let q=getQty(id);
- await client.from('stok').update({stok: cur+q}).eq('id',id); load();
-}
-async function kurangStok(id,cur){
- let q=getQty(id);
- let v=cur-q; if(v<0) v=0;
- await client.from('stok').update({stok: v}).eq('id',id); load();
-}
-async function tambahPakai(id,cur){
- let q=getQty(id);
- await client.from('stok').update({terpakai: cur+q}).eq('id',id); load();
-}
-async function kurangPakai(id,cur){
- let q=getQty(id);
- let v=cur-q; if(v<0) v=0;
- await client.from('stok').update({terpakai: v}).eq('id',id); load();
-}
-async function editQty(id){
- let ns=prompt('Masukkan STOK baru (angka):');
- if(ns===null) return;
- let np=prompt('Masukkan TERPAKAI baru (angka):');
- if(np===null) return;
- await client.from('stok').update({stok: parseInt(ns||0), terpakai: parseInt(np||0)}).eq('id',id); load();
-}
-async function tambah(){
- let n=document.getElementById('nama').value.trim();
- let s=parseInt(document.getElementById('stok').value||0);
- let p=parseInt(document.getElementById('pakai').value||0);
- if(!n) return alert('Isi nama!');
- await client.from('stok').insert([{nama_barang:n,stok:s,terpakai:p}]);
- document.getElementById('nama').value='';document.getElementById('stok').value='';document.getElementById('pakai').value='';
- load();
-}
-async function hapus(id){ if(!confirm('Hapus barang ini?')) return; await client.from('stok').delete().eq('id',id); load();}
-
+function getQty(id){let v=parseInt(document.getElementById('qty-'+id).value||1);if(v<1)v=1;return v;}
+async function tambahStok(id,cur){let q=getQty(id);await client.from('stok').update({stok:cur+q}).eq('id',id);load();}
+async function kurangStok(id,cur){let q=getQty(id);let v=cur-q;if(v<0)v=0;await client.from('stok').update({stok:v}).eq('id',id);load();}
+async function tambahPakai(id,cur){let q=getQty(id);await client.from('stok').update({terpakai:cur+q}).eq('id',id);load();}
+async function kurangPakai(id,cur){let q=getQty(id);let v=cur-q;if(v<0)v=0;await client.from('stok').update({terpakai:v}).eq('id',id);load();}
+async function editQty(id){let ns=prompt('Stok baru:');if(ns===null)return;let np=prompt('Terpakai baru:');if(np===null)return;await client.from('stok').update({stok:parseInt(ns||0),terpakai:parseInt(np||0)}).eq('id',id);load();}
+async function tambah(){let n=nama.value.trim(),s=parseInt(stok.value||0),p=parseInt(pakai.value||0);if(!n)return alert('isi nama');await client.from('stok').insert([{nama_barang:n,stok:s,terpakai:p}]);nama.value=stok.value=pakai.value='';load();}
+async function hapus(id){if(!confirm('hapus?'))return;await client.from('stok').delete().eq('id',id);load();}
 load();
 </script>
 </body>
