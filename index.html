@@ -1,1 +1,61 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>STOK GUDANG LC</title><link rel="manifest" href="./manifest.json"><meta name="theme-color" content="#16a34a"><link rel="icon" href="./IMG-20261006-WA5776.jpg"><link rel="apple-touch-icon" href="./IMG-20261006-WA5776.jpg"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>body{font-family:system-ui;max-width:480px;margin:0 auto;padding:16px;background:#fafafa}.card{border:1px solid #ddd;border-radius:14px;padding:12px;background:#fff;margin-bottom:12px}input{padding:12px;border-radius:10px;border:1px solid #ccc;width:100%;box-sizing:border-box;margin-bottom:8px}button{padding:10px 14px;border-radius:10px;border:0;font-weight:bold;cursor:pointer}.btn-add{background:#00df81;width:100%;padding:14px;font-size:16px}.btn-mini{background:#eee;margin:2px;padding:6px 10px}.badge{background:#f2f2f2;padding:8px;border-radius:10px;text-align:center;flex:1;font-size:13px}.flex{display:flex;gap:8px}.config{background:#111;color:#fff;padding:12px;border-radius:12px;margin-bottom:16px}.config input{background:#222;color:#fff;border-color:#444}.config small{color:#888}</style></head><body><h1 style="text-align:center">📦 STOK GUDANG LC</h1><div class="config"><small>PASTE KUNCI SUPABASE DI SINI (sekali aja)</small><input id="url" value="https://lgunwtgwlzggfmfjzxqm.supabase.co"><input id="key" placeholder="sb_publishable
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STOK GUDANG LC</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{font-family:sans-serif;padding:15px;background:#f6f6f6}
+.box{background:#111;color:#fff;padding:15px;border-radius:15px;margin-bottom:15px}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;margin:5px 0;box-sizing:border-box}
+button{width:100%;padding:13px;background:#00e676;border:0;border-radius:12px;font-weight:bold;font-size:16px}
+.item{background:#fff;padding:12px;border-radius:10px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+</style>
+</head>
+<body>
+<h2>📦 STOK GUDANG LC</h2>
+<div class="box" id="statusBox">⏳ Connecting...</div>
+
+<div style="display:flex;gap:8px">
+<input id="nama" placeholder="Nama barang">
+<input id="stok" type="number" placeholder="Stok" style="width:90px">
+<input id="pakai" type="number" placeholder="Pakai" style="width:90px">
+</div>
+<button onclick="tambah()" style="margin-top:10px">+ Tambah Barang</button>
+
+<div id="list" style="margin-top:15px"></div>
+
+<script>
+const SUPA_URL = "https://lgunwtgwlzggfmfjzxqm.supabase.co";
+const SUPA_KEY = "sb_publishable_9cBL507qhMKrDzofjIow-A_Y0d4TeskMv2jH3v9cBL"; // GANTI DENGAN KUNCI FULL KAMU YANG DARI FOTO TADI
+
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+async function load(){
+  document.getElementById("statusBox").innerHTML="✅ Connected - "+SUPA_URL;
+  let {data,error}=await supa.from("stok").select("*").order("id",{ascending:false});
+  if(error){ document.getElementById("statusBox").innerHTML="❌ "+error.message; return; }
+  let html="";
+  if(!data || data.length==0) html="<p style='text-align:center;color:#888'>Belum ada barang, tambah di atas</p>";
+  else data.forEach(r=>{
+    html+=`<div class="item"><div><b>${r.nama_barang}</b><br><small>Stok: ${r.stok}</small></div><div><button onclick="hapus(${r.id})" style="background:#ff5252;color:#fff;width:auto;padding:8px 12px">Hapus</button></div></div>`;
+  });
+  document.getElementById("list").innerHTML=html;
+}
+
+async function tambah(){
+  let n=document.getElementById("nama").value;
+  let s=document.getElementById("stok").value;
+  if(!n) return alert("Isi nama barang!");
+  let {error}=await supa.from("stok").insert([{nama_barang:n,stok:parseInt(s||0)}]);
+  if(error) alert(error.message);
+  else { document.getElementById("nama").value=""; document.getElementById("stok").value=""; load(); }
+}
+async function hapus(id){
+  await supa.from("stok").delete().eq("id",id);
+  load();
+}
+load();
+</script>
+</body>
+</html>
