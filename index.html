@@ -2,24 +2,25 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GUDANG LABBAIK V14 SIMPLE</title>
+<title>GUDANG LABBAIK CHICKEN V14.1 FIX</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body class="bg-gray-100">
 <div class="max-w-md mx-auto bg-white min-h-screen pb-24">
   <div class="bg-green-700 text-white p-4 sticky top-0 z-20">
-    <h1 class="font-black text-xl text-center">GUDANG LABBAIK</h1>
+    <h1 class="font-black text-xl text-center">GUDANG LABBAIK CHICKEN </h1>
     <div class="flex justify-center items-center gap-2 mt-1">
       <h2 id="judulToko" class="font-bold text-yellow-300 text-lg">-</h2><span>🔒</span>
     </div>
-    <div id="areaPilih" class="mt-3 hidden">
+    <div id="areaPilih" class="mt-3">
+      <p class="text-xs text-center mb-2 text-yellow-200">Pilih toko dulu biar gak Loading:</p>
       <select id="toko" class="w-full p-3 rounded-xl text-black font-bold">
-        <option value="KATAPANG">🏪 KATAPANG</option><option value="ALFATHU">🏪 ALFATHU</option><option value="GADING TUTUKA">🏪 GADING TUTUKA</option><option value="CIWIDEY">🏪 CIWIDEY</option>
+        <option value="KATAPANG">🏪 KATAPANG</option><option value="ALFATHU">🏪 ALFATHU</option><option value="GATUK">🏪 GATUK</option><option value="CIWIDEY">🏪 CIWIDEY</option>
       </select>
       <button onclick="kunciToko()" class="w-full mt-2 bg-yellow-400 text-black p-3 rounded-xl font-black">🔒 KUNCI TOKO INI</button>
     </div>
-    <div id="areaTerkunci" class="mt-2 text-center">
+    <div id="areaTerkunci" class="mt-2 text-center hidden">
       <span id="labelToko" class="bg-white text-green-800 px-4 py-1.5 rounded-full font-black text-sm"></span>
       <div class="flex justify-center gap-4 mt-2 text-xs">
         <button onclick="bukaKunci()" class="underline text-yellow-200">🔓 Ganti Toko</button>
@@ -43,8 +44,7 @@
     </div>
     <input id="cari" oninput="load()" placeholder="🔍 Cari barang" class="w-full p-3 border rounded-xl text-sm font-bold">
   </div>
-
-  <div id="list" class="p-3 space-y-3">Loading...</div>
+  <div id="list" class="p-3 space-y-3">Pilih toko dulu di atas ☝️</div>
 </div>
 
 <script>
@@ -57,15 +57,28 @@ function setPinToko(t,p){localStorage.setItem('pin_'+t,p);}
 let tokoAktif=localStorage.getItem('toko_labbaik');
 let terkunci=localStorage.getItem('toko_terkunci')==='1';
 function init(){
-  if(!tokoAktif){document.getElementById('areaPilih').classList.remove('hidden');document.getElementById('areaTerkunci').classList.add('hidden');document.getElementById('judulToko').innerText='PILIH TOKO';}
-  else{
-    document.getElementById('toko').value=tokoAktif;
-    if(terkunci){document.getElementById('areaPilih').classList.add('hidden');document.getElementById('areaTerkunci').classList.remove('hidden');document.getElementById('labelToko').innerText='🏪 '+tokoAktif+' - TERKUNCI 🔒';document.getElementById('judulToko').innerText=tokoAktif;}
-    else{document.getElementById('areaPilih').classList.remove('hidden');document.getElementById('areaTerkunci').classList.add('hidden');document.getElementById('judulToko').innerText=tokoAktif;}
-  }load();
+  if(!tokoAktif){
+    document.getElementById('areaPilih').classList.remove('hidden');
+    document.getElementById('areaTerkunci').classList.add('hidden');
+    document.getElementById('judulToko').innerText='PILIH TOKO DULU';
+    document.getElementById('list').innerHTML='<div class="text-center p-6 bg-yellow-100 rounded-xl font-bold">⚠️ Pilih toko KATAPANG dulu di atas biar gak Loading!</div>';
+    return;
+  }
+  document.getElementById('toko').value=tokoAktif;
+  if(terkunci){
+    document.getElementById('areaPilih').classList.add('hidden');
+    document.getElementById('areaTerkunci').classList.remove('hidden');
+    document.getElementById('labelToko').innerText='🏪 '+tokoAktif+' - TERKUNCI 🔒';
+    document.getElementById('judulToko').innerText=tokoAktif;
+  }else{
+    document.getElementById('areaPilih').classList.remove('hidden');
+    document.getElementById('areaTerkunci').classList.add('hidden');
+    document.getElementById('judulToko').innerText=tokoAktif;
+  }
+  load();
 }
 function kunciToko(){let t=document.getElementById('toko').value;localStorage.setItem('toko_labbaik',t);localStorage.setItem('toko_terkunci','1');tokoAktif=t;terkunci=true;init();}
-function bukaKunci(){let pin=prompt('PIN toko '+tokoAktif+':');if(pin===getPinToko(tokoAktif)||pin===PIN_MASTER){localStorage.setItem('toko_terkunci','0');terkunci=false;document.getElementById('areaPilih').classList.remove('hidden');document.getElementById('areaTerkunci').classList.add('hidden');}else if(pin!==null)alert('PIN salah!');}
+function bukaKunci(){let pin=prompt('PIN toko '+tokoAktif+':');if(pin===getPinToko(tokoAktif)||pin===PIN_MASTER){localStorage.setItem('toko_terkunci','0');terkunci=false;document.getElementById('areaPilih').classList.remove('hidden');document.getElementById('areaTerkunci').classList.add('hidden');init();}else if(pin!==null)alert('PIN salah!');}
 function gantiPin(){let a=prompt('PIN lama:');if(a!==getPinToko(tokoAktif)&&a!==PIN_MASTER){if(a!==null)alert('Salah!');return;}let b=prompt('PIN BARU 4 digit:');if(!b||b.length<4)return alert('Minimal 4!');let c=prompt('Ulangi PIN BARU:');if(b!==c)return alert('Tidak sama!');setPinToko(tokoAktif,b);alert('PIN jadi '+b);}
 function getStatus(sisa,sat){
   sat=(sat||'pcs').toLowerCase();
@@ -75,35 +88,39 @@ function getStatus(sisa,sat){
   else{if(sisa<=2)return{t:'🚨 KRISIS',c:'border-red-600 bg-red-50'};if(sisa<=5)return{t:'⚠️ MENIPIS',c:'border-yellow-500 bg-yellow-50'};if(sisa>=20)return{t:'📦 OVER',c:'border-blue-500 bg-blue-50'};return{t:'✅ Aman',c:'border-green-500 bg-white'};}
 }
 async function load(){
-  let r=await fetch(URL+"?select=*&order=id.desc&limit=10000",{headers:HEAD});
-  let data=await r.json();
-  let q=(document.getElementById('cari').value||'').toLowerCase();
-  let filtered=data.filter(it=>{let cc=!q||(it.nama_barang||'').toLowerCase().includes(q);let ct=!tokoAktif||(it.toko||'KATAPANG')==tokoAktif;return cc&&ct;});
-  document.getElementById('status').innerText=`✅ ${filtered.length} barang di ${tokoAktif||'-'}`;
-  let html='';
-  filtered.forEach(it=>{
-    let stok=parseFloat(it.stok)||0;let masuk=parseFloat(it.penerimaan)||0;let pakai=parseFloat(it.terpakai)||0;let sisa=stok+masuk-pakai;let sat=it.satuan||'pcs';
-    let st=getStatus(sisa,sat);
-    html+=`<div class="bg-white p-3 rounded-2xl shadow border-l-4 ${st.c}">
-      <div class="flex justify-between items-center"><b class="text-[15px]">${it.nama_barang}</b><span class="text-[10px] bg-gray-100 px-2 py-1 rounded-full font-bold">${it.toko||'KATAPANG'}</span></div>
-
-      <div class="mt-2 bg-gray-50 p-2.5 rounded-xl leading-6">
-        <div class="text-[14px] font-bold"><span class="text-gray-600">Awal:</span> ${stok} ${sat} | <span class="text-blue-600">Masuk:</span> <span class="text-blue-700">${masuk}</span> | <span class="text-red-600">Pakai:</span> ${pakai}</div>
-        <div class="text-[15px] font-black mt-1"><span class="text-green-700">SISA: ${sisa} ${sat}</span> - ${st.t}</div>
-      </div>
-
-      <div class="flex gap-2 mt-3">
-        <button onclick="tambahMasuk(${it.id},'${it.nama_barang}',${masuk})" class="flex-1 bg-blue-600 text-white py-3 rounded-xl text-sm font-black">📥 TAMBAH STOK</button>
-        <button onclick="pakaiStok(${it.id},'${it.nama_barang}',${pakai})" class="flex-1 bg-red-600 text-white py-3 rounded-xl text-sm font-black">📤 PAKAI STOK</button>
-      </div>
-    </div>`;
-  });
-  document.getElementById('list').innerHTML=html||'<div class="text-center p-6 text-sm font-bold">Belum ada barang</div>';
+  if(!tokoAktif) return;
+  try{
+    document.getElementById('list').innerHTML='⏳ Loading...';
+    let r=await fetch(URL+"?select=*&order=id.desc&limit=10000",{headers:HEAD});
+    if(!r.ok) throw new Error('DB error '+r.status);
+    let data=await r.json();
+    let q=(document.getElementById('cari').value||'').toLowerCase();
+    let filtered=data.filter(it=>{let cc=!q||(it.nama_barang||'').toLowerCase().includes(q);let ct=(it.toko||'KATAPANG')==tokoAktif;return cc&&ct;});
+    document.getElementById('status').innerText=`✅ ${filtered.length} barang di ${tokoAktif}`;
+    let html='';
+    filtered.forEach(it=>{
+      let stok=parseFloat(it.stok)||0;let masuk=parseFloat(it.penerimaan)||0;let pakai=parseFloat(it.terpakai)||0;let sisa=stok+masuk-pakai;let sat=it.satuan||'pcs';
+      let st=getStatus(sisa,sat);
+      html+=`<div class="bg-white p-3 rounded-2xl shadow border-l-4 ${st.c}">
+        <div class="flex justify-between items-center"><b class="text-[15px]">${it.nama_barang}</b><span class="text-[10px] bg-gray-100 px-2 py-1 rounded-full font-bold">${it.toko||'KATAPANG'}</span></div>
+        <div class="mt-2 bg-gray-50 p-2.5 rounded-xl leading-6">
+          <div class="text-[14px] font-bold"><span class="text-gray-600">Awal:</span> ${stok} | <span class="text-blue-600">Masuk:</span> <span class="text-blue-700">${masuk}</span> | <span class="text-red-600">Pakai:</span> ${pakai}</div>
+          <div class="text-[15px] font-black mt-1"><span class="text-green-700">SISA: ${sisa} ${sat}</span> - ${st.t}</div>
+        </div>
+        <div class="flex gap-2 mt-3">
+          <button onclick="tambahMasuk(${it.id},'${it.nama_barang}',${masuk})" class="flex-1 bg-blue-600 text-white py-3 rounded-xl text-sm font-black">📥 TAMBAH STOK</button>
+          <button onclick="pakaiStok(${it.id},'${it.nama_barang}',${pakai})" class="flex-1 bg-red-600 text-white py-3 rounded-xl text-sm font-black">📤 PAKAI STOK</button>
+        </div>
+      </div>`;
+    });
+    document.getElementById('list').innerHTML=html||'<div class="text-center p-6 font-bold">Belum ada barang di '+tokoAktif+'</div>';
+  }catch(e){
+    document.getElementById('list').innerHTML='<div class="text-center p-4 bg-red-100 rounded-xl"><b>Gagal load:</b><br>'+e.message+'<br><br><button onclick="load()" class="bg-red-600 text-white px-4 py-2 rounded-xl">🔄 Coba Lagi</button></div>';
+  }
 }
-async function tambahMasuk(id,nama,now){let j=prompt(`TAMBAH STOK\n${nama}\nMasuk sekarang: ${now}\nMau tambah berapa? Contoh: 160`);if(!j)return;let t=parseFloat(j);if(isNaN(t))return alert('Harus angka!');await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify({penerimaan:now+t})});load();}
-async function pakaiStok(id,nama,now){let j=prompt(`PAKAI STOK\n${nama}\nTerpakai sekarang: ${now}\nMau pakai berapa?`);if(!j)return;let t=parseFloat(j);if(isNaN(t))return alert('Harus angka!');await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify({terpakai:now+t})});load();}
+async function tambahMasuk(id,nama,now){let j=prompt(`TAMBAH STOK\n${nama}\nMasuk sekarang: ${now}\nTambah berapa?`);if(!j)return;let t=parseFloat(j);if(isNaN(t))return alert('Harus angka!');await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify({penerimaan:now+t})});load();}
+async function pakaiStok(id,nama,now){let j=prompt(`PAKAI STOK\n${nama}\nTerpakai sekarang: ${now}\nPakai berapa?`);if(!j)return;let t=parseFloat(j);if(isNaN(t))return alert('Harus angka!');await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify({terpakai:now+t})});load();}
 async function tambah(){let n=document.getElementById('nama').value.trim();let s=document.getElementById('stok').value||0;let sa=document.getElementById('sat').value;if(!n)return alert('Isi nama!');if(!tokoAktif)return alert('Pilih toko dulu!');await fetch(URL,{method:'POST',headers:HEAD,body:JSON.stringify({nama_barang:n,stok:parseFloat(s),penerimaan:0,terpakai:0,satuan:sa,toko:tokoAktif})});document.getElementById('nama').value='';document.getElementById('stok').value='';load();}
-
 async function importSO(e){
   if(!tokoAktif) return alert('Pilih toko dulu!');
   let file=e.target.files[0]; if(!file) return;
@@ -128,19 +145,21 @@ async function importSO(e){
         if(!['kg','gr','pcs','ekor','karung'].includes(sat)) sat='pcs';
         list.push({nama_barang:nama,stok:stok,penerimaan:0,terpakai:0,satuan:sat,toko:tokoAktif});
       }
-      if(list.length==0) return alert('File kosong / format salah!');
-      if(!confirm(`Mau import ${list.length} barang ke ${tokoAktif}?\nPastikan file benar!`)) return;
-      document.getElementById('status').innerText=`⏳ Import ${list.length} barang...`;
-      for(let i=0;i<list.length;i+=100){
-        let batch=list.slice(i,i+100);
-        await fetch(URL,{method:'POST',headers:HEAD,body:JSON.stringify(batch)});
-      }
-      alert(`✅ Berhasil import ${list.length} barang!`);
-      load();
-    }catch(err){alert('Gagal baca file: '+err.message);}
+      if(list.length==0) return alert('File kosong!');
+      if(!confirm(`Import ${list.length} barang ke ${tokoAktif}?`)) return;
+      document.getElementById('status').innerText=`⏳ Import ${list.length}...`;
+      for(let i=0;i<list.length;i+=100){await fetch(URL,{method:'POST',headers:HEAD,body:JSON.stringify(list.slice(i,i+100))});}
+      alert(`✅ Berhasil import ${list.length}!`); load();
+    }catch(err){alert('Gagal: '+err.message);}
   };
-  reader.readAsArrayBuffer(file);
-  e.target.value='';
+  reader.readAsArrayBuffer(file); e.target.value='';
 }
 function downloadTemplate(){
-  let ws=XLSX.utils.aoa_to_sheet([["nama_barang","stok","satuan"],["Ay
+  let ws=XLSX.utils.aoa_to_sheet([["nama_barang","stok","satuan"],["Ayam pot besar",600,"gr"],["Tepung bumbu ori",75000,"gr"]]);
+  let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,"Template SO");
+  XLSX.writeFile(wb,"Template_SO_LABBAIK.xlsx");
+}
+init();
+</script>
+</body>
+</html>
