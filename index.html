@@ -7,39 +7,35 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen">
-<div class="max-w-md mx-auto bg-white min-h-screen shadow-lg">
-  <!-- HEADER -->
-  <div class="bg-green-700 text-white p-4 sticky top-0 z-10">
+<body class="bg-gray-100">
+<div class="max-w-md mx-auto bg-white min-h-screen shadow-xl">
+  <div class="bg-green-700 text-white p-4 sticky top-0 z-20">
     <h1 class="font-black text-xl text-center">GUDANG LABBAIK</h1>
-    <h2 id="judulToko" class="text-center font-bold text-yellow-300">KATAPANG</h2>
-    <select id="toko" onchange="gantiToko()" class="w-full mt-2 p-2.5 rounded-lg text-black font-bold">
+    <h2 id="judulToko" class="text-center font-bold text-yellow-300 tracking-widest">KATAPANG</h2>
+    <select id="toko" onchange="gantiToko()" class="w-full mt-3 p-3 rounded-xl text-black font-bold text-sm">
       <option value="KATAPANG">🏪 KATAPANG</option>
-      <option value="GADING">🏪 GADING - GUDANG LABBAIK CIMAHI</option>
+      <option value="GATUK">🏪 GATUK</option>
       <option value="ALFATHU">🏪 ALFATHU</option>
       <option value="SUKAMENAK">🏪 SUKAMENAK</option>
       <option value="CIWIDEY">🏪 CIWIDEY</option>
     </select>
   </div>
 
-  <div class="p-3 space-y-2 text-xs">
-    <div class="flex gap-2">
-      <span class="bg-yellow-200 px-2 py-1 rounded">🟡 Menipis <5kg/10pcs</span>
-      <span class="bg-red-200 px-2 py-1 rounded">🔴 Kritis <2kg/5pcs</span>
-      <span class="bg-blue-200 px-2 py-1 rounded">🔵 Over >80kg</span>
-    </div>
+  <div class="p-3 flex gap-2 text-[10px] font-bold">
+    <span class="bg-yellow-200 px-2 py-1 rounded-full">🟡 MENIPIS</span>
+    <span class="bg-red-200 px-2 py-1 rounded-full">🔴 KRITIS</span>
+    <span class="bg-blue-200 px-2 py-1 rounded-full">🔵 OVER</span>
+    <span class="bg-green-200 px-2 py-1 rounded-full">✅ AMAN</span>
   </div>
 
-  <div id="list" class="p-3 space-y-3 pb-20">Loading...</div>
+  <div id="list" class="p-3 space-y-3 pb-20">Loading stok...</div>
 </div>
 
 <script>
-// === GANTI INI PAKAI PUNYA KAMU DARI V6 KEMARIN ===
-const SUPABASE_URL = "https://xxxx.supabase.co";
-const SUPABASE_KEY = "eyJhbG...anonym key kamu";
-// ===================================================
-
+const SUPABASE_URL = "https://lgunwtgwlzggfmfjzxqm.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 let tokoAktif = localStorage.getItem('toko_labbaik') || 'KATAPANG';
 document.getElementById('toko').value = tokoAktif;
 
@@ -53,44 +49,38 @@ function gantiToko(){
 gantiToko();
 
 async function loadData(){
-  const {data, error} = await sb.from('stok').select('*').order('nama_barang');
-  if(error){ document.getElementById('list').innerHTML = error.message; return; }
-  let filtered = data.filter(d =>!d.toko || d.toko==tokoAktif);
-  if(filtered.length==0) filtered = data;
+  document.getElementById('list').innerHTML = '<div class="text-center p-10">Loading...</div>';
+  const {data, error} = await sb.from('stok').select('*').order('nama_barang', {ascending:true});
+  if(error){ document.getElementById('list').innerHTML = '<div class="bg-red-100 p-3 rounded">Error: '+error.message+'</div>'; return; }
+
+  let filtered = data.filter(d =>!d.toko || d.toko == tokoAktif);
+  if(filtered.length==0 && data.length>0) filtered = data;
 
   let html = '';
-  filtered.forEach(i=>{
-    let stok = parseFloat(i.stok)||0;
-    let sat = (i.satuan||'kg').toLowerCase();
+  filtered.forEach(item=>{
+    let stok = parseFloat(item.stok)||0;
+    let sat = (item.satuan||'kg').toLowerCase();
     let min = (sat=='pcs'||sat=='ekor')? 10 : 5;
     let krit = (sat=='pcs'||sat=='ekor')? 5 : 2;
     let max = (sat=='pcs'||sat=='ekor')? 100 : 80;
-    let warna = 'border-gray-200', status='✅ Aman';
-    if(stok<=krit){ warna='bg-red-100 border-red-500 border-2 animate-pulse'; status='🚨 HAMPIR HABIS!'; }
-    else if(stok<=min){ warna='bg-yellow-100 border-yellow-500 border-2'; status='⚠️ MENIPIS!'; }
-    else if(stok>=max){ warna='bg-blue-100 border-blue-500 border-2'; status='📦 OVER STOK'; }
 
-    html += `<div class="bg-white p-3 rounded-xl shadow flex justify-between items-center ${warna}">
-      <div><div class="font-bold">${i.nama_barang}</div><div class="text-xs mt-1 font-bold">${status} - ${stok} ${sat}</div></div>
+    let cardClass = 'border-l-4 ';
+    let status = '';
+    if(stok <= krit){ cardClass += 'bg-red-50 border-red-600 animate-pulse'; status = '🚨 HAMPIR HABIS!'; }
+    else if(stok <= min){ cardClass += 'bg-yellow-50 border-yellow-500'; status = '⚠️ MENIPIS!'; }
+    else if(stok >= max){ cardClass += 'bg-blue-50 border-blue-600'; status = '📦 OVER STOK'; }
+    else { cardClass += 'bg-white border-green-500'; status = '✅ Aman'; }
+
+    html += `<div class="p-3 rounded-xl shadow-sm flex justify-between items-center ${cardClass}">
+      <div>
+        <div class="font-bold text-sm">${item.nama_barang}</div>
+        <div class="text-[11px] font-bold mt-1">${status} - ${stok} ${sat}</div>
+      </div>
       <div class="flex gap-1 items-center">
-        <input type="number" value="${stok}" onchange="upd('stok', '${i.id}', this.value)" class="w-16 p-2 border rounded-lg font-bold">
-        <select onchange="upd('satuan', '${i.id}', this.value)" class="p-2 border rounded-lg bg-gray-50 font-bold">
+        <input type="number" step="0.1" value="${stok}" onchange="updateData('${item.id}','stok',this.value)" class="w-16 p-2 border rounded-lg font-bold text-center text-sm">
+        <select onchange="updateData('${item.id}','satuan',this.value)" class="p-2 border rounded-lg bg-gray-50 font-bold text-xs">
           <option value="kg" ${sat=='kg'?'selected':''}>kg</option>
           <option value="gr" ${sat=='gr'?'selected':''}>gr</option>
           <option value="pcs" ${sat=='pcs'?'selected':''}>pcs</option>
           <option value="ekor" ${sat=='ekor'?'selected':''}>ekor</option>
-          <option value="karung" ${sat=='karung'?'selected':''}>karung</option>
-        </select>
-      </div>
-    </div>`;
-  });
-  document.getElementById('list').innerHTML = html || `<div class='text-center p-10'>Belum ada barang di ${tokoAktif}</div>`;
-}
-async function upd(kolom, id, val){
-  let obj={}; obj[kolom]= (kolom=='stok'? parseFloat(val): val);
-  await sb.from('stok').update(obj).eq('id', id);
-  loadData();
-}
-</script>
-</body>
-</html>
+          <option value="
