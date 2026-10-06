@@ -1,86 +1,72 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GUDANG LABBAIK</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
 <div class="max-w-md mx-auto bg-white min-h-screen shadow-xl">
   <div class="bg-green-700 text-white p-4 sticky top-0 z-20">
     <h1 class="font-black text-xl text-center">GUDANG LABBAIK</h1>
-    <h2 id="judulToko" class="text-center font-bold text-yellow-300 tracking-widest">KATAPANG</h2>
-    <select id="toko" onchange="gantiToko()" class="w-full mt-3 p-3 rounded-xl text-black font-bold text-sm">
+    <h2 id="judulToko" class="text-center font-bold text-yellow-300">KATAPANG</h2>
+    <select id="toko" onchange="gantiToko()" class="w-full mt-3 p-3 rounded-xl text-black font-bold">
       <option value="KATAPANG">🏪 KATAPANG</option>
-      <option value="GATUK">🏪 GATUK</option>
       <option value="ALFATHU">🏪 ALFATHU</option>
-      <option value="SUKAMENAK">🏪 SUKAMENAK</option>
-      <option value="CIWIDEY">🏪 CIWIDEY</option>
+      <option value="CIMAHI">🏪 CIMAHI</option>
+      <option value="BUAH BATU">🏪 BUAH BATU</option>
     </select>
   </div>
-
   <div class="p-3 flex gap-2 text-[10px] font-bold">
     <span class="bg-yellow-200 px-2 py-1 rounded-full">🟡 MENIPIS</span>
     <span class="bg-red-200 px-2 py-1 rounded-full">🔴 KRITIS</span>
     <span class="bg-blue-200 px-2 py-1 rounded-full">🔵 OVER</span>
     <span class="bg-green-200 px-2 py-1 rounded-full">✅ AMAN</span>
   </div>
-
-  <div id="list" class="p-3 space-y-3 pb-20">Loading stok...</div>
+  <div id="list" class="p-3 space-y-2 pb-20">Loading stok...</div>
 </div>
-
 <script>
-const SUPABASE_URL = "https://lgunwtgwlzggfmfjzxqm.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let tokoAktif = localStorage.getItem('toko_labbaik') || 'KATAPANG';
-document.getElementById('toko').value = tokoAktif;
-
-function gantiToko(){
-  tokoAktif = document.getElementById('toko').value;
-  localStorage.setItem('toko_labbaik', tokoAktif);
-  document.getElementById('judulToko').innerText = tokoAktif;
-  document.title = "GUDANG LABBAIK " + tokoAktif;
-  loadData();
-}
+const SUPABASE_URL="https://lgunwtgwlzggfmfjzxqm.supabase.co";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let tokoAktif=localStorage.getItem('toko_labbaik')||'KATAPANG';
+document.getElementById('toko').value=tokoAktif;
+function gantiToko(){tokoAktif=document.getElementById('toko').value;localStorage.setItem('toko_labbaik',tokoAktif);document.getElementById('judulToko').innerText=tokoAktif;loadData();}
 gantiToko();
-
 async function loadData(){
-  document.getElementById('list').innerHTML = '<div class="text-center p-10">Loading...</div>';
-  const {data, error} = await sb.from('stok').select('*').order('nama_barang', {ascending:true});
-  if(error){ document.getElementById('list').innerHTML = '<div class="bg-red-100 p-3 rounded">Error: '+error.message+'</div>'; return; }
-
-  let filtered = data.filter(d =>!d.toko || d.toko == tokoAktif);
-  if(filtered.length==0 && data.length>0) filtered = data;
-
-  let html = '';
-  filtered.forEach(item=>{
-    let stok = parseFloat(item.stok)||0;
-    let sat = (item.satuan||'kg').toLowerCase();
-    let min = (sat=='pcs'||sat=='ekor')? 10 : 5;
-    let krit = (sat=='pcs'||sat=='ekor')? 5 : 2;
-    let max = (sat=='pcs'||sat=='ekor')? 100 : 80;
-
-    let cardClass = 'border-l-4 ';
-    let status = '';
-    if(stok <= krit){ cardClass += 'bg-red-50 border-red-600 animate-pulse'; status = '🚨 HAMPIR HABIS!'; }
-    else if(stok <= min){ cardClass += 'bg-yellow-50 border-yellow-500'; status = '⚠️ MENIPIS!'; }
-    else if(stok >= max){ cardClass += 'bg-blue-50 border-blue-600'; status = '📦 OVER STOK'; }
-    else { cardClass += 'bg-white border-green-500'; status = '✅ Aman'; }
-
-    html += `<div class="p-3 rounded-xl shadow-sm flex justify-between items-center ${cardClass}">
-      <div>
-        <div class="font-bold text-sm">${item.nama_barang}</div>
-        <div class="text-[11px] font-bold mt-1">${status} - ${stok} ${sat}</div>
-      </div>
-      <div class="flex gap-1 items-center">
-        <input type="number" step="0.1" value="${stok}" onchange="updateData('${item.id}','stok',this.value)" class="w-16 p-2 border rounded-lg font-bold text-center text-sm">
-        <select onchange="updateData('${item.id}','satuan',this.value)" class="p-2 border rounded-lg bg-gray-50 font-bold text-xs">
+  document.getElementById('list').innerHTML='Loading stok...';
+  const {data,error}=await sb.from('stok').select('*').order('nama_barang');
+  if(error){document.getElementById('list').innerHTML='<div class="bg-red-100 p-3 rounded">Error: '+error.message+'</div>';return;}
+  let html='';
+  data.forEach(item=>{
+    let stok=parseFloat(item.stok)||0;
+    let sat=(item.satuan||'kg').toLowerCase();
+    let min=(sat=='pcs'||sat=='ekor')?10:5;
+    let krit=(sat=='pcs'||sat=='ekor')?5:2;
+    let max=(sat=='pcs'||sat=='ekor')?100:80;
+    let cls='border-green-500';let sts='✅ Aman';let bg='bg-white';
+    if(stok<=krit){bg='bg-red-50';cls='border-red-600';sts='🚨 KRITIS';}
+    else if(stok<=min){bg='bg-yellow-50';cls='border-yellow-500';sts='⚠️ MENIPIS';}
+    else if(stok>=max){bg='bg-blue-50';cls='border-blue-600';sts='📦 OVER';}
+    html+=`<div class="p-3 rounded-xl shadow flex justify-between items-center ${bg} border-l-4 ${cls}">
+      <div><div class="font-bold text-sm">${item.nama_barang}</div><div class="text-[11px] font-bold">${sts} - ${stok} ${sat}</div></div>
+      <div class="flex gap-1">
+        <input type="number" value="${stok}" onchange="updateStok(${item.id},this.value)" class="w-16 p-2 border rounded-lg text-center font-bold text-sm">
+        <select onchange="updateSatuan(${item.id},this.value)" class="p-2 border rounded-lg bg-gray-50 font-bold text-xs">
           <option value="kg" ${sat=='kg'?'selected':''}>kg</option>
           <option value="gr" ${sat=='gr'?'selected':''}>gr</option>
           <option value="pcs" ${sat=='pcs'?'selected':''}>pcs</option>
           <option value="ekor" ${sat=='ekor'?'selected':''}>ekor</option>
-          <option value="
+          <option value="karung" ${sat=='karung'?'selected':''}>karung</option>
+        </select>
+      </div>
+    </div>`;
+  });
+  document.getElementById('list').innerHTML=html||'Belum ada barang';
+}
+async function updateStok(id,val){await sb.from('stok').update({stok:parseFloat(val)}).eq('id',id);loadData();}
+async function updateSatuan(id,val){await sb.from('stok').update({satuan:val}).eq('id',id);loadData();}
+</script>
+</body>
+</html>
