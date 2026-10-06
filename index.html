@@ -7,25 +7,41 @@
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-<div class="max-w-md mx-auto bg-white min-h-screen shadow-xl">
+<div class="max-w-md mx-auto bg-white min-h-screen shadow-xl pb-24">
   <div class="bg-green-700 text-white p-4 sticky top-0 z-20">
     <h1 class="font-black text-xl text-center">GUDANG LABBAIK</h1>
     <h2 id="judulToko" class="text-center font-bold text-yellow-300">KATAPANG</h2>
-    <select id="toko" onchange="gantiToko()" class="w-full mt-3 p-3 rounded-xl text-black font-bold">
+    <select id="toko" onchange="gantiToko()" class="w-full mt-3 p-2 rounded-xl text-black font-bold text-sm">
       <option value="KATAPANG">🏪 KATAPANG</option>
       <option value="ALFATHU">🏪 ALFATHU</option>
-      <option value="CIMAHI">🏪 CIMAHI</option>
-      <option value="BUAH BATU">🏪 BUAH BATU</option>
+      <option value="GATUK">🏪 GATUK</option>
+      <option value="CIWIDEY">🏪 CIWIDEY</option>
     </select>
   </div>
+
+  <!-- FORM TAMBAH -->
+  <div class="p-3 bg-yellow-50 border-b-2 border-dashed border-yellow-400">
+    <div class="font-black text-xs mb-2">➕ TAMBAH BARANG BARU</div>
+    <div class="flex gap-1">
+      <input id="namaBaru" placeholder="Nama barang" class="flex-1 p-2 border rounded-lg text-sm">
+      <input id="stokBaru" type="number" placeholder="Stok" class="w-16 p-2 border rounded-lg text-sm text-center font-bold">
+      <select id="satuanBaru" class="w-20 p-2 border rounded-lg text-xs font-bold">
+        <option value="kg">kg</option><option value="gr">gr</option><option value="pcs" selected>pcs</option><option value="ekor">ekor</option><option value="karung">karung</option>
+      </select>
+      <button onclick="tambahBarang()" class="bg-green-700 text-white px-4 rounded-lg font-black">+</button>
+    </div>
+  </div>
+
   <div class="p-3 flex gap-2 text-[10px] font-bold">
     <span class="bg-yellow-200 px-2 py-1 rounded-full">🟡 MENIPIS</span>
     <span class="bg-red-200 px-2 py-1 rounded-full">🔴 KRITIS</span>
     <span class="bg-blue-200 px-2 py-1 rounded-full">🔵 OVER</span>
     <span class="bg-green-200 px-2 py-1 rounded-full">✅ AMAN</span>
   </div>
-  <div id="list" class="p-3 space-y-2 pb-20">Loading stok...</div>
+
+  <div id="list" class="p-3 space-y-3">Loading...</div>
 </div>
+
 <script>
 const SUPABASE_URL="https://lgunwtgwlzggfmfjzxqm.supabase.co";
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
@@ -34,39 +50,21 @@ let tokoAktif=localStorage.getItem('toko_labbaik')||'KATAPANG';
 document.getElementById('toko').value=tokoAktif;
 function gantiToko(){tokoAktif=document.getElementById('toko').value;localStorage.setItem('toko_labbaik',tokoAktif);document.getElementById('judulToko').innerText=tokoAktif;loadData();}
 gantiToko();
+
 async function loadData(){
-  document.getElementById('list').innerHTML='Loading stok...';
   const {data,error}=await sb.from('stok').select('*').order('nama_barang');
-  if(error){document.getElementById('list').innerHTML='<div class="bg-red-100 p-3 rounded">Error: '+error.message+'</div>';return;}
+  if(error){document.getElementById('list').innerHTML='Error: '+error.message;return;}
   let html='';
   data.forEach(item=>{
     let stok=parseFloat(item.stok)||0;
+    let pakai=parseFloat(item.terpakai)||0;
+    let sisa=stok-pakai;
     let sat=(item.satuan||'kg').toLowerCase();
-    let min=(sat=='pcs'||sat=='ekor')?10:5;
-    let krit=(sat=='pcs'||sat=='ekor')?5:2;
-    let max=(sat=='pcs'||sat=='ekor')?100:80;
-    let cls='border-green-500';let sts='✅ Aman';let bg='bg-white';
-    if(stok<=krit){bg='bg-red-50';cls='border-red-600';sts='🚨 KRITIS';}
-    else if(stok<=min){bg='bg-yellow-50';cls='border-yellow-500';sts='⚠️ MENIPIS';}
-    else if(stok>=max){bg='bg-blue-50';cls='border-blue-600';sts='📦 OVER';}
-    html+=`<div class="p-3 rounded-xl shadow flex justify-between items-center ${bg} border-l-4 ${cls}">
-      <div><div class="font-bold text-sm">${item.nama_barang}</div><div class="text-[11px] font-bold">${sts} - ${stok} ${sat}</div></div>
-      <div class="flex gap-1">
-        <input type="number" value="${stok}" onchange="updateStok(${item.id},this.value)" class="w-16 p-2 border rounded-lg text-center font-bold text-sm">
-        <select onchange="updateSatuan(${item.id},this.value)" class="p-2 border rounded-lg bg-gray-50 font-bold text-xs">
-          <option value="kg" ${sat=='kg'?'selected':''}>kg</option>
-          <option value="gr" ${sat=='gr'?'selected':''}>gr</option>
-          <option value="pcs" ${sat=='pcs'?'selected':''}>pcs</option>
-          <option value="ekor" ${sat=='ekor'?'selected':''}>ekor</option>
-          <option value="karung" ${sat=='karung'?'selected':''}>karung</option>
-        </select>
-      </div>
-    </div>`;
-  });
-  document.getElementById('list').innerHTML=html||'Belum ada barang';
-}
-async function updateStok(id,val){await sb.from('stok').update({stok:parseFloat(val)}).eq('id',id);loadData();}
-async function updateSatuan(id,val){await sb.from('stok').update({satuan:val}).eq('id',id);loadData();}
-</script>
-</body>
-</html>
+    let min=(sat=='pcs'||sat=='ekor')?10:5; let krit=(sat=='pcs'||sat=='ekor')?5:2; let max=(sat=='pcs'||sat=='ekor')?100:80;
+    let bg='bg-white',cls='border-green-500',sts='✅ Aman';
+    if(sisa<=krit){bg='bg-red-50';cls='border-red-600';sts='🚨 KRITIS';}
+    else if(sisa<=min){bg='bg-yellow-50';cls='border-yellow-500';sts='⚠️ MENIPIS';}
+    else if(sisa>=max){bg='bg-blue-50';cls='border-blue-600';sts='📦 OVER';}
+
+    html+=`<div class="p-3 rounded-xl shadow ${bg} border-l-4 ${cls}">
+      <div class="flex
