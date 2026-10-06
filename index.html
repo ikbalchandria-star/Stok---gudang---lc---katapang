@@ -2,42 +2,51 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GUDANG LABBAIK V12.2 FIX</title>
+<title>GUDANG LABBAIK V14 SIMPLE</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body class="bg-gray-100">
 <div class="max-w-md mx-auto bg-white min-h-screen pb-24">
   <div class="bg-green-700 text-white p-4 sticky top-0 z-20">
     <h1 class="font-black text-xl text-center">GUDANG LABBAIK</h1>
     <div class="flex justify-center items-center gap-2 mt-1">
-      <h2 id="judulToko" class="font-bold text-yellow-300">-</h2><span>🔒</span>
+      <h2 id="judulToko" class="font-bold text-yellow-300 text-lg">-</h2><span>🔒</span>
     </div>
     <div id="areaPilih" class="mt-3 hidden">
-      <select id="toko" class="w-full p-2.5 rounded-xl text-black font-bold text-sm">
-        <option value="KATAPANG">🏪 KATAPANG</option><option value="ALFATHU">🏪 ALFATHU</option><option value="GADING TUTUKA">🏪 GADING TUTUKA</option><option value="CIWIDEY">🏪 BUAH BATU</option>
+      <select id="toko" class="w-full p-3 rounded-xl text-black font-bold">
+        <option value="KATAPANG">🏪 KATAPANG</option><option value="ALFATHU">🏪 ALFATHU</option><option value="GADING TUTUKA">🏪 GADING TUTUKA</option><option value="CIWIDEY">🏪 CIWIDEY</option>
       </select>
-      <button onclick="kunciToko()" class="w-full mt-2 bg-yellow-400 text-black p-2 rounded-xl font-black text-sm">🔒 KUNCI TOKO INI DI HP</button>
+      <button onclick="kunciToko()" class="w-full mt-2 bg-yellow-400 text-black p-3 rounded-xl font-black">🔒 KUNCI TOKO INI</button>
     </div>
     <div id="areaTerkunci" class="mt-2 text-center">
-      <span id="labelToko" class="bg-white text-green-800 px-3 py-1 rounded-full font-black text-sm"></span>
-      <div class="flex justify-center gap-3 mt-2 text-[10px]">
+      <span id="labelToko" class="bg-white text-green-800 px-4 py-1.5 rounded-full font-black text-sm"></span>
+      <div class="flex justify-center gap-4 mt-2 text-xs">
         <button onclick="bukaKunci()" class="underline text-yellow-200">🔓 Ganti Toko</button>
         <button onclick="gantiPin()" class="underline text-yellow-200">🔑 Ganti PIN</button>
       </div>
     </div>
-    <p id="status" class="text-center text-[10px] text-yellow-200 mt-2">✅ Terhubung</p>
+    <p id="status" class="text-center text-xs text-yellow-200 mt-2 font-bold">✅ Terhubung</p>
   </div>
+
   <div class="p-3 bg-yellow-50 border-b space-y-2">
     <div class="flex gap-1">
-      <input id="nama" placeholder="Nama barang baru" class="flex-1 p-2 border rounded-lg text-sm">
-      <input id="stok" type="number" placeholder="Awal" class="w-16 p-2 border rounded-lg text-sm font-bold text-center">
-      <select id="sat" class="w-16 p-2 border rounded-lg text-xs font-bold"><option>kg</option><option>gr</option><option selected>pcs</option><option>ekor</option><option>karung</option></select>
-      <button onclick="tambah()" class="bg-green-700 text-white px-4 rounded-lg font-black">+</button>
+      <input id="nama" placeholder="Nama barang baru" class="flex-1 p-3 border rounded-xl text-sm font-bold">
+      <input id="stok" type="number" placeholder="Awal" class="w-20 p-3 border rounded-xl text-sm font-black text-center">
+      <select id="sat" class="w-20 p-3 border rounded-xl text-xs font-black"><option>kg</option><option>gr</option><option selected>pcs</option><option>ekor</option><option>karung</option></select>
+      <button onclick="tambah()" class="bg-green-700 text-white px-5 rounded-xl font-black text-xl">+</button>
     </div>
-    <input id="cari" oninput="load()" placeholder="🔍 Cari barang" class="w-full p-2.5 border rounded-xl text-sm">
+    <div class="flex gap-2">
+      <input type="file" id="fileSO" accept=".xlsx,.xls,.csv" class="hidden" onchange="importSO(event)">
+      <button onclick="document.getElementById('fileSO').click()" class="flex-1 bg-blue-600 text-white py-3 rounded-xl text-sm font-black">📂 IMPORT DARI EXCEL</button>
+      <button onclick="downloadTemplate()" class="bg-white border-2 border-blue-600 text-blue-600 px-4 rounded-xl text-xs font-black">Template</button>
+    </div>
+    <input id="cari" oninput="load()" placeholder="🔍 Cari barang" class="w-full p-3 border rounded-xl text-sm font-bold">
   </div>
+
   <div id="list" class="p-3 space-y-3">Loading...</div>
 </div>
+
 <script>
 const URL="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
 const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
@@ -66,59 +75,72 @@ function getStatus(sisa,sat){
   else{if(sisa<=2)return{t:'🚨 KRISIS',c:'border-red-600 bg-red-50'};if(sisa<=5)return{t:'⚠️ MENIPIS',c:'border-yellow-500 bg-yellow-50'};if(sisa>=20)return{t:'📦 OVER',c:'border-blue-500 bg-blue-50'};return{t:'✅ Aman',c:'border-green-500 bg-white'};}
 }
 async function load(){
-  let r=await fetch(URL+"?select=*&order=id.desc",{headers:HEAD});
+  let r=await fetch(URL+"?select=*&order=id.desc&limit=10000",{headers:HEAD});
   let data=await r.json();
   let q=(document.getElementById('cari').value||'').toLowerCase();
   let filtered=data.filter(it=>{let cc=!q||(it.nama_barang||'').toLowerCase().includes(q);let ct=!tokoAktif||(it.toko||'KATAPANG')==tokoAktif;return cc&&ct;});
-  document.getElementById('status').innerText=`✅ ${filtered.length} di ${tokoAktif||'-'}`;
+  document.getElementById('status').innerText=`✅ ${filtered.length} barang di ${tokoAktif||'-'}`;
   let html='';
   filtered.forEach(it=>{
     let stok=parseFloat(it.stok)||0;let masuk=parseFloat(it.penerimaan)||0;let pakai=parseFloat(it.terpakai)||0;let sisa=stok+masuk-pakai;let sat=it.satuan||'pcs';
     let st=getStatus(sisa,sat);
-    html+=`<div class="bg-white p-3 rounded-xl shadow border-l-4 ${st.c}">
-      <div class="flex justify-between"><b class="text-sm">${it.nama_barang}</b><span class="text-[9px] bg-gray-100 px-2 py-1 rounded-full">${it.toko||'KATAPANG'}</span></div>
-      <div class="text-[11px] mt-1">Awal:${stok} | Masuk:<b class="text-blue-600">${masuk}</b> | Pakai:${pakai} | <b class="text-green-700">SISA:${sisa} ${sat}</b> - ${st.t}</div>
+    html+=`<div class="bg-white p-3 rounded-2xl shadow border-l-4 ${st.c}">
+      <div class="flex justify-between items-center"><b class="text-[15px]">${it.nama_barang}</b><span class="text-[10px] bg-gray-100 px-2 py-1 rounded-full font-bold">${it.toko||'KATAPANG'}</span></div>
 
-      <div class="flex gap-1 mt-2">
-        <button onclick="tambahMasuk(${it.id},'${it.nama_barang}',${masuk})" class="flex-1 bg-blue-600 text-white py-2 rounded-xl text-xs font-black">📥 TAMBAH STOK</button>
-        <button onclick="pakaiStok(${it.id},'${it.nama_barang}',${pakai})" class="flex-1 bg-red-600 text-white py-2 rounded-xl text-xs font-black">📤 PAKAI STOK</button>
+      <div class="mt-2 bg-gray-50 p-2.5 rounded-xl leading-6">
+        <div class="text-[14px] font-bold"><span class="text-gray-600">Awal:</span> ${stok} ${sat} | <span class="text-blue-600">Masuk:</span> <span class="text-blue-700">${masuk}</span> | <span class="text-red-600">Pakai:</span> ${pakai}</div>
+        <div class="text-[15px] font-black mt-1"><span class="text-green-700">SISA: ${sisa} ${sat}</span> - ${st.t}</div>
       </div>
 
-      <div class="mt-2 bg-gray-50 p-2 rounded-xl">
-        <div class="text-[9px] font-bold text-gray-500 mb-1">EDIT MANUAL (ketik lalu tekan ✅):</div>
-        <div class="flex gap-1">
-          <input id="s_${it.id}" type="number" value="${stok}" placeholder="Awal" class="w-full p-1.5 border rounded text-center text-xs font-bold">
-          <button onclick="saveManual(${it.id},'stok','s_${it.id}')" class="bg-green-700 text-white px-2 rounded text-xs">✅</button>
-          <input id="m_${it.id}" type="number" value="${masuk}" placeholder="Masuk" class="w-full p-1.5 border-2 border-blue-200 bg-blue-50 rounded text-center text-xs font-bold">
-          <button onclick="saveManual(${it.id},'penerimaan','m_${it.id}')" class="bg-blue-600 text-white px-2 rounded text-xs">✅</button>
-          <input id="p_${it.id}" type="number" value="${pakai}" placeholder="Pakai" class="w-full p-1.5 border-2 border-red-200 bg-red-50 rounded text-center text-xs font-bold">
-          <button onclick="saveManual(${it.id},'terpakai','p_${it.id}')" class="bg-red-600 text-white px-2 rounded text-xs">✅</button>
-        </div>
+      <div class="flex gap-2 mt-3">
+        <button onclick="tambahMasuk(${it.id},'${it.nama_barang}',${masuk})" class="flex-1 bg-blue-600 text-white py-3 rounded-xl text-sm font-black">📥 TAMBAH STOK</button>
+        <button onclick="pakaiStok(${it.id},'${it.nama_barang}',${pakai})" class="flex-1 bg-red-600 text-white py-3 rounded-xl text-sm font-black">📤 PAKAI STOK</button>
       </div>
-      <div class="mt-1"><select onchange="upd(${it.id},'satuan',this.value)" class="w-full p-1 border rounded text-xs font-bold"><option ${sat=='kg'?'selected':''}>kg</option><option ${sat=='gr'?'selected':''}>gr</option><option ${sat=='pcs'?'selected':''}>pcs</option><option ${sat=='ekor'?'selected':''}>ekor</option><option ${sat=='karung'?'selected':''}>karung</option></select></div>
     </div>`;
   });
-  document.getElementById('list').innerHTML=html||'<div class="text-center p-5 text-sm">Belum ada barang</div>';
+  document.getElementById('list').innerHTML=html||'<div class="text-center p-6 text-sm font-bold">Belum ada barang</div>';
 }
-async function upd(id,k,v){let b={};b[k]=k=='satuan'?v:parseFloat(v);await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify(b)});load();}
-async function saveManual(id,k,inputId){let v=document.getElementById(inputId).value;if(v==='')v=0;let b={};b[k]=k=='satuan'?v:parseFloat(v);await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify(b)});load();}
+async function tambahMasuk(id,nama,now){let j=prompt(`TAMBAH STOK\n${nama}\nMasuk sekarang: ${now}\nMau tambah berapa? Contoh: 160`);if(!j)return;let t=parseFloat(j);if(isNaN(t))return alert('Harus angka!');await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify({penerimaan:now+t})});load();}
+async function pakaiStok(id,nama,now){let j=prompt(`PAKAI STOK\n${nama}\nTerpakai sekarang: ${now}\nMau pakai berapa?`);if(!j)return;let t=parseFloat(j);if(isNaN(t))return alert('Harus angka!');await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify({terpakai:now+t})});load();}
+async function tambah(){let n=document.getElementById('nama').value.trim();let s=document.getElementById('stok').value||0;let sa=document.getElementById('sat').value;if(!n)return alert('Isi nama!');if(!tokoAktif)return alert('Pilih toko dulu!');await fetch(URL,{method:'POST',headers:HEAD,body:JSON.stringify({nama_barang:n,stok:parseFloat(s),penerimaan:0,terpakai:0,satuan:sa,toko:tokoAktif})});document.getElementById('nama').value='';document.getElementById('stok').value='';load();}
 
-async function tambahMasuk(id,nama,now){
-  let j=prompt(`Tambah stok untuk ${nama}\nStok masuk sekarang ${now}\nMau tambah berapa? (contoh 160)`);
-  if(!j) return;
-  let t=parseFloat(j); if(isNaN(t)) return alert('Harus angka!');
-  let baru=now+t;
-  await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify({penerimaan:baru})});load();
+async function importSO(e){
+  if(!tokoAktif) return alert('Pilih toko dulu!');
+  let file=e.target.files[0]; if(!file) return;
+  let reader=new FileReader();
+  reader.onload=async function(ev){
+    try{
+      let data=new Uint8Array(ev.target.result);
+      let wb=XLSX.read(data,{type:'array'});
+      let ws=wb.Sheets[wb.SheetNames[0]];
+      let rows=XLSX.utils.sheet_to_json(ws,{header:1});
+      let header=rows[0].map(h=>String(h).toLowerCase());
+      let idxNama=header.findIndex(h=>h.includes('nama')||h.includes('barang'));
+      let idxStok=header.findIndex(h=>h.includes('stok')||h.includes('qty')||h.includes('jumlah')||h.includes('awal'));
+      let idxSat=header.findIndex(h=>h.includes('sat'));
+      if(idxNama==-1) idxNama=0; if(idxStok==-1) idxStok=1; if(idxSat==-1) idxSat=2;
+      let list=[];
+      for(let i=1;i<rows.length;i++){
+        let r=rows[i]; if(!r||!r[idxNama]) continue;
+        let nama=String(r[idxNama]).trim(); if(!nama) continue;
+        let stok=parseFloat(r[idxStok])||0;
+        let sat=(r[idxSat]||'pcs').toString().toLowerCase();
+        if(!['kg','gr','pcs','ekor','karung'].includes(sat)) sat='pcs';
+        list.push({nama_barang:nama,stok:stok,penerimaan:0,terpakai:0,satuan:sat,toko:tokoAktif});
+      }
+      if(list.length==0) return alert('File kosong / format salah!');
+      if(!confirm(`Mau import ${list.length} barang ke ${tokoAktif}?\nPastikan file benar!`)) return;
+      document.getElementById('status').innerText=`⏳ Import ${list.length} barang...`;
+      for(let i=0;i<list.length;i+=100){
+        let batch=list.slice(i,i+100);
+        await fetch(URL,{method:'POST',headers:HEAD,body:JSON.stringify(batch)});
+      }
+      alert(`✅ Berhasil import ${list.length} barang!`);
+      load();
+    }catch(err){alert('Gagal baca file: '+err.message);}
+  };
+  reader.readAsArrayBuffer(file);
+  e.target.value='';
 }
-async function pakaiStok(id,nama,now){
-  let j=prompt(`Pakai stok untuk ${nama}\nTerpakai sekarang ${now}\nMau pakai berapa?`);
-  if(!j) return;
-  let t=parseFloat(j); if(isNaN(t)) return alert('Harus angka!');
-  let baru=now+t;
-  await fetch(URL+"?id=eq."+id,{method:'PATCH',headers:HEAD,body:JSON.stringify({terpakai:baru})});load();
-}
-async function tambah(){let n=document.getElementById('nama').value.trim();let s=document.getElementById('stok').value||0;let sa=document.getElementById('sat').value;if(!n)return alert('Isi nama!');if(!tokoAktif)return alert('Pilih toko dulu!');await fetch(URL,{method:'POST',headers:HEAD,body:JSON.stringify({nama_barang:n,stok:parseFloat(s),penerimaan:0,terpakai:0,satuan:sa,toko:tokoAktif})});document.getElementById('nama').value='';load();}
-init();
-</script>
-</body>
-</html>
+function downloadTemplate(){
+  let ws=XLSX.utils.aoa_to_sheet([["nama_barang","stok","satuan"],["Ay
