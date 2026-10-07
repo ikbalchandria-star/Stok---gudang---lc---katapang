@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LABBAIK V18.6 EDIT LENGKAP</title>
+<title>LABBAIK V18.8 PIN SEKALI</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:sans-serif;background:#f0f0f0}
 .header{background:#15803d;color:white;padding:16px;position:sticky;top:0;z-index:10}
 .btn{padding:12px;border-radius:12px;border:none;font-weight:900;cursor:pointer}
 .card{background:white;margin:10px;padding:12px;border-radius:16px;box-shadow:0 2px 6px #0001;border-left:4px solid #22c55e}
 .badge{background:#15803d;color:white;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:900}
-.u{ text-decoration:underline; cursor:pointer; padding:2px 4px; border-radius:6px; background:#f3f4f6 }
+.u{text-decoration:underline;cursor:pointer;padding:2px 4px;border-radius:6px;background:#f3f4f6}
 </style>
 </head>
 <body>
 <div style="max-width:480px;margin:auto;background:white;min-height:100vh">
 <div class="header">
 <div style="text-align:center;font-weight:900">GUDANG LABBAIK CHICKEN</div>
-<div id="judul" style="text-align:center;color:#fde047;font-size:13px;margin-top:4px">PILIH TOKO DULU</div>
+<div id="judul" style="text-align:center;color:#fde047;font-size:13px;margin-top:4px"></div>
 <select id="toko" style="width:100%;padding:12px;border-radius:12px;margin-top:12px;font-weight:bold;color:black">
 <option value="KATAPANG">KATAPANG</option><option value="ALFATHU">ALFATHU</option><option value="GADING TUTUKA">GADING TUTUKA</option><option value="CIWIDEY">CIWIDEY</option>
 </select>
 <button onclick="kunciBaru()" style="width:100%;margin-top:8px;background:#facc15;padding:12px;border-radius:12px;font-weight:900;border:none">🔒 KUNCI & BUAT PIN</button>
 <div id="areaKunci" style="display:none;text-align:center;margin-top:8px">
 <span id="labelToko" style="background:white;color:#15803d;padding:6px 12px;border-radius:20px;font-weight:900;font-size:12px"></span><br>
+<span style="font-size:10px;color:#bbf7d0" id="infoSesi">PIN cuma 1x pas awal masuk</span><br>
 <button onclick="gantiToko()" style="background:none;border:none;color:#fde047;text-decoration:underline;margin-top:6px;font-size:11px">Ganti Toko</button>
-<button onclick="gantiPin()" style="background:none;border:none;color:#fde047;text-decoration:underline;margin-top:6px;margin-left:10px;font-size:11px">Ganti PIN</button>
+<button onclick="gantiPin()" style="background:none;border:none;color:#fde047;text-decoration:underline;margin-left:10px;font-size:11px">Ganti PIN</button>
 </div>
 <div style="display:flex;gap:6px;margin-top:12px">
 <button onclick="setSO('harian')" id="b-harian" class="btn" style="flex:1;background:#facc15;color:black">HARIAN</button>
@@ -32,10 +34,22 @@
 </div>
 </div>
 
-<div style="padding:12px;background:#fef9c3;display:flex;gap:6px;flex-wrap:wrap">
-<input id="cari" oninput="load()" placeholder="Cari barang" style="flex:1;padding:12px;border-radius:12px;border:1px solid #ccc">
-<button onclick="load()" class="btn" style="background:#15803d;color:white">Cari</button>
-<button onclick="resetHarian()" class="btn" style="background:#facc15;color:black;font-size:11px">🔄 RESET HARIAN</button>
+<div style="padding:12px;background:#fef9c3;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;gap:6px">
+<input id="namaBaru" placeholder="Nama barang baru" style="flex:1;padding:12px;border-radius:12px;border:1px solid #ccc;font-weight:bold">
+<input id="stokBaru" type="number" placeholder="Awal" style="width:70px;padding:12px;border-radius:12px;border:1px solid #ccc;text-align:center;font-weight:900">
+<select id="satBaru" style="width:70px;padding:12px;border-radius:12px;border:1px solid #ccc;font-weight:900"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option><option>karung</option></select>
+<button onclick="tambahBarang()" class="btn" style="background:#15803d;color:white;width:50px;font-size:20px">+</button>
+</div>
+<div style="display:flex;gap:6px">
+<input type="file" id="fileSO" accept=".xlsx,.xls,.csv" style="display:none" onchange="importExcel(event)">
+<button onclick="document.getElementById('fileSO').click()" class="btn" style="flex:1;background:#2563eb;color:white;font-size:13px">📂 IMPORT EXCEL</button>
+<button onclick="downloadTemplate()" class="btn" style="background:white;border:2px solid #2563eb;color:#2563eb;font-size:11px">Template</button>
+</div>
+<div style="display:flex;gap:6px">
+<input id="cari" oninput="load()" placeholder="🔍 Cari barang" style="flex:1;padding:12px;border-radius:12px;border:1px solid #ccc">
+<button onclick="resetHarian()" class="btn" style="background:#facc15;color:black;font-size:11px">🔄 RESET</button>
+</div>
 </div>
 
 <div id="list" style="padding:12px">Pilih toko dulu...</div>
@@ -46,12 +60,13 @@ const URL="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
 const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
 const H={"apikey":KEY,"Authorization":"Bearer "+KEY};
 let toko=localStorage.getItem('toko_labbaik');
-let terkunci=localStorage.getItem('toko_terkunci')==='1';
 let so=localStorage.getItem('so_type')||'harian';
 let login=false;
 const MASTER="9999";
 function getPin(t){return localStorage.getItem('pin_'+t);}
 function setPin(t,p){localStorage.setItem('pin_'+t,p);}
+function sudahLogin(t){return localStorage.getItem('login_'+t)==='1';}
+function setSudahLogin(t){localStorage.setItem('login_'+t,'1');}
 
 function setSO(s){so=s;localStorage.setItem('so_type',s);
 document.getElementById('b-harian').style.background=s=='harian'?'#facc15':'#ffffff33';
@@ -60,39 +75,40 @@ document.getElementById('b-mingguan').style.background=s=='mingguan'?'#facc15':'
 document.getElementById('b-mingguan').style.color=s=='mingguan'?'black':'white';
 document.getElementById('b-bulanan').style.background=s=='bulanan'?'#facc15':'#ffffff33';
 document.getElementById('b-bulanan').style.color=s=='bulanan'?'black':'white';
-document.getElementById('judul').innerText=(toko||'PILIH TOKO')+' | SO '+s.toUpperCase();
+if(toko) document.getElementById('judul').innerText=toko+' | SO '+s.toUpperCase();
 if(toko && login) load();
 }
 
 function init(){
 setSO(so);
-if(!toko){document.getElementById('list').innerHTML='Pilih toko dulu di atas ☝️'; return;}
+if(!toko){document.getElementById('judul').innerText='PILIH TOKO DULU'; document.getElementById('list').innerHTML='Pilih toko di atas ☝️'; return;}
 document.getElementById('toko').value=toko;
 let pin=getPin(toko);
-if(!pin){document.getElementById('judul').innerText=toko+' BELUM ADA PIN'; document.getElementById('list').innerHTML='<div class=card>⚠️ Belum ada PIN!<br><button onclick=kunciBaru() class=btn style=background:#15803d;color:white;width:100%>Bikin PIN</button></div>'; return;}
-if(terkunci && !login){
-document.getElementById('judul').innerText=toko+' TERKUNCI 🔒';
+if(!pin){document.getElementById('judul').innerText=toko+' BELUM ADA PIN'; document.getElementById('list').innerHTML='<div class=card>⚠️ Belum ada PIN! Bikin dulu<br><button onclick=kunciBaru() class=btn style=background:#15803d;color:white;width:100%>Bikin PIN</button></div>'; return;}
+// CEK: Sudah pernah login di toko ini?
+if(!sudahLogin(toko)){
+document.getElementById('judul').innerText=toko+' - MASUKAN PIN SEKALI AJA!';
 document.getElementById('areaKunci').style.display='block';
-document.getElementById('labelToko').innerText=toko+' TERKUNCI';
-document.getElementById('list').innerHTML='<div class=card style=text-align:center><b>🔒 '+toko+' Terkunci!</b><br><br><button onclick=mintaPin() class=btn style=background:#15803d;color:white;width:100%;padding:16px>🔓 MASUKAN PIN</button></div>';
+document.getElementById('labelToko').innerText=toko+' BELUM LOGIN';
+document.getElementById('list').innerHTML='<div class=card style=text-align:center><b>🔒 Masukkan PIN sekali aja pas pertama masuk!</b><br><small>Abis itu refresh gak akan minta lagi</small><br><br><button onclick=mintaPin() class=btn style=background:#15803d;color:white;width:100%;padding:16px>🔓 MASUKAN PIN</button></div>';
 setTimeout(mintaPin,300); return;
 }
-login=true; document.getElementById('areaKunci').style.display='block';
-document.getElementById('labelToko').innerText=toko+' | '+so.toUpperCase();
+login=true;
+document.getElementById('areaKunci').style.display='block';
+document.getElementById('labelToko').innerText=toko+' | '+so.toUpperCase()+' 🔓';
 document.getElementById('judul').innerText=toko+' | SO '+so.toUpperCase();
 load();
 }
-function mintaPin(){let p=prompt('PIN '+toko+' (Master 9999):'); if(p===null) return; if(p===getPin(toko)||p===MASTER){login=true;load();}else alert('Salah!');}
+function mintaPin(){let p=prompt('PIN '+toko+' (cuma diminta sekali pas pertama masuk!)\nMaster: 9999'); if(p===null) return; if(p===getPin(toko)||p===MASTER){setSudahLogin(toko); login=true; init();}else alert('PIN Salah!');}
 function kunciBaru(){
 let t=document.getElementById('toko').value; let lama=getPin(t);
-if(lama){let cek=prompt('PIN lama '+t+':'); if(cek!==lama&&cek!==MASTER) return alert('Salah!'); localStorage.setItem('toko_labbaik',t);localStorage.setItem('toko_terkunci','1');toko=t;terkunci=true;login=false;init();return;}
-let p1=prompt('Bikin PIN baru '+t+' (4 digit):'); if(!p1||p1.length<4) return alert('Min 4!'); let p2=prompt('Ulangi:'); if(p1!==p2) return alert('Gak sama!'); setPin(t,p1);localStorage.setItem('toko_labbaik',t);localStorage.setItem('toko_terkunci','1');toko=t;terkunci=true;login=true;alert('PIN jadi '+p1);init();
+if(lama){let cek=prompt('PIN lama '+t+':'); if(cek!==lama&&cek!==MASTER) return alert('Salah!'); localStorage.setItem('toko_labbaik',t); localStorage.removeItem('login_'+t); toko=t; init(); return;}
+let p1=prompt('Bikin PIN baru '+t+' (4 digit):'); if(!p1||p1.length<4) return alert('Min 4!'); let p2=prompt('Ulangi:'); if(p1!==p2) return alert('Gak sama!'); setPin(t,p1); localStorage.setItem('toko_labbaik',t); setSudahLogin(t); toko=t; login=true; alert('PIN jadi '+p1+'\nCuma diminta sekali pas pertama masuk!'); init();
 }
-function gantiToko(){let p=prompt('PIN untuk ganti toko:'); if(p!==getPin(toko)&&p!==MASTER) return alert('Salah!'); localStorage.setItem('toko_terkunci','0');terkunci=false;login=false;toko=null;localStorage.removeItem('toko_labbaik');document.getElementById('areaKunci').style.display='none';init();}
+function gantiToko(){let p=prompt('PIN untuk ganti toko:'); if(p!==getPin(toko)&&p!==MASTER) return alert('Salah!'); localStorage.removeItem('login_'+toko); localStorage.removeItem('toko_labbaik'); toko=null; login=false; document.getElementById('areaKunci').style.display='none'; init();}
 function gantiPin(){let a=prompt('PIN lama:'); if(a!==getPin(toko)&&a!==MASTER) return alert('Salah!'); let b=prompt('PIN baru:'); if(!b||b.length<4) return alert('Min 4!'); let c=prompt('Ulangi:'); if(b!==c) return alert('Gak sama!'); setPin(toko,b); alert('PIN jadi '+b);}
 
 function getStatus(sisa,sat){sat=(sat||'pcs').toLowerCase(); if(sat==='pcs'||sat==='ekor'){if(sisa<=10)return'🚨 KRISIS'; if(sisa<=25)return'⚠️ MENIPIS'; if(sisa>=100)return'📦 OVER'; return'✅ Aman';}else if(sat==='kg'){if(sisa<=5)return'🚨 KRISIS'; if(sisa<=10)return'⚠️ MENIPIS'; if(sisa>=50)return'📦 OVER'; return'✅ Aman';}else{if(sisa<=1000)return'🚨 KRISIS'; if(sisa<=3000)return'⚠️ MENIPIS'; return'✅ Aman';}}
-
 async function load(){
 if(!toko||!login) return; document.getElementById('list').innerHTML='⏳ Loading...';
 try{
@@ -103,32 +119,54 @@ let h='';
 fil.forEach(it=>{
 let stok=+it.stok||0; let masuk=+it.penerimaan||0; let pakai=+it.terpakai||0; let sisa=stok+masuk-pakai; let sat=it.satuan||'pcs'; let st=getStatus(sisa,sat);
 h+=`<div class=card>
-<div style=display:flex;justify-content:space-between;align-items:center><b style=font-size:15px>${it.nama_barang}</b><span class=badge onclick="editSatuan(${it.id},'${sat}','${it.nama_barang}')">${sat} ✏️</span></div>
+<div style=display:flex;justify-content:space-between><b>${it.nama_barang}</b><span class=badge onclick="editSatuan(${it.id},'${sat}')">${sat} ✏️</span></div>
 <div style="margin-top:8px;background:#f9fafb;padding:8px;border-radius:10px;font-size:13px;line-height:1.6">
-<span class=u onclick="editAwal(${it.id},${stok},'${it.nama_barang.replace(/'/g,"")}')">Awal: ${stok} ✏️</span> | 
-<span class=u style=color:#2563eb onclick="editMasuk(${it.id},${masuk},'${it.nama_barang.replace(/'/g,"")}')">Masuk: ${masuk} ✏️</span> | 
-<span class=u style=color:#dc2626 onclick="editPakai(${it.id},${pakai},'${it.nama_barang.replace(/'/g,"")}')">Pakai: ${pakai} ✏️</span>
+<span class=u onclick="editAwal(${it.id},${stok})">Awal: ${stok} ✏️</span> |
+<span class=u style=color:#2563eb onclick="editMasuk(${it.id},${masuk})">Masuk: ${masuk} ✏️</span> |
+<span class=u style=color:#dc2626 onclick="editPakai(${it.id},${pakai})">Pakai: ${pakai} ✏️</span>
 <div style="margin-top:6px;font-weight:900">SISA: <span style=color:#15803d>${sisa}</span> ${sat} - ${st}</div>
 </div>
 <div style=display:flex;gap:6px;margin-top:8px>
 <button onclick="tambahMasuk(${it.id},${masuk})" class=btn style=flex:1;background:#2563eb;color:white>📥 +Masuk</button>
 <button onclick="pakaiStok(${it.id},${pakai})" class=btn style=flex:1;background:#dc2626;color:white>📤 +Pakai</button>
+<button onclick="hapusBarang(${it.id},'${it.nama_barang}')" class=btn style=background:#fee2e2;color:#dc2626;width:40px">✕</button>
 </div>
 </div>`;
 });
-document.getElementById('list').innerHTML=h||'<div class=card>Belum ada barang</div>';
+document.getElementById('list').innerHTML=h||'<div class=card>Belum ada barang - Import atau Tambah di atas</div>';
 }catch(e){document.getElementById('list').innerHTML='Gagal: '+e.message;}
 }
-
-async function editAwal(id,now,nama){let j=prompt('EDIT SALDO AWAL\n'+nama+'\nAwal sekarang: '+now+'\nMasukkan awal baru:'); if(j===null) return; let v=parseFloat(j); if(isNaN(v)) return alert('Harus angka!'); await fetch(URL+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({stok:v})}); load();}
-async function editMasuk(id,now,nama){let j=prompt('EDIT MASUK\n'+nama+'\nMasuk sekarang: '+now+'\nMasukkan total masuk baru:'); if(j===null) return; let v=parseFloat(j); if(isNaN(v)) return alert('Harus angka!'); await fetch(URL+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:v})}); load();}
-async function editPakai(id,now,nama){let j=prompt('EDIT PAKAI\n'+nama+'\nPakai sekarang: '+now+'\nMasukkan total pakai baru:'); if(j===null) return; let v=parseFloat(j); if(isNaN(v)) return alert('Harus angka!'); await fetch(URL+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:v})}); load();}
-async function editSatuan(id,now,nama){let j=prompt('EDIT SATUAN\n'+nama+'\nSatuan sekarang: '+now+'\nKetik: gr, kg, pcs, ekor, karung'); if(j===null) return; let baru=j.toLowerCase(); await fetch(URL+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({satuan:baru})}); load();}
-
+async function editAwal(id,now){let j=prompt('EDIT SALDO AWAL\nSekarang: '+now); if(j===null) return; let v=parseFloat(j); if(isNaN(v)) return alert('Angka!'); await fetch(URL+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({stok:v})}); load();}
+async function editMasuk(id,now){let j=prompt('EDIT MASUK\nSekarang: '+now); if(j===null) return; let v=parseFloat(j); if(isNaN(v)) return alert('Angka!'); await fetch(URL+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:v})}); load();}
+async function editPakai(id,now){let j=prompt('EDIT PAKAI\nSekarang: '+now); if(j===null) return; let v=parseFloat(j); if(isNaN(v)) return alert('Angka!'); await fetch(URL+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:v})}); load();}
+async function editSatuan(id,now){let j=prompt('Satuan sekarang: '+now+'\nKetik: gr, kg, pcs, ekor, karung'); if(j===null) return; await fetch(URL+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({satuan:j.toLowerCase()})}); load();}
 async function tambahMasuk(id,now){let j=prompt('Tambah masuk berapa?'); if(!j) return; let v=parseFloat(j); await fetch(URL+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:(+now||0)+v})}); load();}
 async function pakaiStok(id,now){let j=prompt('Pakai berapa?'); if(!j) return; let v=parseFloat(j); await fetch(URL+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:(+now||0)+v})}); load();}
-async function resetHarian(){if(!confirm('RESET HARIAN '+toko+'?\nSisa jadi awal, masuk & pakai jadi 0')) return; let pin=prompt('PIN toko:'); if(pin!==getPin(toko)&&pin!==MASTER) return alert('PIN salah!'); let r=await fetch(URL+'?select=*&toko=eq.'+toko,{headers:H}); let data=await r.json(); for(let it of data){let sisa=(+it.stok||0)+(+it.penerimaan||0)-(+it.terpakai||0); await fetch(URL+'?id=eq.'+it.id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({stok:sisa,penerimaan:0,terpakai:0})});} alert('Reset '+data.length+' barang selesai!'); load();}
-
+async function tambahBarang(){let n=document.getElementById('namaBaru').value.trim(); let s=parseFloat(document.getElementById('stokBaru').value||0); let sa=document.getElementById('satBaru').value; if(!n) return alert('Isi nama!'); if(!toko) return alert('Pilih toko!'); await fetch(URL,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:n,stok:s,penerimaan:0,terpakai:0,satuan:sa,toko:toko})}); document.getElementById('namaBaru').value=''; document.getElementById('stokBaru').value=''; load();}
+async function hapusBarang(id,nama){if(!confirm('Hapus '+nama+'?')) return; let p=prompt('PIN untuk hapus:'); if(p!==getPin(toko)&&p!==MASTER) return alert('PIN salah!'); await fetch(URL+'?id=eq.'+id,{method:'DELETE',headers:H}); load();}
+async function resetHarian(){if(!confirm('RESET HARIAN '+toko+'?')) return; let pin=prompt('PIN:'); if(pin!==getPin(toko)&&pin!==MASTER) return alert('Salah!'); let r=await fetch(URL+'?select=*&toko=eq.'+toko,{headers:H}); let data=await r.json(); for(let it of data){let sisa=(+it.stok||0)+(+it.penerimaan||0)-(+it.terpakai||0); await fetch(URL+'?id=eq.'+it.id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({stok:sisa,penerimaan:0,terpakai:0})});} alert('Reset '+data.length+' selesai!'); load();}
+async function importExcel(e){
+let file=e.target.files[0]; if(!file) return; if(!toko) return alert('Pilih toko!');
+let reader=new FileReader();
+reader.onload=async function(ev){
+try{
+let data=new Uint8Array(ev.target.result); let wb=XLSX.read(data,{type:'array'}); let ws=wb.Sheets[wb.SheetNames[0]]; let rows=XLSX.utils.sheet_to_json(ws,{header:1});
+let header=rows[0].map(h=>String(h).toLowerCase());
+let iNama=header.findIndex(h=>h.includes('nama')||h.includes('barang')); if(iNama==-1) iNama=0;
+let iStok=header.findIndex(h=>h.includes('stok')||h.includes('qty')||h.includes('awal')); if(iStok==-1) iStok=1;
+let iSat=header.findIndex(h=>h.includes('sat')); if(iSat==-1) iSat=2;
+let rExist=await fetch(URL+'?select=*&toko=eq.'+toko,{headers:H}); let exist=rExist.ok?await rExist.json():[]; let map={}; exist.forEach(it=>map[it.nama_barang.toLowerCase().trim()]=it);
+let baru=[]; let update=0;
+for(let i=1;i<rows.length;i++){let r=rows[i]; if(!r||!r[iNama]) continue; let nama=String(r[iNama]).trim(); if(!nama) continue; let stok=parseFloat(r[iStok])||0; let sat=String(r[iSat]||'pcs').toLowerCase(); let key=nama.toLowerCase();
+if(map[key]){await fetch(URL+'?id=eq.'+map[key].id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({stok:stok,satuan:sat})}); update++;}
+else{baru.push({nama_barang:nama,stok:stok,penerimaan:0,terpakai:0,satuan:sat,toko:toko});}
+}
+if(baru.length>0){for(let i=0;i<baru.length;i+=100){await fetch(URL,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify(baru.slice(i,i+100))});}}
+alert('Import selesai! Update: '+update+' Baru: '+baru.length); load();
+}catch(err){alert('Gagal import: '+err.message);}
+}; reader.readAsArrayBuffer(file); e.target.value='';
+}
+function downloadTemplate(){let ws=XLSX.utils.aoa_to_sheet([["nama_barang","stok","satuan"],["Ayam",600,"gr"]]); let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,"Template"); XLSX.writeFile(wb,"Template_SO.xlsx");}
 init();
 </script>
 </body>
