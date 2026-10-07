@@ -2,27 +2,13 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GUDANG LABBAIK V18.5 PIN GATE</title>
+<title>GUDANG LABBAIK V18.5b FIX</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#15803d">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body class="bg-gray-100">
-<!-- KUNCI LAYAR PIN - INI YANG BIKIN PRIVASI AMAN -->
-<div id="pinGate" class="fixed inset-0 z-[100] bg-green-800 flex items-center justify-center p-6 hidden">
-  <div class="bg-white w-full max-w-sm rounded-[24px] p-6 text-center shadow-2xl">
-    <div class="text-5xl mb-2">🔒</div>
-    <h2 class="font-black text-xl">MASUKAN PIN TOKO</h2>
-    <p id="pinGateToko" class="font-bold text-green-700 mt-1">ALFATHU</p>
-    <p class="text-xs text-gray-500 mt-1">Kepala toko wajib PIN, biar karyawan lain gak ngintip stok!</p>
-    <input id="inputPinGate" type="password" maxlength="6" inputmode="numeric" placeholder="PIN 4 digit" class="w-full mt-4 p-4 border-2 border-green-700 rounded-xl text-center text-2xl font-black tracking-[8px]">
-    <button onclick="cekPinGate()" class="w-full mt-3 bg-green-700 text-white py-4 rounded-xl font-black">🔓 BUKA TOKO</button>
-    <button onclick="bukaKunciDariGate()" class="w-full mt-2 text-xs underline text-gray-500">🔓 Ganti Toko / Lupa PIN? Klik sini</button>
-    <p id="pinGateError" class="text-red-600 font-bold text-xs mt-2 hidden">PIN Salah!</p>
-  </div>
-</div>
-
 <div class="max-w-md mx-auto bg-white min-h-screen pb-24">
   <div class="bg-green-700 text-white p-4 sticky top-0 z-10">
     <div class="text-center">
@@ -105,7 +91,6 @@ function init(){
   if(!tokoAktif){
     document.getElementById('areaPilih').classList.remove('hidden');
     document.getElementById('areaTerkunci').classList.add('hidden');
-    document.getElementById('pinGate').classList.add('hidden');
     document.getElementById('judulToko').innerText='PILIH TOKO DULU';
     document.getElementById('list').innerHTML='<div class="text-center p-6 bg-yellow-100 rounded-xl font-bold">⚠️ Pilih toko di atas, lalu Bikin PIN!</div>';
     return;
@@ -113,19 +98,80 @@ function init(){
   document.getElementById('toko').value=tokoAktif;
   let pinSudahAda=getPinToko(tokoAktif);
   if(terkunci && pinSudahAda){
-    // WAJIB PIN DULU BARU BISA LIAT STOK!
+    // KUNCI PRIVASI: WAJIB MASUKIN PIN LEWAT POPUP, GAK PAKE LAYAR OVERLAY BIAR GAK FREEZE
     sudahLogin=false;
-    document.getElementById('pinGate').classList.remove('hidden');
-    document.getElementById('pinGateToko').innerText='🏪 '+tokoAktif;
     document.getElementById('areaPilih').classList.add('hidden');
     document.getElementById('areaTerkunci').classList.remove('hidden');
     document.getElementById('labelToko').innerText='🏪 '+tokoAktif+' 🔒 TERKUNCI';
-    document.getElementById('judulToko').innerText=tokoAktif+' TERKUNCI';
-    document.getElementById('list').innerHTML='<div class="text-center p-6 bg-red-100 rounded-xl font-bold">🔒 Masukkan PIN dulu di atas!</div>';
-    setTimeout(()=>document.getElementById('inputPinGate').focus(),300);
+    document.getElementById('judulToko').innerText=tokoAktif+' TERKUNCI - MASUKIN PIN!';
+    document.getElementById('list').innerHTML='<div class="text-center p-6 bg-red-100 rounded-xl font-bold">🔒 Toko '+tokoAktif+' terkunci!<br><button onclick="mintaPin()" class="mt-3 bg-green-700 text-white px-6 py-3 rounded-xl font-black">🔓 MASUKAN PIN</button></div>';
+    // auto popup PIN
+    setTimeout(()=>{mintaPin();},500);
   }else if(!pinSudahAda){
-    // Toko sudah dipilih tapi belum punya PIN -> suruh bikin
-    document.getElementById('pinGate').classList.add('hidden');
     document.getElementById('areaPilih').classList.remove('hidden');
     document.getElementById('areaTerkunci').classList.add('hidden');
     document.getElementById('judulToko').innerText=tokoAktif+' - BIKIN PIN DULU!';
+    document.getElementById('list').innerHTML='<div class="text-center p-6 bg-yellow-100 rounded-xl font-bold">⚠️ Toko '+tokoAktif+' belum punya PIN!<br>Pencet KUNCI & BUAT PIN di atas!</div>';
+  }else{
+    sudahLogin=true;
+    document.getElementById('areaPilih').classList.add('hidden');
+    document.getElementById('areaTerkunci').classList.remove('hidden');
+    document.getElementById('labelToko').innerText='🏪 '+tokoAktif+' - SO '+soAktif.toUpperCase()+' 🔓';
+    document.getElementById('judulToko').innerText=tokoAktif+' | SO '+soAktif.toUpperCase();
+    load();
+  }
+}
+
+function mintaPin(){
+  let pin=prompt('🔒 MASUKAN PIN TOKO '+tokoAktif+'\n(Master: 9999):');
+  if(pin===null) return;
+  if(pin===getPinToko(tokoAktif) || pin===PIN_MASTER){
+    sudahLogin=true;
+    document.getElementById('judulToko').innerText=tokoAktif+' | SO '+soAktif.toUpperCase();
+    document.getElementById('labelToko').innerText='🏪 '+tokoAktif+' - SO '+soAktif.toUpperCase()+' 🔓';
+    load();
+  }else{
+    alert('PIN salah! Coba lagi!');
+    document.getElementById('list').innerHTML='<div class="text-center p-6 bg-red-100 rounded-xl font-bold">❌ PIN Salah!<br><button onclick="mintaPin()" class="mt-3 bg-green-700 text-white px-6 py-3 rounded-xl font-black">Coba Lagi</button></div>';
+  }
+}
+
+function kunciTokoBaru(){
+  let t=document.getElementById('toko').value;
+  let pinLama=getPinToko(t);
+  if(pinLama){
+    let cek=prompt('Toko '+t+' sudah ada PIN, masukkan PIN lama:');
+    if(cek!==pinLama && cek!==PIN_MASTER) return alert('PIN salah!');
+    localStorage.setItem('toko_labbaik',t); localStorage.setItem('toko_terkunci','1'); tokoAktif=t; terkunci=true; sudahLogin=false; init();
+    return;
+  }
+  let p1=prompt('Bikin PIN BARU untuk toko '+t+' (4 digit):');
+  if(!p1 || p1.length<4) return alert('PIN minimal 4 digit!');
+  let p2=prompt('Ulangi PIN barunya:');
+  if(p1!==p2) return alert('PIN gak sama!');
+  setPinToko(t,p1);
+  localStorage.setItem('toko_labbaik',t); localStorage.setItem('toko_terkunci','1');
+  tokoAktif=t; terkunci=true; sudahLogin=true;
+  alert('✅ PIN untuk '+t+' jadi: '+p1+'\nBesok buka APK wajib PIN ini!');
+  init();
+}
+
+function bukaKunci(){
+  let pin=prompt('PIN toko '+tokoAktif+' (Master: 9999):');
+  if(pin===getPinToko(tokoAktif)||pin===PIN_MASTER){
+    localStorage.setItem('toko_terkunci','0'); terkunci=false; sudahLogin=false;
+    init();
+  } else if(pin!==null) alert('PIN salah!');
+}
+function gantiPin(){
+  let a=prompt('PIN lama:');
+  if(a!==getPinToko(tokoAktif)&&a!==PIN_MASTER){if(a!==null) alert('Salah!'); return;}
+  let b=prompt('PIN BARU 4 digit:'); if(!b||b.length<4) return alert('Minimal 4!');
+  let c=prompt('Ulangi:'); if(b!==c) return alert('Tidak sama!');
+  setPinToko(tokoAktif,b); alert('PIN jadi '+b);
+}
+
+function getStatus(sisa,sat){sat=(sat||'pcs').toLowerCase(); if(sat==='pcs'||sat==='ekor'){if(sisa<=10)return{t:'🚨 KRISIS',c:'border-red-600 bg-red-50'};if(sisa<=25)return{t:'⚠️ MENIPIS',c:'border-yellow-500 bg-yellow-50'};if(sisa>=100)return{t:'📦 OVER',c:'border-blue-500 bg-blue-50'};return{t:'✅ Aman',c:'border-green-500 bg-white'};}else if(sat==='kg'){if(sisa<=5)return{t:'🚨 KRISIS',c:'border-red-600 bg-red-50'};if(sisa<=10)return{t:'⚠️ MENIPIS',c:'border-yellow-500 bg-yellow-50'};if(sisa>=50)return{t:'📦 OVER',c:'border-blue-500 bg-blue-50'};return{t:'✅ Aman',c:'border-green-500 bg-white'};}else if(sat==='gr'||sat==='gram'){if(sisa<=1000)return{t:'🚨 KRISIS',c:'border-red-600 bg-red-50'};if(sisa<=3000)return{t:'⚠️ MENIPIS',c:'border-yellow-500 bg-yellow-50'};if(sisa>=20000)return{t:'📦 OVER',c:'border-blue-500 bg-blue-50'};return{t:'✅ Aman',c:'border-green-500 bg-white'};}else{if(sisa<=2)return{t:'🚨 KRISIS',c:'border-red-600 bg-red-50'};if(sisa<=5)return{t:'⚠️ MENIPIS',c:'border-yellow-500 bg-yellow-50'};if(sisa>=20)return{t:'📦 OVER',c:'border-blue-500 bg-blue-50'};return{t:'✅ Aman',c:'border-green-500 bg-white'};}}
+function normalisasiSatuan(s){if(!s)return'pcs';s=String(s).toLowerCase().trim();if(s.includes('gr')||s.includes('gram'))return'gr';if(s.includes('kg')||s.includes('kilo'))return'kg';if(s.includes('pcs')||s.includes('pc'))return'pcs';if(s.includes('ekor'))return'ekor';if(s.includes('karung')||s.includes('sak'))return'karung';return'pcs';}
+async function load(){
+  if(!tokoAktif ||!
