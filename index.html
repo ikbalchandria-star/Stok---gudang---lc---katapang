@@ -16,25 +16,29 @@ html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 <div class="header">
 <b>GUDANG LABBAIK CHICKEN</b><br>
 <span id="judul" style="color:#bbf7d0;font-weight:900;font-size:18px">KATAPANG</span><br>
-<select id="toko" onchange="gantiToko(this.value)" style="width:100%;padding:14px;border-radius:10px;margin-top:8px;font-weight:bold;font-size:15px">
+<select id="toko" onchange="gantiToko(this.value)" style="width:100%;padding:14px;border-radius:10px;margin-top:8px;font-weight:bold">
 <option value="KATAPANG">KATAPANG</option><option value="ALFATHU">ALFATHU</option><option value="GADING TUTUKA">GADING TUTUKA</option><option value="CIWIDEY">CIWIDEY</option><option value="BALEENDAH">BALEENDAH</option><option value="SUKAMENAK">SUKAMENAK</option><option value="BOJONG SOANG">BOJONG SOANG</option><option value="MARGAASIH">MARGAASIH</option>
 </select>
 </div>
 
-<!-- LOGIN SIMPLE - BUKAN MODAL FIXED! -->
-<div id="loginArea" style="padding:14px;background:#f0fdf4;border-bottom:3px solid #15803d;text-align:center">
-<b>🔐 LOGIN WAJIB VERIFIKASI</b><br>
-<div style="font-size:11px;color:#555;margin:4px 0">OTP wajib ke email toko <span id="namaTokoLogin">KATAPANG</span></div>
-<input id="emailInput" type="email" class="inp" placeholder="email toko katapang">
-<button type="button" id="btnKirim" onclick="kirimOTP()" ontouchstart="kirimOTP()" style="width:100%;background:#15803d;color:white;padding:15px;border-radius:10px;border:none;font-weight:900;font-size:15px;margin-top:8px">📧 KIRIM KODE VERIFIKASI</button>
+<div id="loginArea" style="padding:14px;background:#f0fdf4;text-align:center">
+<b>🔐 LOGIN WAJIB KODE - V29 ANTI GAGAL KLIK</b><br>
+<div style="font-size:11px;margin:4px 0">Toko: <span id="namaTokoLogin">KATAPANG</span> | OTP ke email toko ini (wajib)</div>
+<input id="emailInput" type="email" class="inp" value="ikbalchandria@gmail.com">
 
-<div id="otpArea" style="display:none;margin-top:12px;background:white;padding:10px;border-radius:10px;border:2px dashed #22c55e">
-<div style="font-size:12px">Kode ke <b id="emailTampil"></b></div>
-<input id="otpInput" type="number" class="inp" placeholder="123456" style="letter-spacing:6px;font-size:22px">
-<button type="button" id="btnVerif" onclick="verifOTP()" ontouchstart="verifOTP()" style="width:100%;background:#2563eb;color:white;padding:15px;border-radius:10px;border:none;font-weight:900;margin-top:6px">✅ VERIFIKASI & MASUK</button>
-<button type="button" onclick="batalOTP()" style="width:100%;background:#eee;padding:10px;border-radius:8px;border:none;margin-top:6px;font-size:11px">Batal</button>
+<!-- 2 TOMBOL UNTUK TEST KLIK -->
+<button type="button" onclick="testKlik()" style="width:100%;background:#facc15;color:black;padding:12px;border-radius:10px;border:none;font-weight:900;margin-top:6px">🧪 TEST KLIK - Pencet ini dulu</button>
+<button type="button" id="btnKirim" onclick="kirimKode()" style="width:100%;background:#15803d;color:white;padding:16px;border-radius:10px;border:none;font-weight:900;font-size:16px;margin-top:8px">📧 KIRIM KODE VERIFIKASI</button>
+
+<div id="otpArea" style="display:none;margin-top:12px;background:white;padding:12px;border-radius:10px;border:2px solid #22c55e">
+<div id="infoKode" style="font-size:13px;font-weight:900;color:#15803d"></div>
+<input id="otpInput" type="text" inputmode="numeric" class="inp" placeholder="Masukkan 6 digit kode" style="letter-spacing:6px;font-size:24px">
+<button type="button" id="btnVerif" onclick="verifKode()" style="width:100%;background:#2563eb;color:white;padding:15px;border-radius:10px;border:none;font-weight:900;margin-top:6px">✅ VERIFIKASI & MASUK</button>
+<div id="kodeCadangan" style="margin-top:10px;padding:8px;background:#fef9c3;border-radius:8px;font-size:11px"></div>
 </div>
-<div id="msgLogin" style="font-size:12px;color:#dc2626;margin-top:10px;white-space:pre-wrap;font-weight:700"></div>
+
+<div id="msgLogin" style="font-size:12px;color:#15803d;margin-top:10px;font-weight:700;white-space:pre-wrap"></div>
+<div id="debug" style="font-size:9px;color:#888;margin-top:6px"></div>
 </div>
 
 <div id="userInfo" style="display:none;background:#dcfce7;padding:10px;text-align:center;font-size:11px;font-weight:900">
@@ -43,7 +47,7 @@ html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 
 <div id="mainArea" style="display:none">
 <div style="padding:10px;background:#fef9c3">
-<div style="display:flex;gap:6px"><input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none"><button type="button" class="tombol" onclick="document.getElementById('fileExcel').click()" style="flex:1;background:#2563eb;color:white">📂 IMPORT EXCEL</button><button type="button" class="tombol" onclick="exportExcel()" style="flex:1;background:#16a34a;color:white">📤 EXPORT EXCEL</button></div>
+<div style="display:flex;gap:6px"><input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none"><button type="button" class="tombol" onclick="document.getElementById('fileExcel').click()" style="flex:1;background:#2563eb;color:white">📂 IMPORT</button><button type="button" class="tombol" onclick="exportExcel()" style="flex:1;background:#16a34a;color:white">📤 EXPORT</button></div>
 <div style="display:flex;gap:6px;margin-top:6px"><input id="namaBaru" placeholder="Nama barang" style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:bold"><input id="stokBaru" type="number" placeholder="Awal" style="width:60px;padding:11px;border-radius:10px;border:1px solid #ccc;text-align:center;font-weight:900"><select id="satBaru" style="width:65px;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:900"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option><option>karung</option></select><button type="button" class="tombol" onclick="tambah()" style="background:#15803d;color:white;width:55px">+</button></div>
 <div style="display:flex;gap:6px;margin-top:6px"><input id="cari" oninput="load()" placeholder="🔍 Cari..." style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc"><button type="button" class="tombol" onclick="resetHarian()" style="background:#facc15;color:black;width:85px;font-size:11px">🔄 RESET</button></div>
 </div>
@@ -55,37 +59,18 @@ html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
 var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
 var H={"apikey":KEY,"Authorization":"Bearer "+KEY};
-var URL_AUTH="https://lgunwtgwlzggfmfjzxqm.supabase.co/auth/v1";
-var toko="KATAPANG"; var emailLogin="";
+var toko="KATAPANG";
 
 var defaultEmails={
  "KATAPANG":"katapang@labbaikchicken.com","ALFATHU":"alfathu@labbaikchicken.com","GADING TUTUKA":"gadingtutuka@labbaikchicken.com",
  "CIWIDEY":"ciwidey@labbaikchicken.com","BALEENDAH":"baleendah@labbaikchicken.com","SUKAMENAK":"sukamenak@labbaikchicken.com",
  "BOJONG SOANG":"bojongsoang@labbaikchicken.com","MARGAASIH":"margaasih@labbaikchicken.com"
 };
-function getEmailToko(t){ try{var s=JSON.parse(localStorage.getItem('emails_toko')||'{}'); if(s[t]) return s[t];}catch(e){} return defaultEmails[t]||''; }
-function gantiToko(v){ toko=v; document.getElementById('judul').innerText=v; document.getElementById('namaTokoLogin').innerText=v; document.getElementById('emailInput').value=getEmailToko(v); try{localStorage.setItem('toko_labbaik',v);}catch(e){} if(checkLogin()) load(); }
+function getEmailToko(t){ try{var s=JSON.parse(localStorage.getItem('emails_toko')||'{}'); if(s[t]) return s[t];}catch(e){} return defaultEmails[t]||'ikbalchandria@gmail.com'; }
+function gantiToko(v){ toko=v; document.getElementById('judul').innerText=v; document.getElementById('namaTokoLogin').innerText=v; document.getElementById('emailInput').value=getEmailToko(v); try{localStorage.setItem('toko_labbaik',v);}catch(e){} document.getElementById('debug').innerText='Toko ganti: '+v+' email: '+getEmailToko(v); }
+
 function checkLogin(){
  try{
   var em=localStorage.getItem('email_labbaik'); var tk=localStorage.getItem('toko_login'); var verif=localStorage.getItem('verif_ok');
   if(em && tk===toko && verif==='yes'){
-   document.getElementById('loginArea').style.display='none'; document.getElementById('userInfo').style.display='block'; document.getElementById('mainArea').style.display='block';
-   document.getElementById('infoUser').innerText=em+' | '+toko+' | VERIFIKASI ✅'; return true;
-  }
- }catch(e){}
- document.getElementById('loginArea').style.display='block'; document.getElementById('userInfo').style.display='none'; document.getElementById('mainArea').style.display='none';
- document.getElementById('emailInput').value=getEmailToko(toko); return false;
-}
-function buatKode(){ return Math.floor(100000+Math.random()*900000).toString(); }
-
-function kirimOTP(){
- var email=document.getElementById('emailInput').value.trim();
- if(!email||email.indexOf('@')==-1){ alert('Email harus ada @'); return; }
- emailLogin=email;
- var btn=document.getElementById('btnKirim'); btn.innerText='⏳ Mengirim ke '+email+'...'; btn.disabled=true;
- var kode=buatKode();
- try{ localStorage.setItem('otp_lokal',kode); localStorage.setItem('otp_email',email); localStorage.setItem('otp_toko',toko); }catch(e){}
- // kirim ke supabase + fallback lokal
- fetch(URL_AUTH+'/otp',{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({email:email,options:{shouldCreateUser:true}})}).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})}).then(function(res){
-  btn.innerText='📧 KIRIM KODE VERIFIKASI'; btn.disabled=false;
-  document.getElement
+   document.getElementById('loginArea').style.display='none'; document.getElementById
