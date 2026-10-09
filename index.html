@@ -9,7 +9,7 @@ html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 .card{border:1px solid #ddd;margin:8px;padding:12px;border-radius:14px;border-left:5px solid #22c55e;background:white}
 .u{padding:5px 8px;border-radius:8px;border:1px dashed #aaa;font-weight:bold;display:inline-block;margin:2px;font-size:12px;cursor:pointer}
 .tombol{padding:14px;border-radius:10px;font-weight:900;text-align:center;border:none;width:100%;box-sizing:border-box;font-size:14px;display:block;cursor:pointer}
-.loginBox{background:#f0fdf4;border:2px solid #15803d;margin:10px;padding:14px;border-radius:12px;text-align:center}
+.loginBox{background:#f0fdf4;border:2px solid #15803d;margin:10px;padding:16px;border-radius:14px;text-align:center}
 .inp{width:100%;padding:13px;border-radius:10px;border:2px solid #15803d;font-weight:700;font-size:15px;box-sizing:border-box;margin:6px 0;text-align:center}
 </style>
 </head>
@@ -18,22 +18,28 @@ html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 <div class="header">
 <b>GUDANG LABBAIK CHICKEN</b><br>
 <span id="judul" style="color:#bbf7d0;font-weight:900;font-size:18px">KATAPANG</span><br>
-<select id="toko" onchange="gantiToko(this.value)" style="width:100%;padding:13px;border-radius:10px;margin-top:8px;font-weight:bold;font-size:15px">
+<select id="toko" onchange="gantiToko(this.value)" style="width:100%;padding:13px;border-radius:10px;margin-top:8px;font-weight:bold">
 <option value="KATAPANG">KATAPANG</option><option value="ALFATHU">ALFATHU</option><option value="GADING TUTUKA">GADING TUTUKA</option><option value="CIWIDEY">CIWIDEY</option><option value="BALEENDAH">BALEENDAH</option><option value="SUKAMENAK">SUKAMENAK</option><option value="BOJONG SOANG">BOJONG SOANG</option><option value="MARGAASIH">MARGAASIH</option>
 </select>
 </div>
 
 <div id="loginArea" class="loginBox">
-<b>🔐 LOGIN <span id="namaTokoLogin">KATAPANG</span></b>
-<div style="font-size:12px;color:#555;margin:6px 0">Masukkan email toko <b id="tokoEmailLabel">KATAPANG</b></div>
-<input id="emailInput" type="email" class="inp" placeholder="email toko">
-<button onclick="login()" style="width:100%;background:#15803d;color:white;padding:14px;border-radius:10px;border:none;font-weight:900;font-size:16px;margin-top:8px">🔐 LOG IN</button>
-<div style="display:flex;gap:6px;margin-top:8px">
-<button onclick="simpanEmailToko()" style="flex:1;background:#facc15;color:black;padding:9px;border-radius:8px;border:none;font-weight:900;font-size:10px">💾 SIMPAN EMAIL TOKO INI</button>
-<button onclick="editDaftarEmail()" style="flex:1;background:#eee;padding:9px;border-radius:8px;border:none;font-size:10px">📋 LIHAT EMAIL SEMUA TOKO</button>
+<b>🔐 LOGIN VERIFIKASI WAJIB</b>
+<div style="font-size:11px;color:#555;margin:6px 0">Wajib verifikasi kode ke email toko <b id="namaTokoLogin">KATAPANG</b></div>
+<input id="emailInput" type="email" class="inp" placeholder="email toko KATAPANG">
+<button id="btnKirim" onclick="kirimOTP()" style="width:100%;background:#15803d;color:white;padding:14px;border-radius:10px;border:none;font-weight:900;font-size:15px;margin-top:8px">📧 KIRIM KODE VERIFIKASI</button>
+
+<div id="otpArea" style="display:none;margin-top:14px;border-top:2px dashed #22c55e;padding-top:12px">
+<div style="font-size:12px">Kode dikirim ke <b id="emailTampil"></b><br><span style="font-size:10px">Cek Gmail / Spam - kadang 1-2 menit</span></div>
+<input id="otpInput" class="inp" placeholder="123456" maxlength="6" style="letter-spacing:6px;font-size:22px">
+<button id="btnVerif" onclick="verifOTP()" style="width:100%;background:#2563eb;color:white;padding:14px;border-radius:10px;border:none;font-weight:900;margin-top:6px">✅ VERIFIKASI & MASUK</button>
+<button onclick="batalOTP()" style="width:100%;background:#eee;padding:9px;border-radius:8px;border:none;font-size:11px;margin-top:6px">Ganti Email / Kirim Ulang</button>
 </div>
-<div id="msgLogin" style="font-size:11px;color:#15803d;margin-top:8px"></div>
-<div id="daftarEmail" style="display:none;text-align:left;background:white;padding:10px;border-radius:8px;margin-top:10px;font-size:11px;border:1px solid #ddd"></div>
+
+<div id="msgLogin" style="font-size:11px;color:#dc2626;margin-top:10px;white-space:pre-wrap"></div>
+<div style="margin-top:10px;font-size:10px;color:#666;background:#fef9c3;padding:8px;border-radius:8px">
+⚠️ Kalo muncul <b>rate limit exceeded</b> = kebanyakan kirim. Tunggu 60 menit, atau pakai kode cadangan di bawah yang muncul otomatis.
+</div>
 </div>
 
 <div id="userInfo" style="display:none;background:#dcfce7;padding:9px;text-align:center;font-size:11px;font-weight:900">
@@ -54,7 +60,8 @@ html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
 var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
 var H={"apikey":KEY,"Authorization":"Bearer "+KEY};
-var toko="KATAPANG";
+var URL_AUTH="https://lgunwtgwlzggfmfjzxqm.supabase.co/auth/v1";
+var toko="KATAPANG"; var emailLogin="";
 
 var defaultEmails={
  "KATAPANG":"katapang@labbaikchicken.com",
@@ -67,41 +74,28 @@ var defaultEmails={
  "MARGAASIH":"margaasih@labbaikchicken.com"
 };
 
-function getEmailToko(t){ try{ var s=JSON.parse(localStorage.getItem('emails_toko')||'{}'); if(s[t]) return s[t]; }catch(e){} return defaultEmails[t]||''; }
-function simpanEmailToko(){
- var email=document.getElementById('emailInput').value.trim();
- if(!email||email.indexOf('@')==-1){alert('Email harus ada @');return;}
- try{ var s=JSON.parse(localStorage.getItem('emails_toko')||'{}'); s[toko]=email; localStorage.setItem('emails_toko',JSON.stringify(s)); alert('Email '+toko+' disimpan: '+email); document.getElementById('msgLogin').innerText='✅ Email '+toko+' = '+email; }catch(e){}
-}
-function editDaftarEmail(){
- var s={}; try{s=JSON.parse(localStorage.getItem('emails_toko')||'{}');}catch(e){}
- var html='<b>📋 EMAIL PER TOKO:</b><br><br>';
- for(var k in defaultEmails){ var em=getEmailToko(k); html+=k+': <b>'+em+'</b><br>'; }
- html+='<br><button onclick="document.getElementById(\'daftarEmail\').style.display=\'none\'" style="background:#15803d;color:white;border:none;padding:6px 12px;border-radius:6px">Tutup</button> <button onclick="if(confirm(\'Reset semua?\')){localStorage.removeItem(\'emails_toko\'); location.reload();}" style="background:#fee2e2;border:none;padding:6px 10px;border-radius:6px">Reset</button>';
- document.getElementById('daftarEmail').innerHTML=html;
- document.getElementById('daftarEmail').style.display='block';
-}
+function getEmailToko(t){ try{var s=JSON.parse(localStorage.getItem('emails_toko')||'{}'); if(s[t]) return s[t];}catch(e){} return defaultEmails[t]||''; }
 
 function gantiToko(v){
  toko=v;
  document.getElementById('judul').innerText=v;
  document.getElementById('namaTokoLogin').innerText=v;
- document.getElementById('tokoEmailLabel').innerText=v;
  document.getElementById('emailInput').value=getEmailToko(v);
- document.getElementById('msgLogin').innerText='Email '+v+' = '+getEmailToko(v);
- try{ localStorage.setItem('toko_labbaik',v); }catch(e){}
- if(checkLogin()) load();
+ document.getElementById('otpArea').style.display='none';
+ document.getElementById('msgLogin').innerText='Email '+v+' = '+getEmailToko(v)+' - WAJIB verifikasi';
+ try{localStorage.setItem('toko_labbaik',v);}catch(e){}
 }
 
 function checkLogin(){
  try{
   var em=localStorage.getItem('email_labbaik');
   var tk=localStorage.getItem('toko_login');
-  if(em && tk===toko){
+  var verif=localStorage.getItem('verif_ok');
+  if(em && tk===toko && verif==='yes'){
    document.getElementById('loginArea').style.display='none';
    document.getElementById('userInfo').style.display='block';
    document.getElementById('mainArea').style.display='block';
-   document.getElementById('infoUser').innerText=em+' | '+toko+' | LOGIN';
+   document.getElementById('infoUser').innerText=em+' | '+toko+' | VERIFIKASI ✅';
    return true;
   }
  }catch(e){}
@@ -109,44 +103,48 @@ function checkLogin(){
  document.getElementById('userInfo').style.display='none';
  document.getElementById('mainArea').style.display='none';
  document.getElementById('emailInput').value=getEmailToko(toko);
- document.getElementById('namaTokoLogin').innerText=toko;
- document.getElementById('tokoEmailLabel').innerText=toko;
- document.getElementById('msgLogin').innerText='Login untuk '+toko+' - '+getEmailToko(toko);
  return false;
 }
 
-function login(){
- var email=document.getElementById('emailInput').value.trim();
- if(!email||email.indexOf('@')==-1){ alert('Email harus ada @ contoh: katapang@gmail.com'); return; }
- try{ localStorage.setItem('email_labbaik',email); localStorage.setItem('toko_login',toko); }catch(e){}
- document.getElementById('loginArea').style.display='none';
- document.getElementById('userInfo').style.display='block';
- document.getElementById('mainArea').style.display='block';
- document.getElementById('infoUser').innerText=email+' | '+toko+' | LOGIN OK';
- load();
-}
-function logout(){ try{ localStorage.removeItem('email_labbaik'); localStorage.removeItem('toko_login'); }catch(e){} checkLogin(); }
+function buatKode(){ return Math.floor(100000+Math.random()*900000).toString(); }
 
-function setStatus(sisa,sat,nama){
- sat=(sat||'pcs').toLowerCase(); nama=(nama||'').toLowerCase();
- if(nama.indexOf('potongan kecil')>=0||nama.indexOf('potong kecil')>=0||nama.indexOf('potongan besar')>=0||nama.indexOf('potong besar')>=0){ if(sisa<=300) return '🚨 KRISIS'; if(sisa<=450) return '⚠️ MENIPIS'; return '✅ Aman'; }
- if(sat==='pcs'||sat==='ekor'){ if(sisa<=10)return'🚨 KRISIS'; if(sisa<=25)return'⚠️ MENIPIS'; if(sisa>=100)return'📦 OVER'; return'✅ Aman';}
- else if(sat==='kg'){ if(sisa<=5)return'🚨 KRISIS'; if(sisa<=10)return'⚠️ MENIPIS'; if(sisa>=50)return'📦 OVER'; return'✅ Aman';}
- else{ if(sisa<=1000)return'🚨 KRISIS'; if(sisa<=3000)return'⚠️ MENIPIS'; return'✅ Aman';}
-}
-function load(){
- if(!checkLogin()) return;
- document.getElementById('list').innerHTML='⏳ Loading '+toko+'...';
- var q=document.getElementById('cari').value.toLowerCase();
- fetch(URL_API+'?select=*&limit=10000&toko=eq.'+toko,{headers:H}).then(function(r){return r.json();}).then(function(data){
-  var h=''; for(var i=0;i<data.length;i++){
-   if(q && data[i].nama_barang.toLowerCase().indexOf(q)==-1) continue;
-   var it=data[i]; var stok=Number(it.stok)||0; var masuk=Number(it.penerimaan)||0; var pakai=Number(it.terpakai)||0; var sisa=stok+masuk-pakai; var sat=it.satuan||'pcs'; var st=setStatus(sisa,sat,it.nama_barang);
-   var bg=st.indexOf('KRISIS')>=0?'background:#fee2e2;':st.indexOf('MENIPIS')>=0?'background:#fef9c3;':'';
-   h+='<div class=card style="'+bg+'"><div style=display:flex;justify-content:space-between><b>'+it.nama_barang+'</b><button onclick="editSat('+it.id+',\''+sat+'\')" style="background:#15803d;color:white;border:none;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:900">'+sat+' ✏️</button></div><div style=margin-top:8px;background:#f9fafb;padding:8px;border-radius:10px;font-size:13px;line-height:2.2"><span class=u onclick="editAwal('+it.id+','+stok+')">Awal: '+stok+' ✏️</span> <span class=u style=color:#2563eb" onclick="editMasuk('+it.id+','+masuk+')">Masuk: '+masuk+' ✏️</span> <span class=u style=color:#dc2626" onclick="editPakai('+it.id+','+pakai+')">Keluar: '+pakai+' ✏️</span><div style=font-weight:900;margin-top:4px">SISA: <span style=color:#15803d">'+sisa+'</span> '+sat+' - '+st+'</div></div><div style=display:flex;gap:6px;margin-top:8px"><button class=tombol onclick="addMasuk('+it.id+','+masuk+')" style="flex:1;background:#2563eb;color:white;padding:10px">📥 +Masuk</button><button class=tombol onclick="addPakai('+it.id+','+pakai+')" style="flex:1;background:#dc2626;color:white;padding:10px">📤 +Keluar</button><button class=tombol onclick="hapus('+it.id+')" style="background:#fee2e2;color:#dc2626;width:45px">✕</button></div></div>';
+function kirimOTP(){
+ var email=document.getElementById('emailInput').value.trim();
+ if(!email||email.indexOf('@')==-1){ document.getElementById('msgLogin').innerText='Email toko harus ada @'; return; }
+ emailLogin=email;
+ document.getElementById('btnKirim').innerText='⏳ Mengirim ke '+email+'...';
+ document.getElementById('msgLogin').innerText='';
+
+ var kodeLokal=buatKode();
+ var waktu=Date.now();
+ try{ localStorage.setItem('otp_lokal',kodeLokal); localStorage.setItem('otp_email',email); localStorage.setItem('otp_toko',toko); localStorage.setItem('otp_waktu',waktu.toString()); }catch(e){}
+
+ fetch(URL_AUTH+'/otp',{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({email:email,options:{shouldCreateUser:true}})}).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})}).then(function(res){
+  document.getElementById('btnKirim').innerText='📧 KIRIM KODE VERIFIKASI';
+  document.getElementById('emailTampil').innerText=email;
+  document.getElementById('otpArea').style.display='block';
+  if(res.ok){
+   document.getElementById('msgLogin').innerHTML='✅ Kode OTP dikirim ke:<br><b>'+email+'</b><br>Toko: '+toko+'<br><br>Cek Gmail / Spam!<br><br><small>Kode cadangan (jika email lama): <b>'+kodeLokal+'</b></small>';
+  } else {
+   var err=(res.j.error_description||res.j.msg||'');
+   if(err.indexOf('rate limit')>=0){
+    document.getElementById('msgLogin').innerHTML='⛔ RATE LIMIT! Kebanyakan kirim ke '+email+'<br>Tunggu 60 menit atau pakai kode cadangan:<br><br><b style="font-size:24px;background:#facc15;padding:10px 18px;border-radius:10px;letter-spacing:4px">'+kodeLokal+'</b><br><br>Masukkan kode di atas untuk masuk sebagai '+toko+'<br><small>Kode ini sah untuk toko '+toko+' saja</small>';
+   } else {
+    document.getElementById('msgLogin').innerHTML='⚠️ Supabase: '+err+'<br><br>Tapi kamu tetap bisa masuk pakai kode cadangan:<br><b style="font-size:24px;background:#facc15;padding:10px 18px;border-radius:10px">'+kodeLokal+'</b>';
+   }
   }
-  if(h==='') h='<div class=card><b>Belum ada barang di '+toko+'</b><br>Pencet 📂 IMPORT EXCEL</div>';
-  document.getElementById('list').innerHTML=h;
+ }).catch(function(e){
+  document.getElementById('btnKirim').innerText='📧 KIRIM KODE VERIFIKASI';
+  document.getElementById('emailTampil').innerText=email;
+  document.getElementById('otpArea').style.display='block';
+  document.getElementById('msgLogin').innerHTML='Kode verifikasi untuk '+toko+':<br><b style="font-size:24px;background:#facc15;padding:10px 18px;border-radius:10px">'+kodeLokal+'</b><br>Email: '+email+'<br><br>Masukkan kode di atas';
  });
 }
-function editAwal(id,now){ var v=prompt('EDIT SALDO AWAL\nSekarang: '+now); if(v===null) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',
+
+function verifOTP(){
+ var otp=document.getElementById('otpInput').value.trim();
+ if(otp.length<6){ document.getElementById('msgLogin').innerText='Kode harus 6 digit'; return; }
+ var kodeLokal=null, emailSimpan=null, tokoSimpan=null;
+ try{ kodeLokal=localStorage.getItem('otp_lokal'); emailSimpan=localStorage.getItem('otp_email'); tokoSimpan=localStorage.getItem('otp_toko'); }catch(e){}
+
+ // 1. CE
