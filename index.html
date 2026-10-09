@@ -5,99 +5,43 @@
 <style>
 html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 .box{max-width:480px;margin:0 auto;background:white;min-height:100vh}
-.header{padding:14px;background:#15803d;color:white;text-align:center}
-.card{border:1px solid #ddd;margin:10px;padding:12px;border-radius:14px;border-left:5px solid #22c55e;background:white}
-.tombol{padding:18px;border-radius:12px;font-weight:900;text-align:center;margin-top:10px;display:block;cursor:pointer;border:none;width:100%;box-sizing:border-box;font-size:15px}
+.header{padding:12px;background:#15803d;color:white;text-align:center}
+.card{border:1px solid #ddd;margin:8px;padding:12px;border-radius:14px;border-left:5px solid #22c55e;background:white}
+.u{background:#f3f4f6;padding:5px 8px;border-radius:8px;border:1px dashed #aaa;font-weight:bold;display:inline-block;margin:2px;font-size:12px;cursor:pointer}
+.tombol{padding:13px;border-radius:10px;font-weight:900;text-align:center;cursor:pointer;border:none;width:100%;box-sizing:border-box;font-size:13px;display:block}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:9999;padding:12px}
+.modalBox{background:white;padding:20px;border-radius:16px;width:100%;max-width:380px;text-align:center}
+.inp{width:100%;padding:13px;border-radius:10px;border:2px solid #15803d;font-weight:700;font-size:16px;box-sizing:border-box;margin:6px 0;text-align:center}
+.small{font-size:11px;color:#666;line-height:1.4}
 </style>
 </head>
 <body>
 <div class="box">
 <div class="header">
 <b>GUDANG LABBAIK CHICKEN</b><br>
-<span id="judul" style="color:#bbf7d0;font-weight:900;font-size:18px">BALEENDAH</span><br>
-<select id="toko" onchange="pindah(this.value)" style="width:100%;padding:14px;border-radius:12px;margin-top:8px;font-weight:bold;font-size:16px">
-<option value="KATAPANG">KATAPANG</option>
-<option value="ALFATHU">ALFATHU</option>
-<option value="GADING TUTUKA">GADING TUTUKA</option>
-<option value="CIWIDEY">CIWIDEY</option>
-<option value="BALEENDAH" selected>BALEENDAH</option>
-<option value="SUKAMENAK">SUKAMENAK</option>
-<option value="BOJONG SOANG">BOJONG SOANG</option>
-<option value="MARGAASIH">MARGAASIH</option>
+<span id="judul" style="color:#bbf7d0;font-weight:900;font-size:16px">KATAPANG</span><br>
+<select id="toko" onchange="pindah(this.value)" style="width:100%;padding:12px;border-radius:10px;margin-top:8px;font-weight:bold">
+<option value="KATAPANG">KATAPANG</option><option value="ALFATHU">ALFATHU</option><option value="GADING TUTUKA">GADING TUTUKA</option><option value="CIWIDEY">CIWIDEY</option><option value="BALEENDAH">BALEENDAH</option><option value="SUKAMENAK">SUKAMENAK</option><option value="BOJONG SOANG">BOJONG SOANG</option><option value="MARGAASIH">MARGAASIH</option>
 </select>
+<div id="infoUser" style="margin-top:6px;font-size:11px;color:#fde047">Belum login</div>
+</div>
+<div style="padding:10px;background:#fef9c3">
+<div style="display:flex;gap:6px"><input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none"><button class="tombol" onclick="document.getElementById('fileExcel').click()" style="flex:1;background:#2563eb;color:white">📂 IMPORT</button><button class="tombol" onclick="exportExcel()" style="flex:1;background:#16a34a;color:white">📤 EXPORT</button><button class="tombol" onclick="logout()" style="width:50px;background:#eee">🚪</button></div>
+<div style="display:flex;gap:6px;margin-top:6px"><input id="namaBaru" placeholder="Nama barang baru" style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:bold"><input id="stokBaru" type="number" placeholder="Awal" style="width:60px;padding:11px;border-radius:10px;border:1px solid #ccc;text-align:center;font-weight:900"><select id="satBaru" style="width:65px;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:900"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option><option>karung</option></select><button class="tombol" onclick="tambah()" style="background:#15803d;color:white;width:50px">+</button></div>
+<div style="display:flex;gap:6px;margin-top:6px"><input id="cari" oninput="load()" placeholder="🔍 Cari..." style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc"><button class="tombol" onclick="resetHarian()" style="background:#facc15;color:black;width:90px;font-size:11px">🔄 RESET</button></div>
+</div>
+<div id="list" style="padding:6px;background:#f0f0f0;min-height:500px">Menunggu login...</div>
 </div>
 
-<div style="padding:12px;background:#fef9c3">
-<div style="display:flex;gap:6px">
-<input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none">
-<button class="tombol" onclick="document.getElementById('fileExcel').click()" style="flex:1;background:#2563eb;color:white">📂 IMPORT EXCEL</button>
-<button class="tombol" onclick="exportExcel()" style="flex:1;background:#16a34a;color:white">📤 EXPORT EXCEL</button>
+<div id="modalLogin" class="modal">
+<div class="modalBox">
+<b style="font-size:17px">🔐 LOGIN GUDANG</b>
+<div id="step1">
+<div class="small" style="margin:10px 0">Pilih mode login:</div>
+<input id="emailInput" type="email" class="inp" placeholder="email@labbaik.com / agussst1@gmail.com">
+<div style="display:flex;gap:8px;margin-top:12px">
+<button class="tombol" onclick="loginStaff()" style="flex:1;background:#facc15;color:black">👷 STAFF<br><span style="font-size:10px">Langsung Masuk</span></button>
+<button id="btnKirim" class="tombol" onclick="kirimOTP()" style="flex:1;background:#15803d;color:white">👑 OWNER<br><span style="font-size:10px">Verifikasi Email</span></button>
 </div>
-<div style="margin-top:8px;display:flex;gap:6px">
-<input id="namaBaru" placeholder="Nama barang" style="flex:1;padding:12px;border-radius:10px;border:1px solid #ccc;font-weight:bold">
-<input id="stokBaru" type="number" placeholder="Awal" style="width:70px;padding:12px;border-radius:10px;border:1px solid #ccc;text-align:center;font-weight:900">
-<button class="tombol" onclick="tambah()" style="background:#15803d;color:white;width:60px">+</button>
-</div>
-<input id="cari" oninput="load()" placeholder="🔍 Cari..." style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;box-sizing:border-box;margin-top:8px">
-</div>
-
-<div id="list" style="padding:8px;background:#f0f0f0;min-height:500px">Loading...</div>
-</div>
-
-<script>
-var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
-var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
-var H={"apikey":KEY,"Authorization":"Bearer "+KEY};
-var toko="BALEENDAH";
-
-function pindah(v){ toko=v; document.getElementById('judul').innerText=v; document.getElementById('toko').value=v; load(); }
-
-function load(){
- document.getElementById('list').innerHTML='⏳ Loading '+toko+'...';
- var q=document.getElementById('cari').value.toLowerCase();
- fetch(URL_API+'?select=*&limit=10000&toko=eq.'+toko,{headers:H}).then(function(r){return r.json();}).then(function(data){
-  var h='';
-  for(var i=0;i<data.length;i++){
-   if(q && data[i].nama_barang.toLowerCase().indexOf(q)==-1) continue;
-   var it=data[i]; var sisa=(Number(it.stok)||0)+(Number(it.penerimaan)||0)-(Number(it.terpakai)||0);
-   h+='<div class=card><b>'+it.nama_barang+'</b> - '+sisa+' '+it.satuan+'<br><small>Awal:'+it.stok+' Masuk:'+it.penerimaan+' Pakai:'+it.terpakai+'</small></div>';
-  }
-  if(h==='') h='<div class=card><b>Belum ada barang di '+toko+'</b><br><br>Pencet 📂 IMPORT EXCEL di atas<br>Pilih file <b>nama barang gudang.xlsx</b> kamu<br>Langsung masuk semua!</div>';
-  document.getElementById('list').innerHTML=h;
- }).catch(function(e){ document.getElementById('list').innerHTML='Error: '+e.message; });
-}
-
-function tambah(){
- var n=document.getElementById('namaBaru').value.trim();
- var s=parseFloat(document.getElementById('stokBaru').value||0);
- if(!n){ alert('Isi nama'); return; }
- fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:n,stok:s,penerimaan:0,terpakai:0,satuan:'pcs',toko:toko})}).then(function(){ document.getElementById('namaBaru').value=''; document.getElementById('stokBaru').value=''; load(); });
-}
-
-document.getElementById('fileExcel').addEventListener('change',function(e){
- var file=e.target.files[0]; if(!file) return;
- var reader=new FileReader();
- reader.onload=function(ev){
-  function proses(buf){
-   var wb=XLSX.read(new Uint8Array(buf),{type:'array'}); var ws=wb.Sheets[wb.SheetNames[0]]; var rows=XLSX.utils.sheet_to_json(ws,{header:1});
-   var janji=[];
-   for(var r=1;r<rows.length;r++){ var row=rows[r]; if(!row||!row[0]) continue; var nama=String(row[0]).trim(); var stok=parseFloat(row[1])||0; var sat=String(row[2]||'pcs'); janji.push(fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:nama,stok:stok,penerimaan:0,terpakai:0,satuan:sat,toko:toko})})); }
-   Promise.all(janji).then(function(){ alert('Import '+janji.length+' barang ke '+toko+' selesai!'); load(); });
-  }
-  if(typeof XLSX==='undefined'){ var s=document.createElement('script'); s.src='https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js'; s.onload=function(){proses(ev.target.result);}; document.head.appendChild(s); } else { proses(ev.target.result); }
- };
- reader.readAsArrayBuffer(file);
-});
-
-function exportExcel(){
- fetch(URL_API+'?select=*&toko=eq.'+toko,{headers:H}).then(function(r){return r.json();}).then(function(data){
-   if(data.length===0){ alert('Kosong'); return; }
-   function go(){ var aoa=[['nama_barang','stok','satuan','toko']]; for(var i=0;i<data.length;i++) aoa.push([data[i].nama_barang,data[i].stok,data[i].satuan,data[i].toko]); var ws=XLSX.utils.aoa_to_sheet(aoa); var wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'stok'); XLSX.writeFile(wb,'Stok_'+toko+'.xlsx'); }
-   if(typeof XLSX==='undefined'){ var s=document.createElement('script'); s.src='https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js'; s.onload=go; document.head.appendChild(s); } else go();
- });
-}
-
-pindah(toko);
-</script>
-</body>
-</html>
+<div id="msg1" class="small" style="margin-top:10px;color:#dc2626"></div>
+<div class="small" style="margin-top:10px;background:#f0fdf4;padding:8px;border-radius:8px">👷 Staff: cepat, tanpa kode,
