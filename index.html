@@ -1,68 +1,63 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TEST KLIK APK</title>
+<title>GUDANG LABBAIK CHICKEN</title>
+<style>
+html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
+.box{max-width:480px;margin:0 auto;background:white;min-height:100vh}
+.header{padding:12px;background:#15803d;color:white;text-align:center}
+.card{border:1px solid #ddd;margin:8px;padding:12px;border-radius:14px;border-left:5px solid #22c55e;background:white}
+.tombol{padding:14px;border-radius:10px;font-weight:900;text-align:center;border:none;width:100%;font-size:14px;display:block}
+.inp{width:100%;padding:14px;border-radius:10px;border:2px solid #15803d;font-weight:700;font-size:15px;box-sizing:border-box;text-align:center;margin:6px 0}
+.kodeBox{font-size:28px;letter-spacing:6px;background:#facc15;padding:12px;border-radius:10px;font-weight:900;text-align:center}
+</style>
 </head>
-<body style="margin:0;padding:20px;background:white;font-family:sans-serif;text-align:center">
-<h2>TEST KLIK APK LABBAIK</h2>
-<p>Kalo tombol bawah bisa di klik, APK OK</p>
+<body>
+<div class="box">
+<div class="header">
+<b>GUDANG LABBAIK CHICKEN</b><br>
+<span id="judul" style="color:#bbf7d0;font-weight:900;font-size:18px">KATAPANG</span><br>
+<select id="toko" onchange="gantiToko(this.value)" style="width:100%;padding:13px;border-radius:10px;margin-top:8px;font-weight:bold">
+<option value="KATAPANG">KATAPANG</option><option value="ALFATHU">ALFATHU</option><option value="GADING TUTUKA">GADING TUTUKA</option><option value="CIWIDEY">CIWIDEY</option><option value="BALEENDAH">BALEENDAH</option><option value="SUKAMENAK">SUKAMENAK</option><option value="BOJONG SOANG">BOJONG SOANG</option><option value="MARGAASIH">MARGAASIH</option>
+</select>
+</div>
 
-<button type="button" onclick="alert('✅ BISA KLIK 1')" style="width:100%;padding:20px;background:red;color:white;font-size:20px;font-weight:900;border:none;border-radius:10px;margin:10px 0">TEST 1 - BUTTON ONCLICK</button>
+<div id="loginArea" style="padding:14px;background:#f0fdf4;text-align:center">
+<b>🔐 LOGIN WAJIB VERIFIKASI</b><br>
+<div style="font-size:11px;color:#555">OTP wajib ke email toko <span id="namaTokoLogin">KATAPANG</span> - Tiap toko beda</div>
+<input id="emailInput" type="text" class="inp" value="ikbalchandria@gmail.com">
+<div onclick="kirimKode()" style="width:100%;background:#15803d;color:white;padding:16px;border-radius:10px;font-weight:900;font-size:16px;margin-top:8px;text-align:center;cursor:pointer;user-select:none">📧 KIRIM KODE VERIFIKASI</div>
+<div style="font-size:10px;color:#666;margin-top:4px">Pencet kotak hijau di atas - Kalo gak bisa, pencet tombol bawah</div>
+<button type="button" onclick="kirimKode()" style="width:100%;background:#0f5d2b;color:white;padding:14px;border-radius:10px;border:none;font-weight:900;margin-top:6px">📧 KIRIM KODE (TOMBOL CADANGAN)</button>
 
-<div onclick="alert('✅ BISA KLIK 2')" style="width:100%;padding:20px;background:blue;color:white;font-size:20px;font-weight:900;border-radius:10px;margin:10px 0">TEST 2 - DIV ONCLICK</div>
+<div id="otpArea" style="display:none;margin-top:12px;background:white;padding:12px;border-radius:12px;border:2px solid #22c55e">
+<div id="infoKode" style="font-size:12px;font-weight:700"></div>
+<div id="kodeTampil" class="kodeBox" style="margin:10px 0"></div>
+<div style="font-size:10px">Kode untuk <span id="emailTampil"></span> - Wajib verifikasi!</div>
+<input id="otpInput" type="text" inputmode="numeric" class="inp" placeholder="Masukin 6 digit kode" style="font-size:22px;letter-spacing:5px">
+<div onclick="verifKode()" style="width:100%;background:#2563eb;color:white;padding:14px;border-radius:10px;font-weight:900;margin-top:6px;text-align:center;cursor:pointer">✅ VERIFIKASI & MASUK</div>
+<button type="button" onclick="verifKode()" style="width:100%;background:#1e40af;color:white;padding:12px;border-radius:10px;border:none;font-weight:900;margin-top:6px">✅ VERIFIKASI (CADANGAN)</button>
+</div>
+<div id="msgLogin" style="font-size:12px;color:#15803d;margin-top:10px;font-weight:700;white-space:pre-wrap"></div>
+</div>
 
-<a href="javascript:alert('✅ BISA KLIK 3')" style="width:100%;padding:20px;background:green;color:white;font-size:20px;font-weight:900;border-radius:10px;margin:10px 0;display:block;text-decoration:none">TEST 3 - LINK JAVASCRIPT</a>
+<div id="userInfo" style="display:none;background:#dcfce7;padding:10px;text-align:center;font-size:11px;font-weight:900">
+<span id="infoUser"></span> <button type="button" onclick="logout()" style="background:#fee2e2;border:none;padding:6px 12px;border-radius:6px;margin-left:8px">🚪 Logout</button>
+</div>
 
-<input type="button" value="TEST 4 - INPUT BUTTON" onclick="alert('✅ BISA KLIK 4')" style="width:100%;padding:20px;background:orange;color:black;font-size:20px;font-weight:900;border:none;border-radius:10px;margin:10px 0">
-
-<hr>
-<p>Versi gudang kamu yang gak bisa di klik itu karena ada error di atasnya. Ini V30.0 FIX TOTAL:</p>
-
-<div id="login" style="border:3px solid #15803d;padding:15px;border-radius:12px;background:#f0fdf4">
-<b>LOGIN WAJIB VERIFIKASI - V30</b><br>
-<select id="toko" style="width:100%;padding:14px;margin:8px 0;font-weight:bold"><option>KATAPANG</option><option>ALFATHU</option><option>BALEENDAH</option></select>
-<input id="email" type="text" value="ikbalchandria@gmail.com" style="width:100%;padding:14px;border:2px solid #15803d;border-radius:10px;text-align:center;font-weight:700;box-sizing:border-box">
-<button type="button" id="btnKirim" onclick="kirim()" style="width:100%;padding:18px;background:#15803d;color:white;font-size:18px;font-weight:900;border:none;border-radius:10px;margin-top:10px">📧 KIRIM KODE - PASTI BISA KLIK</button>
-<div id="hasil" style="margin-top:12px;font-weight:900;font-size:14px;white-space:pre-wrap"></div>
-<div id="kodeBox" style="display:none;margin-top:12px;background:white;padding:12px;border-radius:10px;border:2px dashed green">
-<div id="kodeTampil" style="font-size:28px;letter-spacing:6px;background:#facc15;padding:10px;border-radius:8px"></div>
-<input id="otp" placeholder="Masukin kode di atas" style="width:100%;padding:14px;margin-top:8px;border-radius:10px;border:2px solid #15803d;text-align:center;font-size:20px;letter-spacing:5px;box-sizing:border-box">
-<button type="button" onclick="verif()" style="width:100%;padding:15px;background:#2563eb;color:white;font-weight:900;border:none;border-radius:10px;margin-top:8px">✅ VERIFIKASI & MASUK</button>
+<div id="mainArea" style="display:none">
+<div style="padding:10px;background:#fef9c3">
+<div style="display:flex;gap:6px"><input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none"><button type="button" class="tombol" onclick="document.getElementById('fileExcel').click()" style="flex:1;background:#2563eb;color:white">📂 IMPORT</button><button type="button" class="tombol" onclick="exportExcel()" style="flex:1;background:#16a34a;color:white">📤 EXPORT</button></div>
+<div style="display:flex;gap:6px;margin-top:6px"><input id="namaBaru" placeholder="Nama barang" style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:bold"><input id="stokBaru" type="number" placeholder="Awal" style="width:60px;padding:11px;border-radius:10px;border:1px solid #ccc;text-align:center;font-weight:900"><select id="satBaru" style="width:65px;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:900"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option><option>karung</option></select><button type="button" class="tombol" onclick="tambah()" style="background:#15803d;color:white;width:55px">+</button></div>
+<div style="display:flex;gap:6px;margin-top:6px"><input id="cari" oninput="load()" placeholder="🔍 Cari..." style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc"><button type="button" class="tombol" onclick="resetHarian()" style="background:#facc15;color:black;width:85px;font-size:11px">🔄 RESET</button></div>
+</div>
+<div id="list" style="padding:6px;background:#f0f0f0;min-height:400px">Loading...</div>
 </div>
 </div>
 
 <script>
-function kirim(){
- try{
-  var email=document.getElementById('email').value;
-  var toko=document.getElementById('toko').value;
-  var kode=Math.floor(100000+Math.random()*900000);
-  alert('✅ KLIK BERHASIL!\nToko: '+toko+'\nEmail: '+email+'\nKode: '+kode);
-  document.getElementById('hasil').innerText='KODE UNTUK '+toko+': '+kode+'\nEmail: '+email+'\n\nWajib verifikasi - tiap toko email beda!';
-  document.getElementById('kodeTampil').innerText=kode;
-  document.getElementById('kodeBox').style.display='block';
-  window.kodeBenar=kode.toString();
-  window.emailBenar=email;
-  window.tokoBenar=toko;
- }catch(e){ alert('Error kirim: '+e.message); }
-}
-function verif(){
- try{
-  var input=document.getElementById('otp').value.trim();
-  if(input===window.kodeBenar){
-   alert('✅ VERIFIKASI SUKSES!\nMasuk ke '+window.tokoBenar+'\nEmail: '+window.emailBenar);
-   document.getElementById('hasil').innerText='✅ LOGIN SUKSES!\n'+window.emailBenar+' | '+window.tokoBenar+' | VERIFIKASI ✅\n\nLanjut load gudang...';
-   localStorage.setItem('email_labbaik',window.emailBenar);
-   localStorage.setItem('toko_login',window.tokoBenar);
-   localStorage.setItem('verif_ok','yes');
-   // load gudang asli di sini
-   location.reload();
-  } else {
-   alert('❌ Kode salah!\nKamu: '+input+'\nBenar: '+window.kodeBenar);
-  }
- }catch(e){ alert('Error verif: '+e.message); }
-}
-alert('V30 loaded - JS jalan!');
-</script>
-</body>
-</html>
+var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
+var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
+var H={"apikey":KEY,"Authorization":"Bearer "+KEY};
+var toko="KATAPANG";
+var defaultEmails={"KATAPANG":"katapang@labbaikchicken.com","ALFATHU":"alfathu@labbaikchicken.com","GADING TUTUKA":"gadingtutuka@labbaikchicken.com","CIWIDEY":"ciwidey@labbaikchicken.com","BALEENDAH":"baleendah@labbaikchicken.com","SUKAMENAK":"sukamenak@labbaikchicken.com","BO
