@@ -15,8 +15,8 @@ html,body{margin:0;padding:0;background:#15803d}
 <div class="box">
 <div class="header">
 <b>GUDANG LABBAIK CHICKEN</b><br>
-<small id="judul" style="color:#bbf7d0;font-weight:900"></small>
-<select id="toko" style="width:100%;padding:14px;border-radius:12px;margin-top:8px;font-weight:bold">
+<small id="judul" style="color:#bbf7d0;font-weight:900;font-size:14px"></small>
+<select id="toko" onchange="localStorage.setItem('toko_labbaik',this.value);init()" style="width:100%;padding:14px;border-radius:12px;margin-top:8px;font-weight:bold">
 <option value="KATAPANG">KATAPANG</option>
 <option value="ALFATHU">ALFATHU</option>
 <option value="GADING TUTUKA">GADING TUTUKA</option>
@@ -26,7 +26,7 @@ html,body{margin:0;padding:0;background:#15803d}
 <option value="BOJONG SOANG">BOJONG SOANG</option>
 <option value="MARGAASIH">MARGAASIH</option>
 </select>
-<button onclick="kunciBaru()" style="width:100%;margin-top:8px;background:#facc15;color:black;padding:14px;border-radius:12px;font-weight:900;border:none">🔒 KUNCI & BUAT PIN</button>
+<button type="button" onclick="kunciBaru()" style="width:100%;margin-top:8px;background:#facc15;color:black;padding:14px;border-radius:12px;font-weight:900;border:none">🔒 KUNCI & BUAT PIN</button>
 <div id="infoLogin" style="margin-top:6px;font-size:11px;color:#fde047"></div>
 </div>
 
@@ -35,15 +35,15 @@ html,body{margin:0;padding:0;background:#15803d}
 <input id="namaBaru" placeholder="Nama barang baru" style="flex:1;padding:12px;border-radius:10px;border:1px solid #ccc;font-weight:bold">
 <input id="stokBaru" type="number" placeholder="Awal" style="width:65px;padding:12px;border-radius:10px;border:1px solid #ccc;text-align:center;font-weight:900">
 <select id="satBaru" style="width:70px;padding:12px;border-radius:10px;border:1px solid #ccc;font-weight:900"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option><option>karung</option></select>
-<button onclick="tambahBarang()" class="btn" style="background:#15803d;color:white;width:45px">+</button>
+<button type="button" onclick="tambahBarang()" class="btn" style="background:#15803d;color:white;width:45px">+</button>
 </div>
 <div style="display:flex;gap:6px">
 <input id="cari" oninput="load()" placeholder="🔍 Cari barang..." style="flex:1;padding:12px;border-radius:10px;border:1px solid #ccc">
-<button onclick="resetHarian()" class="btn" style="background:#facc15;color:black;font-size:11px">🔄 RESET</button>
+<button type="button" onclick="resetHarian()" class="btn" style="background:#facc15;color:black;font-size:11px">🔄 RESET</button>
 </div>
 <div style="display:flex;gap:6px">
-<button onclick="gantiToko()" class="btn" style="flex:1;background:#eee;font-size:11px">Ganti Toko</button>
-<button onclick="gantiPin()" class="btn" style="flex:1;background:#eee;font-size:11px">Ganti PIN</button>
+<button type="button" onclick="gantiToko()" class="btn" style="flex:1;background:#eee;font-size:11px">Ganti Toko</button>
+<button type="button" onclick="gantiPin()" class="btn" style="flex:1;background:#eee;font-size:11px">Ganti PIN</button>
 </div>
 </div>
 
@@ -52,25 +52,4 @@ html,body{margin:0;padding:0;background:#15803d}
 
 <script>
 const URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
-const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
-const H={"apikey":KEY,"Authorization":"Bearer "+KEY};
-const MASTER="9999";
-let toko=localStorage.getItem('toko_labbaik')||"KATAPANG";
-document.getElementById('toko').value=toko;
-
-function getPin(t){return localStorage.getItem('pin_'+t);}
-function setPin(t,p){localStorage.setItem('pin_'+t,p);}
-function sudahLogin(t){return localStorage.getItem('login_'+t)==='1';}
-
-function kunciBaru(){
- let t=document.getElementById('toko').value;
- let lama=getPin(t);
- if(lama){let cek=prompt('PIN lama '+t+':'); if(cek!==lama&&cek!==MASTER) return alert('Salah!'); localStorage.setItem('toko_labbaik',t); localStorage.removeItem('login_'+t); toko=t; init(); return;}
- let p1=prompt('Bikin PIN baru '+t+' (4 digit):'); if(!p1||p1.length<4) return alert('Min 4!'); let p2=prompt('Ulangi PIN:'); if(p1!==p2) return alert('Gak sama!'); setPin(t,p1); localStorage.setItem('toko_labbaik',t); localStorage.setItem('login_'+t,'1'); toko=t; alert('PIN '+t+' jadi '+p1); init();
-}
-function gantiToko(){let p=prompt('PIN untuk ganti toko:'); if(p!==getPin(toko)&&p!==MASTER) return alert('Salah!'); localStorage.removeItem('login_'+toko); localStorage.removeItem('toko_labbaik'); location.reload();}
-function gantiPin(){let a=prompt('PIN lama:'); if(a!==getPin(toko)&&a!==MASTER) return alert('Salah!'); let b=prompt('PIN baru:'); if(!b||b.length<4) return alert('Min 4!'); let c=prompt('Ulangi:'); if(b!==c) return alert('Gak sama!'); setPin(toko,b); alert('PIN jadi '+b);}
-
-function setStatus(sisa,sat,nama){
- sat=(sat||'pcs').toLowerCase(); nama=(nama||'').toLowerCase();
- if(nama
+const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3
