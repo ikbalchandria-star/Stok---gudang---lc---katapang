@@ -1,26 +1,21 @@
 <!DOCTYPE html>
-<html><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LABBAIK V19 APK FIX</title>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LABBAIK V19.2 FIX KLIK 100%</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:sans-serif;background:#f0f0f0}
-.header{background:#15803d;color:white;padding:16px;position:sticky;top:0;z-index:20}
-.btn{padding:14px;border-radius:12px;border:none;font-weight:900;cursor:pointer}
-.card{background:white;margin:10px;padding:12px;border-radius:16px;box-shadow:0 2px 6px #0001;border-left:4px solid #22c55e}
-.badge{background:#15803d;color:white;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:900}
-.u{text-decoration:underline;cursor:pointer;padding:4px 6px;border-radius:6px;background:#f3f4f6;display:inline-block;margin:2px}
-.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
-.modalBox{background:white;width:100%;max-width:350px;padding:20px;border-radius:20px;text-align:center}
-.modalBox input{width:100%;padding:16px;border-radius:12px;border:2px solid #15803d;text-align:center;font-size:20px;font-weight:900;letter-spacing:4px;margin:10px 0}
+body{margin:0;font-family:sans-serif;background:#15803d;padding:12px}
+.box{max-width:400px;margin:auto;background:white;border-radius:16px;padding:16px}
+button{width:100%;padding:18px;border-radius:12px;border:none;font-weight:900;font-size:16px;margin-top:10px}
 </style>
 </head>
 <body>
-<div style="max-width:480px;margin:auto;background:white;min-height:100vh">
-<div class="header">
-<div style="text-align:center;font-weight:900">GUDANG LABBAIK CHICKEN</div>
-<div id="judul" style="text-align:center;color:#fde047;font-size:13px;margin-top:4px"></div>
-<select id="toko" style="width:100%;padding:14px;border-radius:12px;margin-top:12px;font-weight:bold;color:black">
+<div class="box">
+<h3 style="text-align:center;margin:0">GUDANG LABBAIK CHICKEN<br><small style="color:green">V19.2 FIX KLIK</small></h3>
+
+<label>Pilih Toko:</label>
+<select id="toko" style="width:100%;padding:16px;border-radius:12px;margin-top:8px;font-weight:bold;border:2px solid #15803d">
 <option value="KATAPANG">KATAPANG</option>
 <option value="ALFATHU">ALFATHU</option>
 <option value="GADING TUTUKA">GADING TUTUKA</option>
@@ -29,98 +24,98 @@
 <option value="SUKAMENAK">SUKAMENAK</option>
 <option value="BOJONG SOANG">BOJONG SOANG</option>
 </select>
-<button onclick="openKunciModal()" style="width:100%;margin-top:10px;background:#facc15;padding:16px;border-radius:12px;font-weight:900;border:none;font-size:16px">🔒 KUNCI & BUAT PIN</button>
-<div id="areaKunci" style="display:none;text-align:center;margin-top:10px">
-<span id="labelToko" style="background:white;color:#15803d;padding:6px 12px;border-radius:20px;font-weight:900;font-size:12px"></span><br>
-<button onclick="gantiTokoModal()" style="background:none;border:none;color:#fde047;text-decoration:underline;font-size:12px;padding:8px;margin-top:6px">Ganti Toko</button>
-<button onclick="openGantiPin()" style="background:none;border:none;color:#fde047;text-decoration:underline;font-size:12px;padding:8px">Ganti PIN</button>
-</div>
-<div style="display:flex;gap:6px;margin-top:12px">
-<button onclick="setSO('harian')" id="b-harian" class="btn" style="flex:1;background:#facc15;color:black">HARIAN</button>
-<button onclick="setSO('mingguan')" id="b-mingguan" class="btn" style="flex:1;background:#ffffff33;color:white">MINGGUAN</button>
-<button onclick="setSO('bulanan')" id="b-bulanan" class="btn" style="flex:1;background:#ffffff33;color:white">BULANAN</button>
-</div>
-</div>
 
-<div style="padding:12px;background:#fef9c3;display:flex;flex-direction:column;gap:8px">
-<div style="display:flex;gap:6px">
-<input id="namaBaru" placeholder="Nama barang baru" style="flex:1;padding:14px;border-radius:12px;border:1px solid #ccc;font-weight:bold">
-<input id="stokBaru" type="number" placeholder="Awal" style="width:70px;padding:14px;border-radius:12px;border:1px solid #ccc;text-align:center;font-weight:900">
-<select id="satBaru" style="width:75px;padding:14px;border-radius:12px;border:1px solid #ccc;font-weight:900"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option><option>karung</option></select>
-<button onclick="tambahBarang()" class="btn" style="background:#15803d;color:white;width:50px">+</button>
-</div>
-<div style="display:flex;gap:6px">
-<input type="file" id="fileSO" accept=".xlsx,.xls,.csv" style="display:none" onchange="importExcel(event)">
-<button onclick="document.getElementById('fileSO').click()" class="btn" style="flex:1;background:#2563eb;color:white">📂 IMPORT EXCEL</button>
-<button onclick="downloadTemplate()" class="btn" style="background:white;border:2px solid #2563eb;color:#2563eb">Template</button>
-</div>
-<div style="display:flex;gap:6px">
-<input id="cari" oninput="load()" placeholder="🔍 Cari barang" style="flex:1;padding:14px;border-radius:12px;border:1px solid #ccc">
-<button onclick="resetHarian()" class="btn" style="background:#facc15;color:black">🔄 RESET</button>
-</div>
-</div>
-<div id="list" style="padding:12px">Loading...</div>
-</div>
+<button onclick="tesKlik()" style="background:#facc15;color:black">🔒 KUNCI & BUAT PIN (TES KLIK)</button>
+<button onclick="buatPinBaru()" style="background:#15803d;color:white">✅ BIKIN PIN BARU</button>
+<button onclick="masukPin()" style="background:#2563eb;color:white">🔓 MASUK PAKAI PIN</button>
 
-<!-- MODAL PIN MASUK -->
-<div id="modalPin" class="modal"><div class="modalBox">
-<b id="pinTitle">MASUKAN PIN</b><br><small id="pinDesc"></small>
-<input id="pinInput" type="password" inputmode="numeric" maxlength="6" placeholder="****">
-<div style="display:flex;gap:8px;margin-top:10px">
-<button onclick="closeModal('modalPin')" class="btn" style="flex:1;background:#eee">Batal</button>
-<button onclick="prosesPinMasuk()" class="btn" style="flex:1;background:#15803d;color:white">MASUK</button>
-</div>
-</div></div>
+<div id="status" style="margin-top:16px;padding:12px;background:#f0f0f0;border-radius:12px;font-size:13px">Status: Siap...<br>Pencet tombol di atas buat tes</div>
 
-<!-- MODAL BUAT PIN -->
-<div id="modalBuatPin" class="modal"><div class="modalBox">
-<b>BUAT PIN BARU</b><br><small id="buatPinToko"></small>
-<input id="pinBaru1" type="password" inputmode="numeric" placeholder="PIN baru (4 digit)">
-<input id="pinBaru2" type="password" inputmode="numeric" placeholder="Ulangi PIN">
-<div style="display:flex;gap:8px;margin-top:10px">
-<button onclick="closeModal('modalBuatPin')" class="btn" style="flex:1;background:#eee">Batal</button>
-<button onclick="prosesBuatPin()" class="btn" style="flex:1;background:#facc15;color:black">SIMPAN PIN</button>
+<div id="list" style="margin-top:12px"></div>
 </div>
-</div></div>
-
-<!-- MODAL KUNCI / GANTI -->
-<div id="modalKunci" class="modal"><div class="modalBox">
-<b id="kunciTitle">KUNCI TOKO</b><br><small id="kunciDesc"></small>
-<input id="kunciPin" type="password" inputmode="numeric" placeholder="Masukkan PIN lama / Master 9999">
-<div style="display:flex;gap:8px;margin-top:10px">
-<button onclick="closeModal('modalKunci')" class="btn" style="flex:1;background:#eee">Batal</button>
-<button onclick="prosesKunci()" class="btn" style="flex:1;background:#15803d;color:white">LANJUT</button>
-</div>
-</div></div>
-
-<!-- MODAL EDIT ANGKA -->
-<div id="modalEdit" class="modal"><div class="modalBox">
-<b id="editTitle">EDIT</b><br><small id="editDesc"></small>
-<input id="editInput" type="number" placeholder="0">
-<div style="display:flex;gap:8px;margin-top:10px">
-<button onclick="closeModal('modalEdit')" class="btn" style="flex:1;background:#eee">Batal</button>
-<button onclick="prosesEdit()" class="btn" style="flex:1;background:#15803d;color:white">SIMPAN</button>
-</div>
-</div></div>
 
 <script>
-const URL="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
+// TANPA CDN - DIJAMIN KLIK JALAN
+const URL_SUPA="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
 const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
 const H={"apikey":KEY,"Authorization":"Bearer "+KEY};
-let toko=localStorage.getItem('toko_labbaik');
-let so=localStorage.getItem('so_type')||'harian';
-let login=false;
-let pendingAction=null;
-const MASTER="9999";
-function getPin(t){return localStorage.getItem('pin_'+t);}
-function setPin(t,p){localStorage.setItem('pin_'+t,p);}
-function sudahLogin(t){return localStorage.getItem('login_'+t)==='1';}
-function setSudahLogin(t){localStorage.setItem('login_'+t,'1');}
-function openModal(id){document.getElementById(id).style.display='flex';}
-function closeModal(id){document.getElementById(id).style.display='none';}
 
-function setSO(s){so=s;localStorage.setItem('so_type',s);
-document.getElementById('b-harian').style.background=s=='harian'?'#facc15':'#ffffff33';
-document.getElementById('b-harian').style.color=s=='harian'?'black':'white';
-document.getElementById('b-mingguan').style.background=s=='mingguan'?'#facc15':'#ffffff33';
-document.getElementById('b-m
+function log(msg){
+ document.getElementById('status').innerHTML = msg + "<br><small>" + new Date().toLocaleTimeString() + "</small>";
+ console.log(msg);
+}
+
+function tesKlik(){
+ log("✅ TOMBOL BISA DI KLIK! JavaScript jalan normal. Sekarang coba BIKIN PIN BARU di bawahnya.");
+ alert("TOMBOL BISA! Sekarang pencet BIKIN PIN BARU");
+}
+
+function getToko(){return document.getElementById('toko').value;}
+function getPin(t){return localStorage.getItem('pin_'+t);}
+function setPin(t,p){localStorage.setItem('pin_'+t,p); localStorage.setItem('toko_labbaik',t); localStorage.setItem('login_'+t,'1');}
+
+function buatPinBaru(){
+ let t=getToko();
+ let lama=getPin(t);
+ if(lama){
+   let cek=prompt("PIN lama "+t+" (Master 9999):");
+   if(cek!==lama && cek!=="9999") return alert("Salah!");
+ }
+ let p1=prompt("Bikin PIN baru untuk "+t+" (4 digit):");
+ if(!p1||p1.length<4) return alert("Minimal 4!");
+ let p2=prompt("Ulangi PIN:");
+ if(p1!==p2) return alert("Gak sama!");
+ setPin(t,p1);
+ log("✅ PIN "+t+" jadi: "+p1+"<br>Refresh gak akan minta lagi. Coba pencet MASUK PAKAI PIN");
+ alert("PIN "+t+" jadi "+p1);
+ load();
+}
+
+function masukPin(){
+ let t=getToko();
+ let pin=getPin(t);
+ if(!pin) return alert("Belum ada PIN untuk "+t+"! Bikin dulu.");
+ let p=prompt("Masukkan PIN "+t+" (Master 9999):");
+ if(p===pin || p==="9999"){
+   localStorage.setItem('login_'+t,'1');
+   localStorage.setItem('toko_labbaik',t);
+   log("✅ LOGIN BERHASIL "+t+"<br>Memuat barang...");
+   load();
+ } else alert("PIN Salah!");
+}
+
+async function load(){
+ let t=getToko();
+ if(!localStorage.getItem('login_'+t)) return log("Belum login "+t);
+ log("Loading barang "+t+"...");
+ try{
+   let r=await fetch(URL_SUPA+"?select=*&limit=20&toko=eq."+t,{headers:H});
+   let data=await r.json();
+   let html="<b>Barang di "+t+": "+data.length+"</b><br>";
+   data.slice(0,10).forEach(it=>{
+     let sisa=(+it.stok||0)+(+it.penerimaan||0)-(+it.terpakai||0);
+     // KRISIS KHUSUS
+     let nama=(it.nama_barang||"").toLowerCase();
+     let isPotongan = nama.includes("potongan kecil")||nama.includes("potong kecil")||nama.includes("potongan besar")||nama.includes("potong besar");
+     let status="";
+     if(isPotongan){
+       if(sisa<=300) status="🚨 KRISIS (300)";
+       else status="✅ Aman";
+     } else {
+       if(sisa<=10) status="🚨 KRISIS";
+       else status="✅ Aman";
+     }
+     html+=`<div style="background:white;padding:8px;margin:6px 0;border-radius:8px;border-left:4px solid green"><b>${it.nama_barang}</b><br>Sisa: ${sisa} ${it.satuan||"pcs"} - ${status}</div>`;
+   });
+   document.getElementById('list').innerHTML=html;
+   log("✅ Berhasil load "+data.length+" barang di "+t);
+ }catch(e){ log("❌ Gagal: "+e.message); }
+}
+
+// AUTO INIT
+let saved=localStorage.getItem('toko_labbaik');
+if(saved) document.getElementById('toko').value=saved;
+log("Siap. Toko terpilih: "+getToko()+"<br>1. Pencet TES KLIK dulu<br>2. Kalo bisa, pencet BIKIN PIN BARU");
+</script>
+</body>
+</html>
