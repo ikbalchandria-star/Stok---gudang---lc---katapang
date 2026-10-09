@@ -7,41 +7,82 @@ html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 .box{max-width:480px;margin:0 auto;background:white;min-height:100vh}
 .header{padding:12px;background:#15803d;color:white;text-align:center}
 .card{border:1px solid #ddd;margin:8px;padding:12px;border-radius:14px;border-left:5px solid #22c55e;background:white}
-.u{background:#f3f4f6;padding:5px 8px;border-radius:8px;border:1px dashed #aaa;font-weight:bold;display:inline-block;margin:2px;font-size:12px;cursor:pointer}
-.tombol{padding:13px;border-radius:10px;font-weight:900;text-align:center;cursor:pointer;border:none;width:100%;box-sizing:border-box;font-size:13px;display:block}
-.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:9999;padding:12px}
-.modalBox{background:white;padding:20px;border-radius:16px;width:100%;max-width:380px;text-align:center}
-.inp{width:100%;padding:13px;border-radius:10px;border:2px solid #15803d;font-weight:700;font-size:16px;box-sizing:border-box;margin:6px 0;text-align:center}
-.small{font-size:11px;color:#666;line-height:1.4}
+.u{padding:5px 8px;border-radius:8px;border:1px dashed #aaa;font-weight:bold;display:inline-block;margin:2px;font-size:12px}
+.tombol{padding:14px;border-radius:10px;font-weight:900;text-align:center;border:none;width:100%;box-sizing:border-box;font-size:13px;display:block;cursor:pointer}
+input,select{font-size:16px}
 </style>
 </head>
 <body>
 <div class="box">
 <div class="header">
 <b>GUDANG LABBAIK CHICKEN</b><br>
-<span id="judul" style="color:#bbf7d0;font-weight:900;font-size:16px">KATAPANG</span><br>
-<select id="toko" onchange="pindah(this.value)" style="width:100%;padding:12px;border-radius:10px;margin-top:8px;font-weight:bold">
+<span id="judul" style="color:#bbf7d0;font-weight:900;font-size:17px">KATAPANG</span><br>
+<select id="toko" onchange="pindah(this.value)" style="width:100%;padding:13px;border-radius:10px;margin-top:8px;font-weight:bold">
 <option value="KATAPANG">KATAPANG</option><option value="ALFATHU">ALFATHU</option><option value="GADING TUTUKA">GADING TUTUKA</option><option value="CIWIDEY">CIWIDEY</option><option value="BALEENDAH">BALEENDAH</option><option value="SUKAMENAK">SUKAMENAK</option><option value="BOJONG SOANG">BOJONG SOANG</option><option value="MARGAASIH">MARGAASIH</option>
 </select>
-<div id="infoUser" style="margin-top:6px;font-size:11px;color:#fde047">Belum login</div>
+<div style="margin-top:8px;display:flex;gap:6px">
+<input id="emailInput" type="email" placeholder="email kamu (opsional)" style="flex:1;padding:10px;border-radius:8px;border:none;text-align:center;font-size:12px">
+<button onclick="simpanEmail()" style="padding:10px 12px;border-radius:8px;border:none;background:#facc15;font-weight:900;font-size:11px">SIMPAN</button>
 </div>
-<div style="padding:10px;background:#fef9c3">
-<div style="display:flex;gap:6px"><input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none"><button class="tombol" onclick="document.getElementById('fileExcel').click()" style="flex:1;background:#2563eb;color:white">📂 IMPORT</button><button class="tombol" onclick="exportExcel()" style="flex:1;background:#16a34a;color:white">📤 EXPORT</button><button class="tombol" onclick="logout()" style="width:50px;background:#eee">🚪</button></div>
-<div style="display:flex;gap:6px;margin-top:6px"><input id="namaBaru" placeholder="Nama barang baru" style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:bold"><input id="stokBaru" type="number" placeholder="Awal" style="width:60px;padding:11px;border-radius:10px;border:1px solid #ccc;text-align:center;font-weight:900"><select id="satBaru" style="width:65px;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:900"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option><option>karung</option></select><button class="tombol" onclick="tambah()" style="background:#15803d;color:white;width:50px">+</button></div>
-<div style="display:flex;gap:6px;margin-top:6px"><input id="cari" oninput="load()" placeholder="🔍 Cari..." style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc"><button class="tombol" onclick="resetHarian()" style="background:#facc15;color:black;width:90px;font-size:11px">🔄 RESET</button></div>
-</div>
-<div id="list" style="padding:6px;background:#f0f0f0;min-height:500px">Menunggu login...</div>
+<div id="infoUser" style="margin-top:4px;font-size:10px;color:#fde047"></div>
 </div>
 
-<div id="modalLogin" class="modal">
-<div class="modalBox">
-<b style="font-size:17px">🔐 LOGIN GUDANG</b>
-<div id="step1">
-<div class="small" style="margin:10px 0">Pilih mode login:</div>
-<input id="emailInput" type="email" class="inp" placeholder="email@labbaik.com / agussst1@gmail.com">
-<div style="display:flex;gap:8px;margin-top:12px">
-<button class="tombol" onclick="loginStaff()" style="flex:1;background:#facc15;color:black">👷 STAFF<br><span style="font-size:10px">Langsung Masuk</span></button>
-<button id="btnKirim" class="tombol" onclick="kirimOTP()" style="flex:1;background:#15803d;color:white">👑 OWNER<br><span style="font-size:10px">Verifikasi Email</span></button>
+<div style="padding:10px;background:#fef9c3">
+<div style="display:flex;gap:6px">
+<input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none">
+<button class="tombol" onclick="document.getElementById('fileExcel').click()" style="flex:1;background:#2563eb;color:white">📂 IMPORT EXCEL</button>
+<button class="tombol" onclick="exportExcel()" style="flex:1;background:#16a34a;color:white">📤 EXPORT EXCEL</button>
 </div>
-<div id="msg1" class="small" style="margin-top:10px;color:#dc2626"></div>
-<div class="small" style="margin-top:10px;background:#f0fdf4;padding:8px;border-radius:8px">👷 Staff: cepat, tanpa kode,
+<div style="display:flex;gap:6px;margin-top:6px">
+<input id="namaBaru" placeholder="Nama barang baru" style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:bold">
+<input id="stokBaru" type="number" placeholder="Awal" style="width:60px;padding:11px;border-radius:10px;border:1px solid #ccc;text-align:center;font-weight:900">
+<select id="satBaru" style="width:65px;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:900"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option><option>karung</option></select>
+<button class="tombol" onclick="tambah()" style="background:#15803d;color:white;width:55px">+</button>
+</div>
+<div style="display:flex;gap:6px;margin-top:6px">
+<input id="cari" oninput="load()" placeholder="🔍 Cari barang..." style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc">
+<button class="tombol" onclick="resetHarian()" style="background:#facc15;color:black;width:85px;font-size:11px">🔄 RESET</button>
+</div>
+</div>
+
+<div id="list" style="padding:6px;background:#f0f0f0;min-height:500px">Loading...</div>
+</div>
+
+<script>
+var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
+var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
+var H={"apikey":KEY,"Authorization":"Bearer "+KEY};
+var toko="KATAPANG";
+
+function pindah(v){
+ toko=v;
+ document.getElementById('judul').innerText=v;
+ try{ localStorage.setItem('toko_labbaik',v); }catch(e){}
+ load();
+}
+
+function simpanEmail(){
+ var e=document.getElementById('emailInput').value.trim();
+ if(!e || e.indexOf('@')==-1){ alert('Email harus ada @'); return; }
+ try{ localStorage.setItem('email_labbaik',e); }catch(e){}
+ document.getElementById('infoUser').innerText=e+' | '+toko+' | LOGIN OK';
+ alert('Email '+e+' disimpan!');
+}
+
+function setStatus(sisa,sat,nama){
+ sat=(sat||'pcs').toLowerCase(); nama=(nama||'').toLowerCase();
+ if(nama.indexOf('potongan kecil')>=0||nama.indexOf('potong kecil')>=0||nama.indexOf('potongan besar')>=0||nama.indexOf('potong besar')>=0){
+   if(sisa<=300) return '🚨 KRISIS'; if(sisa<=450) return '⚠️ MENIPIS'; return '✅ Aman';
+ }
+ if(sat==='pcs'||sat==='ekor'){ if(sisa<=10)return'🚨 KRISIS'; if(sisa<=25)return'⚠️ MENIPIS'; if(sisa>=100)return'📦 OVER'; return'✅ Aman';}
+ else if(sat==='kg'){ if(sisa<=5)return'🚨 KRISIS'; if(sisa<=10)return'⚠️ MENIPIS'; if(sisa>=50)return'📦 OVER'; return'✅ Aman';}
+ else{ if(sisa<=1000)return'🚨 KRISIS'; if(sisa<=3000)return'⚠️ MENIPIS'; return'✅ Aman';}
+}
+
+function load(){
+ document.getElementById('list').innerHTML='⏳ Loading '+toko+'...';
+ var q=document.getElementById('cari').value.toLowerCase();
+ fetch(URL_API+'?select=*&limit=10000&toko=eq.'+toko,{headers:H}).then(function(r){return r.json();}).then(function(data){
+  var h='';
+  for(var i=0;i<data.length;i++){
+   if(q && data[i].nama_barang.toLowerCase().indexOf(q)==-1)
