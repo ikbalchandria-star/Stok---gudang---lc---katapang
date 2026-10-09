@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LABBAIK V20.3 LENGKAP</title>
+<title>GUDANG LABBAIK CHICKEN</title>
 <style>
 html,body{margin:0;padding:0;background:#15803d}
 .box{max-width:480px;margin:0 auto;background:white;min-height:100vh}
@@ -14,10 +14,17 @@ html,body{margin:0;padding:0;background:#15803d}
 <body>
 <div class="box">
 <div class="header">
-<b>GUDANG LABBAIK CHICKEN</b><br><small style="color:#fde047">V20.3 LENGKAP - FIX HIJAU</small><br>
-<small id="judul" style="color:#bbf7d0"></small>
+<b>GUDANG LABBAIK CHICKEN</b><br>
+<small id="judul" style="color:#bbf7d0;font-weight:900"></small>
 <select id="toko" style="width:100%;padding:14px;border-radius:12px;margin-top:8px;font-weight:bold">
-<option value="KATAPANG">KATAPANG</option><option value="ALFATHU">ALFATHU</option><option value="GADING TUTUKA">GADING TUTUKA</option><option value="CIWIDEY">CIWIDEY</option><option value="BALEENDAH">BALEENDAH</option><option value="SUKAMENAK">SUKAMENAK</option><option value="BOJONG SOANG">BOJONG SOANG</option>
+<option value="KATAPANG">KATAPANG</option>
+<option value="ALFATHU">ALFATHU</option>
+<option value="GADING TUTUKA">GADING TUTUKA</option>
+<option value="CIWIDEY">CIWIDEY</option>
+<option value="BALEENDAH">BALEENDAH</option>
+<option value="SUKAMENAK">SUKAMENAK</option>
+<option value="BOJONG SOANG">BOJONG SOANG</option>
+<option value="MARGAASIH">MARGAASIH</option>
 </select>
 <button onclick="kunciBaru()" style="width:100%;margin-top:8px;background:#facc15;color:black;padding:14px;border-radius:12px;font-weight:900;border:none">🔒 KUNCI & BUAT PIN</button>
 <div id="infoLogin" style="margin-top:6px;font-size:11px;color:#fde047"></div>
@@ -66,76 +73,4 @@ function gantiPin(){let a=prompt('PIN lama:'); if(a!==getPin(toko)&&a!==MASTER) 
 
 function setStatus(sisa,sat,nama){
  sat=(sat||'pcs').toLowerCase(); nama=(nama||'').toLowerCase();
- if(nama.includes('potongan kecil')||nama.includes('potong kecil')||nama.includes('potongan besar')||nama.includes('potong besar')){
-   if(sisa<=300) return '🚨 KRISIS';
-   if(sisa<=450) return '⚠️ MENIPIS';
-   return '✅ Aman';
- }
- if(sat==='pcs'||sat==='ekor'){ if(sisa<=10)return'🚨 KRISIS'; if(sisa<=25)return'⚠️ MENIPIS'; if(sisa>=100)return'📦 OVER'; return'✅ Aman';}
- else if(sat==='kg'){ if(sisa<=5)return'🚨 KRISIS'; if(sisa<=10)return'⚠️ MENIPIS'; if(sisa>=50)return'📦 OVER'; return'✅ Aman';}
- else{ if(sisa<=1000)return'🚨 KRISIS'; if(sisa<=3000)return'⚠️ MENIPIS'; return'✅ Aman';}
-}
-
-function init(){
- toko=document.getElementById('toko').value;
- localStorage.setItem('toko_labbaik',toko);
- document.getElementById('judul').innerText=toko;
- let pin=getPin(toko);
- if(!pin){document.getElementById('infoLogin').innerText='Belum ada PIN, pencet KUNCI & BUAT PIN'; document.getElementById('list').innerHTML='<div class=card><b>'+toko+' belum ada PIN</b><br><button onclick=kunciBaru() class=btn style=background:#15803d;color:white;width:100%;margin-top:8px>🔒 Bikin PIN '+toko+'</button></div>'; return;}
- if(!sudahLogin(toko)){
-   document.getElementById('list').innerHTML='<div class=card style=text-align:center><b>Login '+toko+'</b><br><br><button onclick="masuk()" class=btn style=background:#2563eb;color:white;width:100%>🔓 MASUKAN PIN</button></div>';
-   return;
- }
- document.getElementById('infoLogin').innerText=toko+' | LOGIN OK 🔓';
- load();
-}
-function masuk(){
- let pin=getPin(toko);
- let p=prompt('Masukkan PIN '+toko+' (Master 9999):');
- if(p===pin||p===MASTER){localStorage.setItem('login_'+toko,'1'); init();}
- else if(p!==null) alert('PIN Salah!');
-}
-
-async function load(){
- document.getElementById('list').innerHTML='⏳ Loading '+toko+'...';
- try{
- let q=document.getElementById('cari').value.toLowerCase();
- let r=await fetch(URL_API+'?select=*&limit=10000&toko=eq.'+toko,{headers:H}); let data=await r.json();
- let fil=data.filter(x=>!q||x.nama_barang.toLowerCase().includes(q));
- let h='';
- fil.forEach(it=>{
-   let stok=+it.stok||0, masuk=+it.penerimaan||0, pakai=+it.terpakai||0, sisa=stok+masuk-pakai, sat=it.satuan||'pcs', st=setStatus(sisa,sat,it.nama_barang);
-   h+=`<div class=card>
-<div style=display:flex;justify-content:space-between><b>${it.nama_barang}</b><span style=background:#15803d;color:white;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:900 onclick="editSat(${it.id},'${sat}')"> ${sat} ✏️</span></div>
-<div style=margin-top:8px;background:#f9fafb;padding:8px;border-radius:10px;font-size:13px;line-height:1.8>
-<span class=u onclick="editAwal(${it.id},${stok})">Awal: ${stok} ✏️</span>
-<span class=u style=color:#2563eb onclick="editMasuk(${it.id},${masuk})">Masuk: ${masuk} ✏️</span>
-<span class=u style=color:#dc2626 onclick="editPakai(${it.id},${pakai})">Pakai: ${pakai} ✏️</span>
-<div style=font-weight:900;margin-top:4px>SISA: <span style=color:#15803d>${sisa}</span> ${sat} - ${st}</div>
-</div>
-<div style=display:flex;gap:6px;margin-top:8px>
-<button onclick="addMasuk(${it.id},${masuk})" class=btn style=flex:1;background:#2563eb;color:white>📥 +Masuk</button>
-<button onclick="addPakai(${it.id},${pakai})" class=btn style=flex:1;background:#dc2626;color:white>📤 +Pakai</button>
-<button onclick="hapus(${it.id},'${it.nama_barang}')" class=btn style=background:#fee2e2;color:#dc2626;width:40px>✕</button>
-</div>
-</div>`;
- });
- document.getElementById('list').innerHTML=h||'<div class=card>Belum ada barang di '+toko+'<br>Ketik di atas untuk tambah</div>';
- }catch(e){document.getElementById('list').innerHTML='Gagal load: '+e.message+'<br><button onclick=load() class=btn style=background:#15803d;color:white;width:100%>Coba Lagi</button>';}
-}
-
-async function editAwal(id,now){let v=prompt('EDIT SALDO AWAL\nSekarang: '+now); if(v===null) return; let n=parseFloat(v); if(isNaN(n)) return alert('Angka!'); await fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({stok:n})}); load();}
-async function editMasuk(id,now){let v=prompt('EDIT MASUK\nSekarang: '+now); if(v===null) return; await fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:parseFloat(v)||0})}); load();}
-async function editPakai(id,now){let v=prompt('EDIT PAKAI\nSekarang: '+now); if(v===null) return; await fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:parseFloat(v)||0})}); load();}
-async function editSat(id,now){let v=prompt('Satuan:',now); if(v===null) return; await fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({satuan:v.toLowerCase()})}); load();}
-async function addMasuk(id,now){let v=prompt('Tambah Masuk:'); if(!v) return; await fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:(+now||0)+parseFloat(v)})}); load();}
-async function addPakai(id,now){let v=prompt('Pakai berapa:'); if(!v) return; await fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:(+now||0)+parseFloat(v)})}); load();}
-async function tambahBarang(){let n=document.getElementById('namaBaru').value.trim(); let s=parseFloat(document.getElementById('stokBaru').value||0); let sa=document.getElementById('satBaru').value; if(!n) return alert('Isi nama!'); await fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:n,stok:s,penerimaan:0,terpakai:0,satuan:sa,toko:toko})}); document.getElementById('namaBaru').value=''; document.getElementById('stokBaru').value=''; load();}
-async function hapus(id,nama){if(!confirm('Hapus '+nama+'?')) return; let p=prompt('PIN hapus:'); if(p!==getPin(toko)&&p!==MASTER) return alert('Salah!'); await fetch(URL_API+'?id=eq.'+id,{method:'DELETE',headers:H}); load();}
-async function resetHarian(){if(!confirm('RESET HARIAN '+toko+'?')) return; let p=prompt('PIN:'); if(p!==getPin(toko)&&p!==MASTER) return alert('Salah!'); let r=await fetch(URL_API+'?select=*&toko=eq.'+toko,{headers:H}); let data=await r.json(); for(let it of data){let sisa=(+it.stok||0)+(+it.penerimaan||0)-(+it.terpakai||0); await fetch(URL_API+'?id=eq.'+it.id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({stok:sisa,penerimaan:0,terpakai:0})});} alert('Reset '+data.length+' selesai!'); load();}
-
-document.getElementById('toko').addEventListener('change',()=>{localStorage.setItem('toko_labbaik',document.getElementById('toko').value); init();});
-init();
-</script>
-</body>
-</html>
+ if(nama
