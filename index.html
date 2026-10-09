@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LABBAIK V18.9</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>LABBAIK V18.9.1 FIX KLIK</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:sans-serif;background:#f0f0f0}
-.header{background:#15803d;color:white;padding:16px;position:sticky;top:0;z-index:10}
-.btn{padding:12px;border-radius:12px;border:none;font-weight:900;cursor:pointer}
+*{box-sizing:border-box}body{margin:0;font-family:sans-serif;background:#f0f0f0;-webkit-tap-highlight-color:transparent}
+.header{background:#15803d;color:white;padding:16px;position:sticky;top:0;z-index:20}
+.btn{padding:12px;border-radius:12px;border:none;font-weight:900;cursor:pointer;touch-action:manipulation}
 .card{background:white;margin:10px;padding:12px;border-radius:16px;box-shadow:0 2px 6px #0001;border-left:4px solid #22c55e}
 .badge{background:#15803d;color:white;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:900}
-.u{text-decoration:underline;cursor:pointer;padding:2px 4px;border-radius:6px;background:#f3f4f6}
+.u{text-decoration:underline;cursor:pointer;padding:4px 6px;border-radius:6px;background:#f3f4f6;display:inline-block;margin:2px}
+select,input,button{font-size:16px !important}
 </style>
 </head>
 <body>
@@ -17,7 +18,7 @@
 <div class="header">
 <div style="text-align:center;font-weight:900">GUDANG LABBAIK CHICKEN</div>
 <div id="judul" style="text-align:center;color:#fde047;font-size:13px;margin-top:4px"></div>
-<select id="toko" style="width:100%;padding:12px;border-radius:12px;margin-top:12px;font-weight:bold;color:black">
+<select id="toko" onchange="onTokoGanti()" style="width:100%;padding:14px;border-radius:12px;margin-top:12px;font-weight:bold;color:black;background:white">
 <option value="KATAPANG">KATAPANG</option>
 <option value="ALFATHU">ALFATHU</option>
 <option value="GADING TUTUKA">GADING TUTUKA</option>
@@ -26,12 +27,12 @@
 <option value="SUKAMENAK">SUKAMENAK</option>
 <option value="BOJONG SOANG">BOJONG SOANG</option>
 </select>
-<button onclick="kunciBaru()" style="width:100%;margin-top:8px;background:#facc15;padding:12px;border-radius:12px;font-weight:900;border:none">🔒 KUNCI & BUAT PIN</button>
-<div id="areaKunci" style="display:none;text-align:center;margin-top:8px">
+<button id="btnKunci" onclick="kunciBaru()" style="width:100%;margin-top:10px;background:#facc15;padding:16px;border-radius:12px;font-weight:900;border:none;font-size:16px;position:relative;z-index:30">🔒 KUNCI & BUAT PIN</button>
+<div id="areaKunci" style="display:none;text-align:center;margin-top:10px">
 <span id="labelToko" style="background:white;color:#15803d;padding:6px 12px;border-radius:20px;font-weight:900;font-size:12px"></span><br>
 <span style="font-size:10px;color:#bbf7d0">PIN cuma 1x pas awal masuk</span><br>
-<button onclick="gantiToko()" style="background:none;border:none;color:#fde047;text-decoration:underline;margin-top:6px;font-size:11px">Ganti Toko</button>
-<button onclick="gantiPin()" style="background:none;border:none;color:#fde047;text-decoration:underline;margin-left:10px;font-size:11px">Ganti PIN</button>
+<button onclick="gantiToko()" style="background:none;border:none;color:#fde047;text-decoration:underline;margin-top:6px;font-size:12px;padding:8px">Ganti Toko</button>
+<button onclick="gantiPin()" style="background:none;border:none;color:#fde047;text-decoration:underline;margin-left:10px;font-size:12px;padding:8px">Ganti PIN</button>
 </div>
 <div style="display:flex;gap:6px;margin-top:12px">
 <button onclick="setSO('harian')" id="b-harian" class="btn" style="flex:1;background:#facc15;color:black">HARIAN</button>
@@ -40,25 +41,25 @@
 </div>
 </div>
 
-<div style="padding:12px;background:#fef9c3;display:flex;flex-direction:column;gap:8px">
+<div style="padding:12px;background:#fef9c3;display:flex;flex-direction:column;gap:8px;position:relative;z-index:10">
 <div style="display:flex;gap:6px">
-<input id="namaBaru" placeholder="Nama barang baru" style="flex:1;padding:12px;border-radius:12px;border:1px solid #ccc;font-weight:bold">
-<input id="stokBaru" type="number" placeholder="Awal" style="width:70px;padding:12px;border-radius:12px;border:1px solid #ccc;text-align:center;font-weight:900">
-<select id="satBaru" style="width:70px;padding:12px;border-radius:12px;border:1px solid #ccc;font-weight:900"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option><option>karung</option></select>
+<input id="namaBaru" placeholder="Nama barang baru" style="flex:1;padding:14px;border-radius:12px;border:1px solid #ccc;font-weight:bold">
+<input id="stokBaru" type="number" placeholder="Awal" style="width:70px;padding:14px;border-radius:12px;border:1px solid #ccc;text-align:center;font-weight:900">
+<select id="satBaru" style="width:75px;padding:14px;border-radius:12px;border:1px solid #ccc;font-weight:900"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option><option>karung</option></select>
 <button onclick="tambahBarang()" class="btn" style="background:#15803d;color:white;width:50px;font-size:20px">+</button>
 </div>
 <div style="display:flex;gap:6px">
 <input type="file" id="fileSO" accept=".xlsx,.xls,.csv" style="display:none" onchange="importExcel(event)">
-<button onclick="document.getElementById('fileSO').click()" class="btn" style="flex:1;background:#2563eb;color:white;font-size:13px">📂 IMPORT EXCEL</button>
-<button onclick="downloadTemplate()" class="btn" style="background:white;border:2px solid #2563eb;color:#2563eb;font-size:11px">Template</button>
+<button onclick="document.getElementById('fileSO').click()" class="btn" style="flex:1;background:#2563eb;color:white;font-size:14px">📂 IMPORT EXCEL</button>
+<button onclick="downloadTemplate()" class="btn" style="background:white;border:2px solid #2563eb;color:#2563eb;font-size:12px">Template</button>
 </div>
 <div style="display:flex;gap:6px">
-<input id="cari" oninput="load()" placeholder="🔍 Cari barang" style="flex:1;padding:12px;border-radius:12px;border:1px solid #ccc">
-<button onclick="resetHarian()" class="btn" style="background:#facc15;color:black;font-size:11px">🔄 RESET</button>
+<input id="cari" oninput="load()" placeholder="🔍 Cari barang" style="flex:1;padding:14px;border-radius:12px;border:1px solid #ccc">
+<button onclick="resetHarian()" class="btn" style="background:#facc15;color:black;font-size:12px">🔄 RESET</button>
 </div>
 </div>
 
-<div id="list" style="padding:12px">Pilih toko dulu...</div>
+<div id="list" style="padding:12px;min-height:300px">Pilih toko dulu...</div>
 </div>
 
 <script>
@@ -74,6 +75,13 @@ function setPin(t,p){localStorage.setItem('pin_'+t,p);}
 function sudahLogin(t){return localStorage.getItem('login_'+t)==='1';}
 function setSudahLogin(t){localStorage.setItem('login_'+t,'1');}
 
+function onTokoGanti(){
+ let v=document.getElementById('toko').value;
+ // preview aja, belum simpen permanen sampai kunci
+ document.getElementById('judul').innerText=v+' - Pencet KUNCI & BUAT PIN';
+ document.getElementById('list').innerHTML='<div class=card style=text-align:center><b>Toko: '+v+'</b><br><br><button onclick="kunciBaru()" class=btn style=background:#facc15;color:black;width:100%;padding:16px>🔒 KUNCI & BUAT PIN UNTUK '+v+'</button></div>';
+}
+
 function setSO(s){so=s;localStorage.setItem('so_type',s);
 document.getElementById('b-harian').style.background=s=='harian'?'#facc15':'#ffffff33';
 document.getElementById('b-harian').style.color=s=='harian'?'black':'white';
@@ -87,56 +95,49 @@ if(toko && login) load();
 
 function init(){
 setSO(so);
-if(!toko){document.getElementById('judul').innerText='PILIH TOKO DULU'; document.getElementById('list').innerHTML='Pilih toko di atas ☝️'; return;}
-document.getElementById('toko').value=toko;
-let pin=getPin(toko);
-if(!pin){document.getElementById('judul').innerText=toko+' BELUM ADA PIN'; document.getElementById('list').innerHTML='<div class=card>⚠️ Belum ada PIN!<br><button onclick=kunciBaru() class=btn style=background:#15803d;color:white;width:100%>Bikin PIN</button></div>'; return;}
-if(!sudahLogin(toko)){
-document.getElementById('judul').innerText=toko+' - MASUKAN PIN SEKALI AJA!';
-document.getElementById('areaKunci').style.display='block';
-document.getElementById('labelToko').innerText=toko+' BELUM LOGIN';
-document.getElementById('list').innerHTML='<div class=card style=text-align:center><b>🔒 Masukkan PIN sekali aja!</b><br><br><button onclick=mintaPin() class=btn style=background:#15803d;color:white;width:100%;padding:16px>🔓 MASUKAN PIN</button></div>';
-setTimeout(mintaPin,300); return;
+if(toko){
+ document.getElementById('toko').value=toko;
+ let pin=getPin(toko);
+ if(!pin){
+   document.getElementById('judul').innerText=toko+' BELUM ADA PIN';
+   document.getElementById('areaKunci').style.display='block';
+   document.getElementById('labelToko').innerText=toko+' BELUM ADA PIN';
+   document.getElementById('list').innerHTML='<div class=card style=text-align:center>⚠️ Toko '+toko+' belum ada PIN!<br><br><button onclick="kunciBaru()" class=btn style=background:#15803d;color:white;width:100%;padding:16px>🔒 BIKIN PIN SEKARANG</button></div>';
+   return;
+ }
+ if(!sudahLogin(toko)){
+   document.getElementById('judul').innerText=toko+' - MASUKAN PIN SEKALI AJA!';
+   document.getElementById('areaKunci').style.display='block';
+   document.getElementById('labelToko').innerText=toko+' BELUM LOGIN';
+   document.getElementById('list').innerHTML='<div class=card style=text-align:center><b>🔒 Masukkan PIN sekali aja!</b><br><br><button onclick="mintaPin()" class=btn style=background:#15803d;color:white;width:100%;padding:16px>🔓 MASUKAN PIN</button></div>';
+   setTimeout(mintaPin,300); return;
+ }
+ login=true;
+ document.getElementById('areaKunci').style.display='block';
+ document.getElementById('labelToko').innerText=toko+' | '+so.toUpperCase()+' 🔓';
+ document.getElementById('judul').innerText=toko+' | SO '+so.toUpperCase();
+ load();
+} else {
+ // BELUM ADA TOKO DISIMPEN - AUTO PILIH YANG DI DROPDOWN
+ let def=document.getElementById('toko').value||'KATAPANG';
+ document.getElementById('judul').innerText='PILIH TOKO & KUNCI PIN';
+ document.getElementById('list').innerHTML='<div class=card style=text-align:center>Pilih toko di atas, terus pencet<br><b>KUNCI & BUAT PIN</b><br><br>Contoh: KATAPANG -> Kunci -> Bikin PIN 1234</div>';
 }
-login=true;
-document.getElementById('areaKunci').style.display='block';
-document.getElementById('labelToko').innerText=toko+' | '+so.toUpperCase()+' 🔓';
-document.getElementById('judul').innerText=toko+' | SO '+so.toUpperCase();
-load();
 }
 function mintaPin(){let p=prompt('PIN '+toko+' (Master: 9999)'); if(p===null) return; if(p===getPin(toko)||p===MASTER){setSudahLogin(toko); login=true; init();}else alert('PIN Salah!');}
 function kunciBaru(){
-let t=document.getElementById('toko').value; let lama=getPin(t);
-if(lama){let cek=prompt('PIN lama '+t+':'); if(cek!==lama&&cek!==MASTER) return alert('Salah!'); localStorage.setItem('toko_labbaik',t); localStorage.removeItem('login_'+t); toko=t; init(); return;}
-let p1=prompt('Bikin PIN baru '+t+' (4 digit):'); if(!p1||p1.length<4) return alert('Min 4!'); let p2=prompt('Ulangi:'); if(p1!==p2) return alert('Gak sama!'); setPin(t,p1); localStorage.setItem('toko_labbaik',t); setSudahLogin(t); toko=t; login=true; alert('PIN jadi '+p1); init();
+let t=document.getElementById('toko').value; 
+if(!t) t='KATAPANG';
+let lama=getPin(t);
+if(lama){
+ let cek=prompt('PIN lama '+t+' (untuk kunci):'); 
+ if(cek!==lama&&cek!==MASTER) return alert('PIN Salah!'); 
+ localStorage.setItem('toko_labbaik',t); 
+ localStorage.removeItem('login_'+t); 
+ toko=t; 
+ init(); 
+ return;
 }
-function gantiToko(){let p=prompt('PIN untuk ganti toko:'); if(p!==getPin(toko)&&p!==MASTER) return alert('Salah!'); localStorage.removeItem('login_'+toko); localStorage.removeItem('toko_labbaik'); toko=null; login=false; document.getElementById('areaKunci').style.display='none'; init();}
-function gantiPin(){let a=prompt('PIN lama:'); if(a!==getPin(toko)&&a!==MASTER) return alert('Salah!'); let b=prompt('PIN baru:'); if(!b||b.length<4) return alert('Min 4!'); let c=prompt('Ulangi:'); if(b!==c) return alert('Gak sama!'); setPin(toko,b); alert('PIN jadi '+b);}
-
-function getStatus(sisa,sat,nama){
-sat=(sat||'pcs').toLowerCase(); nama=(nama||'').toLowerCase();
-// KHUSUS AYAM POTONGAN KECIL & BESAR - KRISIS DI 300 PCS
-if(nama.includes('potongan kecil') || nama.includes('potong kecil') || nama.includes('potongan besar') || nama.includes('potong besar')){
-  if(sisa<=300) return '🚨 KRISIS';
-  if(sisa<=450) return '⚠️ MENIPIS';
-  return '✅ Aman';
+let p1=prompt('Bikin PIN baru untuk '+t+' (4 digit):'); if(!p1||p1.length<4) return alert('Minimal 4 digit!'); let p2=prompt('Ulangi PIN '+t+':'); if(p1!==p2) return alert('PIN gak sama!'); setPin(t,p1); localStorage.setItem('toko_labbaik',t); setSudahLogin(t); toko=t; login=true; alert('PIN '+t+' jadi: '+p1+'\nSudah otomatis login, refresh gak minta PIN lagi!'); init();
 }
-// SELEBIHNYA TETAP SAMA - JANGAN DIUBAH
-if(sat==='pcs'||sat==='ekor'){
-  if(sisa<=10)return'🚨 KRISIS'; 
-  if(sisa<=25)return'⚠️ MENIPIS'; 
-  if(sisa>=100)return'📦 OVER'; 
-  return'✅ Aman';
-}else if(sat==='kg'){
-  if(sisa<=5)return'🚨 KRISIS'; 
-  if(sisa<=10)return'⚠️ MENIPIS'; 
-  if(sisa>=50)return'📦 OVER'; 
-  return'✅ Aman';
-}else{
-  if(sisa<=1000)return'🚨 KRISIS'; 
-  if(sisa<=3000)return'⚠️ MENIPIS'; 
-  return'✅ Aman';
-}}
-
-async function load(){
-if(!toko||!login) return; document.getElementById('list').innerHTML
+function gantiToko(){let p=prompt('PIN untuk ganti toko:'); if(p!==getPin(toko)&&p!==MASTER) return alert('Salah!'); localStorage.removeItem('login
