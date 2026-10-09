@@ -8,41 +8,36 @@ html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 .header{padding:12px;background:#15803d;color:white;text-align:center}
 .card{border:1px solid #ddd;margin:8px;padding:12px;border-radius:14px;border-left:5px solid #22c55e;background:white}
 .u{padding:5px 8px;border-radius:8px;border:1px dashed #aaa;font-weight:bold;display:inline-block;margin:2px;font-size:12px;cursor:pointer}
-.tombol{padding:13px;border-radius:10px;font-weight:900;text-align:center;border:none;width:100%;box-sizing:border-box;font-size:13px;display:block;cursor:pointer}
-.loginBox{background:#f0fdf4;border:2px solid #15803d;margin:10px;padding:12px;border-radius:12px;text-align:center}
-.inp{width:100%;padding:12px;border-radius:8px;border:2px solid #15803d;font-weight:700;font-size:14px;box-sizing:border-box;margin:5px 0;text-align:center}
+.tombol{padding:14px;border-radius:10px;font-weight:900;text-align:center;border:none;width:100%;box-sizing:border-box;font-size:14px;display:block;cursor:pointer}
+.loginBox{background:#f0fdf4;border:2px solid #15803d;margin:10px;padding:14px;border-radius:12px;text-align:center}
+.inp{width:100%;padding:13px;border-radius:10px;border:2px solid #15803d;font-weight:700;font-size:15px;box-sizing:border-box;margin:6px 0;text-align:center}
 </style>
 </head>
 <body>
 <div class="box">
 <div class="header">
 <b>GUDANG LABBAIK CHICKEN</b><br>
-<span id="judul" style="color:#bbf7d0;font-weight:900;font-size:17px">KATAPANG</span><br>
-<select id="toko" onchange="pindah(this.value)" style="width:100%;padding:13px;border-radius:10px;margin-top:8px;font-weight:bold">
+<span id="judul" style="color:#bbf7d0;font-weight:900;font-size:18px">KATAPANG</span><br>
+<select id="toko" onchange="gantiToko(this.value)" style="width:100%;padding:13px;border-radius:10px;margin-top:8px;font-weight:bold;font-size:15px">
 <option value="KATAPANG">KATAPANG</option><option value="ALFATHU">ALFATHU</option><option value="GADING TUTUKA">GADING TUTUKA</option><option value="CIWIDEY">CIWIDEY</option><option value="BALEENDAH">BALEENDAH</option><option value="SUKAMENAK">SUKAMENAK</option><option value="BOJONG SOANG">BOJONG SOANG</option><option value="MARGAASIH">MARGAASIH</option>
 </select>
 </div>
 
-<!-- LOGIN BOX - DI ATAS, GAK NUTUPIN -->
 <div id="loginArea" class="loginBox">
-<b>🔐 LOGIN EMAIL</b><br>
-<div style="font-size:11px;color:#555;margin:4px 0">Masukin email dulu baru bisa lihat stok</div>
-<input id="emailInput" type="email" class="inp" placeholder="ikbalchandria@gmail.com">
+<b>🔐 LOGIN <span id="namaTokoLogin">KATAPANG</span></b>
+<div style="font-size:12px;color:#555;margin:6px 0">Masukkan email toko <b id="tokoEmailLabel">KATAPANG</b></div>
+<input id="emailInput" type="email" class="inp" placeholder="email toko">
+<button onclick="login()" style="width:100%;background:#15803d;color:white;padding:14px;border-radius:10px;border:none;font-weight:900;font-size:16px;margin-top:8px">🔐 LOG IN</button>
 <div style="display:flex;gap:6px;margin-top:8px">
-<button id="btnStaff" onclick="loginStaff()" style="flex:1;background:#facc15;color:black;padding:12px;border-radius:8px;border:none;font-weight:900;font-size:12px">👷 STAFF<br><span style="font-size:9px">Langsung Masuk</span></button>
-<button id="btnOwner" onclick="kirimOTP()" style="flex:1;background:#15803d;color:white;padding:12px;border-radius:8px;border:none;font-weight:900;font-size:12px">👑 OWNER<br><span style="font-size:9px">Verifikasi Email</span></button>
+<button onclick="simpanEmailToko()" style="flex:1;background:#facc15;color:black;padding:9px;border-radius:8px;border:none;font-weight:900;font-size:10px">💾 SIMPAN EMAIL TOKO INI</button>
+<button onclick="editDaftarEmail()" style="flex:1;background:#eee;padding:9px;border-radius:8px;border:none;font-size:10px">📋 LIHAT EMAIL SEMUA TOKO</button>
 </div>
-<div id="otpArea" style="display:none;margin-top:10px">
-<div style="font-size:11px">Kode dikirim ke <b id="emailTampil"></b>, cek Gmail</div>
-<input id="otpInput" class="inp" placeholder="123456" maxlength="6" style="letter-spacing:5px;font-size:18px">
-<button onclick="verifOTP()" style="width:100%;background:#2563eb;color:white;padding:12px;border-radius:8px;border:none;font-weight:900;margin-top:6px">✅ VERIFIKASI KODE</button>
-<button onclick="document.getElementById('otpArea').style.display='none'" style="width:100%;background:#eee;padding:8px;border-radius:8px;border:none;font-size:11px;margin-top:6px">Batal / Ganti ke Staff</button>
-</div>
-<div id="msgLogin" style="font-size:11px;color:red;margin-top:6px"></div>
+<div id="msgLogin" style="font-size:11px;color:#15803d;margin-top:8px"></div>
+<div id="daftarEmail" style="display:none;text-align:left;background:white;padding:10px;border-radius:8px;margin-top:10px;font-size:11px;border:1px solid #ddd"></div>
 </div>
 
-<div id="userInfo" style="display:none;background:#dcfce7;padding:8px;text-align:center;font-size:11px;font-weight:900">
-<span id="infoUser"></span> <button onclick="logout()" style="background:#fee2e2;border:none;padding:4px 8px;border-radius:6px;font-size:10px;margin-left:8px">🚪 Logout</button>
+<div id="userInfo" style="display:none;background:#dcfce7;padding:9px;text-align:center;font-size:11px;font-weight:900">
+<span id="infoUser"></span> <button onclick="logout()" style="background:#fee2e2;border:none;padding:5px 10px;border-radius:6px;font-size:11px;margin-left:8px">🚪 Logout</button>
 </div>
 
 <div id="mainArea" style="display:none">
@@ -59,67 +54,78 @@ html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
 var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
 var H={"apikey":KEY,"Authorization":"Bearer "+KEY};
-var URL_AUTH="https://lgunwtgwlzggfmfjzxqm.supabase.co/auth/v1";
-var toko="KATAPANG"; var emailLogin="";
+var toko="KATAPANG";
 
-function pindah(v){ toko=v; document.getElementById('judul').innerText=v; try{localStorage.setItem('toko_labbaik',v);}catch(e){} load(); }
+var defaultEmails={
+ "KATAPANG":"katapang@labbaikchicken.com",
+ "ALFATHU":"alfathu@labbaikchicken.com",
+ "GADING TUTUKA":"gadingtutuka@labbaikchicken.com",
+ "CIWIDEY":"ciwidey@labbaikchicken.com",
+ "BALEENDAH":"baleendah@labbaikchicken.com",
+ "SUKAMENAK":"sukamenak@labbaikchicken.com",
+ "BOJONG SOANG":"bojongsoang@labbaikchicken.com",
+ "MARGAASIH":"margaasih@labbaikchicken.com"
+};
+
+function getEmailToko(t){ try{ var s=JSON.parse(localStorage.getItem('emails_toko')||'{}'); if(s[t]) return s[t]; }catch(e){} return defaultEmails[t]||''; }
+function simpanEmailToko(){
+ var email=document.getElementById('emailInput').value.trim();
+ if(!email||email.indexOf('@')==-1){alert('Email harus ada @');return;}
+ try{ var s=JSON.parse(localStorage.getItem('emails_toko')||'{}'); s[toko]=email; localStorage.setItem('emails_toko',JSON.stringify(s)); alert('Email '+toko+' disimpan: '+email); document.getElementById('msgLogin').innerText='✅ Email '+toko+' = '+email; }catch(e){}
+}
+function editDaftarEmail(){
+ var s={}; try{s=JSON.parse(localStorage.getItem('emails_toko')||'{}');}catch(e){}
+ var html='<b>📋 EMAIL PER TOKO:</b><br><br>';
+ for(var k in defaultEmails){ var em=getEmailToko(k); html+=k+': <b>'+em+'</b><br>'; }
+ html+='<br><button onclick="document.getElementById(\'daftarEmail\').style.display=\'none\'" style="background:#15803d;color:white;border:none;padding:6px 12px;border-radius:6px">Tutup</button> <button onclick="if(confirm(\'Reset semua?\')){localStorage.removeItem(\'emails_toko\'); location.reload();}" style="background:#fee2e2;border:none;padding:6px 10px;border-radius:6px">Reset</button>';
+ document.getElementById('daftarEmail').innerHTML=html;
+ document.getElementById('daftarEmail').style.display='block';
+}
+
+function gantiToko(v){
+ toko=v;
+ document.getElementById('judul').innerText=v;
+ document.getElementById('namaTokoLogin').innerText=v;
+ document.getElementById('tokoEmailLabel').innerText=v;
+ document.getElementById('emailInput').value=getEmailToko(v);
+ document.getElementById('msgLogin').innerText='Email '+v+' = '+getEmailToko(v);
+ try{ localStorage.setItem('toko_labbaik',v); }catch(e){}
+ if(checkLogin()) load();
+}
 
 function checkLogin(){
  try{
   var em=localStorage.getItem('email_labbaik');
-  if(em){
-   emailLogin=em;
+  var tk=localStorage.getItem('toko_login');
+  if(em && tk===toko){
    document.getElementById('loginArea').style.display='none';
    document.getElementById('userInfo').style.display='block';
    document.getElementById('mainArea').style.display='block';
-   document.getElementById('infoUser').innerText=em+' | '+toko+' | LOGIN OK ✅';
+   document.getElementById('infoUser').innerText=em+' | '+toko+' | LOGIN';
    return true;
   }
  }catch(e){}
  document.getElementById('loginArea').style.display='block';
  document.getElementById('userInfo').style.display='none';
  document.getElementById('mainArea').style.display='none';
+ document.getElementById('emailInput').value=getEmailToko(toko);
+ document.getElementById('namaTokoLogin').innerText=toko;
+ document.getElementById('tokoEmailLabel').innerText=toko;
+ document.getElementById('msgLogin').innerText='Login untuk '+toko+' - '+getEmailToko(toko);
  return false;
 }
 
-function loginStaff(){
+function login(){
  var email=document.getElementById('emailInput').value.trim();
- if(!email || email.indexOf('@')==-1){ document.getElementById('msgLogin').innerText='Email harus ada @'; return; }
- try{ localStorage.setItem('email_labbaik',email); localStorage.setItem('login_mode','staff'); }catch(e){}
- emailLogin=email;
+ if(!email||email.indexOf('@')==-1){ alert('Email harus ada @ contoh: katapang@gmail.com'); return; }
+ try{ localStorage.setItem('email_labbaik',email); localStorage.setItem('toko_login',toko); }catch(e){}
  document.getElementById('loginArea').style.display='none';
  document.getElementById('userInfo').style.display='block';
  document.getElementById('mainArea').style.display='block';
- document.getElementById('infoUser').innerText=email+' | '+toko+' | STAFF';
+ document.getElementById('infoUser').innerText=email+' | '+toko+' | LOGIN OK';
  load();
 }
-function kirimOTP(){
- var email=document.getElementById('emailInput').value.trim();
- if(!email || email.indexOf('@')==-1){ document.getElementById('msgLogin').innerText='Email harus ada @'; return; }
- document.getElementById('btnOwner').innerText='⏳ Mengirim...';
- fetch(URL_AUTH+'/otp',{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({email:email,options:{shouldCreateUser:true}})}).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})}).then(function(res){
-  document.getElementById('btnOwner').innerHTML='👑 OWNER<br><span style="font-size:9px">Verifikasi Email</span>';
-  if(!res.ok){ document.getElementById('msgLogin').innerText='Gagal kirim: '+(res.j.error_description||res.j.msg||JSON.stringify(res.j))+' | Pakai Staff dulu ya'; return; }
-  emailLogin=email;
-  document.getElementById('emailTampil').innerText=email;
-  document.getElementById('otpArea').style.display='block';
-  document.getElementById('msgLogin').innerText='Kode dikirim! Cek Gmail / Spam';
- }).catch(function(e){ document.getElementById('btnOwner').innerHTML='👑 OWNER<br><span style="font-size:9px">Verifikasi Email</span>'; document.getElementById('msgLogin').innerText='Error: '+e.message; });
-}
-function verifOTP(){
- var otp=document.getElementById('otpInput').value.trim();
- if(otp.length<6){ document.getElementById('msgLogin').innerText='Kode 6 digit'; return; }
- fetch(URL_AUTH+'/verify',{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({email:emailLogin,token:otp,type:'email'})}).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})}).then(function(res){
-  if(!res.ok){ document.getElementById('msgLogin').innerText='Kode salah/expired'; return; }
-  try{ localStorage.setItem('email_labbaik',emailLogin); localStorage.setItem('sb_session',JSON.stringify(res.j)); localStorage.setItem('login_mode','owner'); }catch(e){}
-  document.getElementById('loginArea').style.display='none';
-  document.getElementById('userInfo').style.display='block';
-  document.getElementById('mainArea').style.display='block';
-  document.getElementById('infoUser').innerText=emailLogin+' | '+toko+' | OWNER ✅';
-  load();
- });
-}
-function logout(){ try{ localStorage.removeItem('email_labbaik'); localStorage.removeItem('sb_session'); }catch(e){} checkLogin(); }
+function logout(){ try{ localStorage.removeItem('email_labbaik'); localStorage.removeItem('toko_login'); }catch(e){} checkLogin(); }
 
 function setStatus(sisa,sat,nama){
  sat=(sat||'pcs').toLowerCase(); nama=(nama||'').toLowerCase();
@@ -128,7 +134,6 @@ function setStatus(sisa,sat,nama){
  else if(sat==='kg'){ if(sisa<=5)return'🚨 KRISIS'; if(sisa<=10)return'⚠️ MENIPIS'; if(sisa>=50)return'📦 OVER'; return'✅ Aman';}
  else{ if(sisa<=1000)return'🚨 KRISIS'; if(sisa<=3000)return'⚠️ MENIPIS'; return'✅ Aman';}
 }
-
 function load(){
  if(!checkLogin()) return;
  document.getElementById('list').innerHTML='⏳ Loading '+toko+'...';
@@ -142,25 +147,6 @@ function load(){
   }
   if(h==='') h='<div class=card><b>Belum ada barang di '+toko+'</b><br>Pencet 📂 IMPORT EXCEL</div>';
   document.getElementById('list').innerHTML=h;
- }).catch(function(e){ document.getElementById('list').innerHTML='Gagal load: '+e.message+'<br><button class=tombol onclick=load() style=background:#15803d;color:white>Coba Lagi</button>'; });
+ });
 }
-
-function editAwal(id,now){ var v=prompt('EDIT SALDO AWAL\nSekarang: '+now+'\nIsi baru:'); if(v===null) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({stok:parseFloat(v)||0})}).then(function(){load();}); }
-function editMasuk(id,now){ var v=prompt('EDIT MASUK\nSekarang: '+now); if(v===null) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:parseFloat(v)||0})}).then(function(){load();}); }
-function editPakai(id,now){ var v=prompt('EDIT KELUAR\nSekarang: '+now); if(v===null) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:parseFloat(v)||0})}).then(function(){load();}); }
-function editSat(id,now){ var v=prompt('Satuan (pcs/kg/gr/ekor):',now); if(!v) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({satuan:v.toLowerCase()})}).then(function(){load();}); }
-function addMasuk(id,now){ var v=prompt('Tambah Masuk berapa:'); if(!v) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:(Number(now)||0)+parseFloat(v)})}).then(function(){load();}); }
-function addPakai(id,now){ var v=prompt('Keluar / Pakai berapa:'); if(!v) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:(Number(now)||0)+parseFloat(v)})}).then(function(){load();}); }
-function hapus(id){ if(!confirm('Hapus barang ini?')) return; fetch(URL_API+'?id=eq.'+id,{method:'DELETE',headers:H}).then(function(){load();}); }
-function tambah(){ var n=document.getElementById('namaBaru').value.trim(); var s=parseFloat(document.getElementById('stokBaru').value||0); var sa=document.getElementById('satBaru').value; if(!n){ alert('Isi nama'); return; } fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:n,stok:s,penerimaan:0,terpakai:0,satuan:sa,toko:toko})}).then(function(){document.getElementById('namaBaru').value=''; document.getElementById('stokBaru').value=''; load();});}
-function resetHarian(){ if(!confirm('RESET HARIAN '+toko+'?')) return; fetch(URL_API+'?select=*&toko=eq.'+toko,{headers:H}).then(function(r){return r.json();}).then(function(data){var i=0; function next(){if(i>=data.length){alert('Reset '+data.length+' selesai'); load(); return;} var it=data[i++]; var sisa=(Number(it.stok)||0)+(Number(it.penerimaan)||0)-(Number(it.terpakai)||0); fetch(URL_API+'?id=eq.'+it.id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({stok:sisa,penerimaan:0,terpakai:0})}).then(next);} next();});}
-document.getElementById('fileExcel').addEventListener('change',function(e){
- var file=e.target.files[0]; if(!file) return; var reader=new FileReader(); reader.onload=function(ev){ function proses(buf){ var wb=XLSX.read(new Uint8Array(buf),{type:'array'}); var ws=wb.Sheets[wb.SheetNames[0]]; var rows=XLSX.utils.sheet_to_json(ws,{header:1}); var janji=[]; for(var r=1;r<rows.length;r++){var row=rows[r]; if(!row||!row[0]) continue; var nama=String(row[0]).trim(); var stok=parseFloat(row[1])||0; var sat=String(row[2]||'pcs'); janji.push(fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:nama,stok:stok,penerimaan:0,terpakai:0,satuan:sat,toko:toko})})); } Promise.all(janji).then(function(){alert('Import '+janji.length+' ke '+toko+' selesai'); load();}); } if(typeof XLSX==='undefined'){var s=document.createElement('script'); s.src='https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js'; s.onload=function(){proses(ev.target.result);}; document.head.appendChild(s);} else proses(ev.target.result); }; reader.readAsArrayBuffer(file);
-});
-function exportExcel(){ fetch(URL_API+'?select=*&toko=eq.'+toko,{headers:H}).then(function(r){return r.json();}).then(function(data){ if(data.length===0){alert('Kosong');return;} function go(){var aoa=[['nama_barang','stok','penerimaan','terpakai','sisa','satuan','toko','status']]; for(var i=0;i<data.length;i++){var it=data[i]; var sisa=(Number(it.stok)||0)+(Number(it.penerimaan)||0)-(Number(it.terpakai)||0); var st=setStatus(sisa,it.satuan,it.nama_barang); aoa.push([it.nama_barang,it.stok,it.penerimaan,it.terpakai,sisa,it.satuan,it.toko,st]); } var ws=XLSX.utils.aoa_to_sheet(aoa); var wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Stok_'+toko); XLSX.writeFile(wb,'Stok_'+toko+'.xlsx'); } if(typeof XLSX==='undefined'){var s=document.createElement('script'); s.src='https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js'; s.onload=go; document.head.appendChild(s);} else go(); });}
-try{ var sv=null; try{sv=localStorage.getItem('toko_labbaik');}catch(e){} if(sv){toko=sv; document.getElementById('toko').value=sv; document.getElementById('judul').innerText=sv;} var em=null; try{em=localStorage.getItem('email_labbaik');}catch(e){} if(em){document.getElementById('emailInput').value=em;} }catch(e){}
-checkLogin();
-if(checkLogin()) load();
-</script>
-</body>
-</html>
+function editAwal(id,now){ var v=prompt('EDIT SALDO AWAL\nSekarang: '+now); if(v===null) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',
