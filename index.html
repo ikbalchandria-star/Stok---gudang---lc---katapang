@@ -15,8 +15,8 @@ html,body{margin:0;padding:0;background:#15803d}
 <div class="box">
 <div class="header">
 <b>GUDANG LABBAIK CHICKEN</b><br>
-<small id="judul" style="color:#bbf7d0;font-weight:900;font-size:14px"></small>
-<select id="toko" onchange="localStorage.setItem('toko_labbaik',this.value);init()" style="width:100%;padding:14px;border-radius:12px;margin-top:8px;font-weight:bold">
+<small id="judul" style="color:#bbf7d0;font-weight:900;font-size:14px">KATAPANG</small><br>
+<select id="toko" onchange="gantiTokoSelect()" style="width:100%;padding:14px;border-radius:12px;margin-top:8px;font-weight:bold">
 <option value="KATAPANG">KATAPANG</option>
 <option value="ALFATHU">ALFATHU</option>
 <option value="GADING TUTUKA">GADING TUTUKA</option>
@@ -51,5 +51,94 @@ html,body{margin:0;padding:0;background:#15803d}
 </div>
 
 <script>
-const URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
-const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3
+var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
+var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
+var H={"apikey":KEY,"Authorization":"Bearer "+KEY};
+var MASTER="9999";
+var toko=localStorage.getItem('toko_labbaik')||"KATAPANG";
+
+function getPin(t){return localStorage.getItem('pin_'+t);}
+function setPin(t,p){localStorage.setItem('pin_'+t,p);}
+function sudahLogin(t){return localStorage.getItem('login_'+t)==='1';}
+function gantiTokoSelect(){var v=document.getElementById('toko').value; localStorage.setItem('toko_labbaik',v); toko=v; init();}
+
+function kunciBaru(){
+ var t=document.getElementById('toko').value;
+ var lama=getPin(t);
+ if(lama){var cek=prompt('PIN lama '+t+':'); if(cek!==lama&&cek!==MASTER) return alert('Salah!'); localStorage.setItem('toko_labbaik',t); localStorage.removeItem('login_'+t); toko=t; init(); return;}
+ var p1=prompt('Bikin PIN baru '+t+' (4 digit):'); if(!p1||p1.length<4) return alert('Min 4!'); var p2=prompt('Ulangi PIN:'); if(p1!==p2) return alert('Gak sama!'); setPin(t,p1); localStorage.setItem('toko_labbaik',t); localStorage.setItem('login_'+t,'1'); toko=t; alert('PIN '+t+' jadi '+p1); init();
+}
+function gantiToko(){var p=prompt('PIN untuk ganti toko:'); if(p!==getPin(toko)&&p!==MASTER) return alert('Salah!'); localStorage.removeItem('login_'+toko); localStorage.removeItem('toko_labbaik'); location.reload();}
+function gantiPin(){var a=prompt('PIN lama:'); if(a!==getPin(toko)&&a!==MASTER) return alert('Salah!'); var b=prompt('PIN baru:'); if(!b||b.length<4) return alert('Min 4!'); var c=prompt('Ulangi:'); if(b!==c) return alert('Gak sama!'); setPin(toko,b); alert('PIN jadi '+b);}
+
+function setStatus(sisa,sat,nama){
+ sat=(sat||'pcs').toLowerCase(); nama=(nama||'').toLowerCase();
+ if(nama.indexOf('potongan kecil')>=0||nama.indexOf('potong kecil')>=0||nama.indexOf('potongan besar')>=0||nama.indexOf('potong besar')>=0){
+   if(sisa<=300) return '🚨 KRISIS';
+   if(sisa<=450) return '⚠️ MENIPIS';
+   return '✅ Aman';
+ }
+ if(sat==='pcs'||sat==='ekor'){ if(sisa<=10)return'🚨 KRISIS'; if(sisa<=25)return'⚠️ MENIPIS'; if(sisa>=100)return'📦 OVER'; return'✅ Aman';}
+ else if(sat==='kg'){ if(sisa<=5)return'🚨 KRISIS'; if(sisa<=10)return'⚠️ MENIPIS'; if(sisa>=50)return'📦 OVER'; return'✅ Aman';}
+ else{ if(sisa<=1000)return'🚨 KRISIS'; if(sisa<=3000)return'⚠️ MENIPIS'; return'✅ Aman';}
+}
+
+function init(){
+ var sel=document.getElementById('toko');
+ toko=sel.value;
+ localStorage.setItem('toko_labbaik',toko);
+ document.getElementById('judul').innerText=toko;
+ document.getElementById('toko').value=toko;
+ var pin=getPin(toko);
+ if(!pin){document.getElementById('infoLogin').innerText='Belum ada PIN, pencet KUNCI & BUAT PIN'; document.getElementById('list').innerHTML='<div class=card><b>'+toko+' belum ada PIN</b><br><button type=button onclick=kunciBaru() class=btn style=background:#15803d;color:white;width:100%;margin-top:8px>🔒 Bikin PIN '+toko+'</button></div>'; return;}
+ if(!sudahLogin(toko)){
+   document.getElementById('list').innerHTML='<div class=card style=text-align:center><b>Login '+toko+'</b><br><br><button type=button onclick="masuk()" class=btn style=background:#2563eb;color:white;width:100%>🔓 MASUKAN PIN</button></div>';
+   return;
+ }
+ document.getElementById('infoLogin').innerText=toko+' | LOGIN OK 🔓';
+ load();
+}
+function masuk(){
+ var pin=getPin(toko);
+ var p=prompt('Masukkan PIN '+toko+' (Master 9999):');
+ if(p===pin||p===MASTER){localStorage.setItem('login_'+toko,'1'); init();}
+ else if(p!==null) alert('PIN Salah!');
+}
+
+function load(){
+ document.getElementById('list').innerHTML='⏳ Loading '+toko+'...';
+ var q=document.getElementById('cari').value.toLowerCase();
+ fetch(URL_API+'?select=*&limit=10000&toko=eq.'+toko,{headers:H}).then(function(r){return r.json();}).then(function(data){
+  var fil=[];
+  for(var i=0;i<data.length;i++){if(!q||data[i].nama_barang.toLowerCase().indexOf(q)>=0) fil.push(data[i]);}
+  var h='';
+  for(var i=0;i<fil.length;i++){
+   var it=fil[i];
+   var stok=Number(it.stok)||0; var masuk=Number(it.penerimaan)||0; var pakai=Number(it.terpakai)||0; var sisa=stok+masuk-pakai; var sat=it.satuan||'pcs'; var st=setStatus(sisa,sat,it.nama_barang);
+   h=h+'<div class=card>'+
+   '<div style=display:flex;justify-content:space-between><b>'+it.nama_barang+'</b><span style=background:#15803d;color:white;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:900 onclick="editSat('+it.id+',\''+sat+'\')"> '+sat+' ✏️</span></div>'+
+   '<div style=margin-top:8px;background:#f9fafb;padding:8px;border-radius:10px;font-size:13px;line-height:1.8>'+
+   '<span class=u onclick="editAwal('+it.id+','+stok+')">Awal: '+stok+' ✏️</span>'+
+   '<span class=u style=color:#2563eb onclick="editMasuk('+it.id+','+masuk+')">Masuk: '+masuk+' ✏️</span>'+
+   '<span class=u style=color:#dc2626 onclick="editPakai('+it.id+','+pakai+')">Pakai: '+pakai+' ✏️</span>'+
+   '<div style=font-weight:900;margin-top:4px>SISA: <span style=color:#15803d>'+sisa+'</span> '+sat+' - '+st+'</div></div>'+
+   '<div style=display:flex;gap:6px;margin-top:8px>'+
+   '<button type=button onclick="addMasuk('+it.id+','+masuk+')" class=btn style=flex:1;background:#2563eb;color:white>📥 +Masuk</button>'+
+   '<button type=button onclick="addPakai('+it.id+','+pakai+')" class=btn style=flex:1;background:#dc2626;color:white>📤 +Pakai</button>'+
+   '<button type=button onclick="hapus('+it.id+',\''+it.nama_barang.replace(/'/g," ")+'\')" class=btn style=background:#fee2e2;color:#dc2626;width:40px>✕</button>'+
+   '</div></div>';
+  }
+  if(h==='') h='<div class=card>Belum ada barang di '+toko+'<br>Ketik di atas untuk tambah</div>';
+  document.getElementById('list').innerHTML=h;
+ }).catch(function(e){document.getElementById('list').innerHTML='Gagal: '+e.message+'<br><button type=button onclick=load() class=btn style=background:#15803d;color:white;width:100%>Coba Lagi</button>';});
+}
+
+function editAwal(id,now){var v=prompt('EDIT SALDO AWAL\nSekarang: '+now); if(v===null) return; var n=parseFloat(v); if(isNaN(n)) return alert('Angka!'); fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:H,body:JSON.stringify({stok:n})}).then(function(){load();});}
+function editMasuk(id,now){var v=prompt('EDIT MASUK\nSekarang: '+now); if(v===null) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:H,body:JSON.stringify({penerimaan:parseFloat(v)||0})}).then(function(){load();});}
+function editPakai(id,now){var v=prompt('EDIT PAKAI\nSekarang: '+now); if(v===null) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:H,body:JSON.stringify({terpakai:parseFloat(v)||0})}).then(function(){load();});}
+function editSat(id,now){var v=prompt('Satuan:',now); if(v===null) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:H,body:JSON.stringify({satuan:v.toLowerCase()})}).then(function(){load();});}
+function addMasuk(id,now){var v=prompt('Tambah Masuk:'); if(!v) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:H,body:JSON.stringify({penerimaan:(Number(now)||0)+parseFloat(v)})}).then(function(){load();});}
+function addPakai(id,now){var v=prompt('Pakai berapa:'); if(!v) return; fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:H,body:JSON.stringify({terpakai:(Number(now)||0)+parseFloat(v)})}).then(function(){load();});}
+function tambahBarang(){var n=document.getElementById('namaBaru').value.trim(); var s=parseFloat(document.getElementById('stokBaru').value||0); var sa=document.getElementById('satBaru').value; if(!n) return alert('Isi nama!'); fetch(URL_API,{method:'POST',headers:H,body:JSON.stringify({nama_barang:n,stok:s,penerimaan:0,terpakai:0,satuan:sa,toko:toko})}).then(function(){document.getElementById('namaBaru').value=''; document.getElementById('stokBaru').value=''; load();});}
+function hapus(id,nama){if(!confirm('Hapus '+nama+'?')) return; var p=prompt('PIN hapus:'); if(p!==getPin(toko)&&p!==MASTER) return alert('Salah!'); fetch(URL_API+'?id=eq.'+id,{method:'DELETE',headers:H}).then(function(){load();});}
+function resetHarian(){if(!confirm('RESET HARIAN '+toko+'?')) return; var p=prompt('PIN:'); if(p!==getPin(toko)&&p!==MASTER) return alert('Salah!'); fetch(URL_API+'
