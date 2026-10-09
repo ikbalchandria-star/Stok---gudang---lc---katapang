@@ -8,7 +8,10 @@ html,body{margin:0;padding:0;background:#15803d}
 .header{padding:14px;background:#15803d;color:white;text-align:center}
 .card{border:1px solid #ddd;margin:10px;padding:12px;border-radius:14px;border-left:5px solid #22c55e;background:white}
 .u{background:#f3f4f6;padding:6px 8px;border-radius:8px;border:1px dashed #aaa;font-weight:bold;display:inline-block;margin:2px;font-size:13px}
-.tombol{display:block;width:100%;padding:16px;border-radius:12px;font-weight:900;font-size:14px;text-align:center;margin-top:8px;cursor:pointer;box-sizing:border-box}
+.tombol{display:block;width:100%;padding:16px;border-radius:12px;font-weight:900;font-size:14px;text-align:center;margin-top:8px;cursor:pointer;box-sizing:border-box;border:none}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:999}
+.modalBox{background:white;padding:20px;border-radius:16px;width:90%;max-width:350px;text-align:center}
+.inp{width:100%;padding:14px;border-radius:10px;border:2px solid #15803d;font-weight:900;font-size:18px;text-align:center;box-sizing:border-box;margin:8px 0}
 </style>
 </head>
 <body>
@@ -26,20 +29,20 @@ html,body{margin:0;padding:0;background:#15803d}
 <option value="BOJONG SOANG">BOJONG SOANG</option>
 <option value="MARGAASIH">MARGAASIH</option>
 </select>
-<div class="tombol" onclick="kunciBaru()" style="background:#facc15;color:black">🔒 KUNCI & BUAT PIN - KLIK DISINI</div>
+<div class="tombol" onclick="bukaKunci()" style="background:#facc15;color:black">🔒 KUNCI & BUAT PIN - KLIK DISINI</div>
 <div id="infoLogin" style="margin-top:6px;font-size:11px;color:#fde047">Klik tombol kuning di atas</div>
 </div>
 
 <div style="padding:12px;background:#fef9c3">
-<input id="cari" oninput="load()" placeholder="🔍 Cari barang... Ketik 'Ayam'" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;box-sizing:border-box">
+<input id="cari" oninput="load()" placeholder="🔍 Cari barang..." style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;box-sizing:border-box">
 <div style="display:flex;gap:6px;margin-top:8px">
 <input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none">
 <div class="tombol" onclick="document.getElementById('fileExcel').click()" style="flex:1;background:#2563eb;color:white;font-size:11px;padding:12px">📂 IMPORT EXCEL</div>
 <div class="tombol" onclick="exportExcel()" style="flex:1;background:#16a34a;color:white;font-size:11px;padding:12px">📤 EXPORT EXCEL</div>
 </div>
 <div style="display:flex;gap:6px;margin-top:6px">
-<div class="tombol" onclick="gantiToko()" style="flex:1;background:#eee;color:black;font-size:11px;padding:12px">Ganti Toko</div>
-<div class="tombol" onclick="gantiPin()" style="flex:1;background:#eee;color:black;font-size:11px;padding:12px">Ganti PIN</div>
+<div class="tombol" onclick="bukaGantiToko()" style="flex:1;background:#eee;color:black;font-size:11px;padding:12px">Ganti Toko</div>
+<div class="tombol" onclick="bukaGantiPin()" style="flex:1;background:#eee;color:black;font-size:11px;padding:12px">Ganti PIN</div>
 <div class="tombol" onclick="resetHarian()" style="flex:1;background:#facc15;color:black;font-size:11px;padding:12px">🔄 RESET</div>
 </div>
 <div style="margin-top:8px;display:flex;gap:6px">
@@ -53,6 +56,20 @@ html,body{margin:0;padding:0;background:#15803d}
 <div id="list" style="padding:8px;background:#f0f0f0;min-height:400px">Klik KUNCI & BUAT PIN dulu...</div>
 </div>
 
+<!-- MODAL PIN -->
+<div id="modal" class="modal" onclick="if(event.target==this) tutupModal()">
+<div class="modalBox">
+<b id="modalTitle">BUAT PIN</b><br><small id="modalDesc">Masukkan PIN</small>
+<input id="pin1" type="password" class="inp" placeholder="PIN 4 digit" maxlength="6">
+<input id="pin2" type="text" class="inp" placeholder="Ulangi PIN (buat baru)" style="display:none">
+<div style="display:flex;gap:8px;margin-top:10px">
+<div class="tombol" onclick="tutupModal()" style="flex:1;background:#eee;color:black">Batal</div>
+<div class="tombol" onclick="prosesModal()" style="flex:1;background:#15803d;color:white">OK</div>
+</div>
+<div style="margin-top:8px;font-size:10px;color:#666">Master PIN: 9999 bisa buat buka semua toko</div>
+</div>
+</div>
+
 <script>
 var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
 var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
@@ -60,12 +77,9 @@ var H={"apikey":KEY,"Authorization":"Bearer "+KEY};
 var MASTER="9999";
 var toko="KATAPANG";
 var pinMemory={};
+var modeModal="";
 
 function safeGet(t){ try{ var v=localStorage.getItem('pin_'+t); if(v) pinMemory[t]=v; return pinMemory[t]||v; }catch(e){ return pinMemory[t]||null; } }
 function safeSet(t,p){ pinMemory[t]=p; try{ localStorage.setItem('pin_'+t,p); localStorage.setItem('toko_labbaik',t); localStorage.setItem('login_'+t,'1'); }catch(e){} }
 function safeLogin(t){ try{ return localStorage.getItem('login_'+t)==='1' || pinMemory['login_'+t]==='1'; }catch(e){ return pinMemory['login_'+t]==='1'; } }
 function safeSetLogin(t){ pinMemory['login_'+t]='1'; try{ localStorage.setItem('login_'+t,'1'); }catch(e){} }
-
-try{ var saved=null; try{saved=localStorage.getItem('toko_labbaik');}catch(e){} if(saved) toko=saved; document.getElementById('toko').value=toko; document.getElementById('judul').innerText=toko; }catch(e){}
-
-function gantiTokoSelect(){ var v=document.getElementById
