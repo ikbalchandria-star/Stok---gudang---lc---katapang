@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GUDANG LABBAIK V41</title>
+<title>GUDANG LABBAIK V42</title>
 <style>
 html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 .box{max-width:480px;margin:0 auto;background:white;min-height:100vh}
@@ -20,20 +20,13 @@ html,body{margin:0;padding:0;background:#15803d;font-family:sans-serif}
 </div>
 
 <div id="loginArea" style="padding:14px;background:#f0fdf4;text-align:center">
-<b>🔐 V41 FIX KLIK APK - PAKAI FORM</b><br>
-<span id="infoToko" style="font-size:11px;color:#555">PIN beda tiap toko - Kepala toko gak bisa buka toko lain</span>
-
+<b>🔐 V42 - REFRESH TETAP LOGIN</b><br>
+<span id="infoToko" style="font-size:11px;color:#555">PIN per toko - Kepala toko gak bisa buka toko lain</span>
 <form id="formLogin" onsubmit="doLogin(); return false;" action="javascript:void(0)" style="margin-top:8px">
-<input id="pinInput" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Ketik PIN 6 digit lalu pencet GO" style="width:100%;padding:18px;border-radius:12px;border:3px solid #15803d;font-weight:900;font-size:22px;text-align:center;letter-spacing:8px;box-sizing:border-box" oninput="cek()">
-<input type="submit" value="🔓 LOGIN - TAP ATAU PENCET GO DI KEYBOARD" style="width:100%;padding:18px;background:#15803d;color:white;font-weight:900;font-size:16px;border-radius:12px;border:none;margin-top:10px">
+<input id="pinInput" type="tel" inputmode="numeric" maxlength="6" placeholder="PIN 6 digit" style="width:100%;padding:18px;border-radius:12px;border:3px solid #15803d;font-weight:900;font-size:22px;text-align:center;letter-spacing:8px;box-sizing:border-box" oninput="cek()">
+<input type="submit" value="🔓 LOGIN" style="width:100%;padding:18px;background:#15803d;color:white;font-weight:900;font-size:18px;border-radius:12px;border:none;margin-top:10px">
 </form>
-
-<div style="margin-top:8px;display:flex;gap:6px">
-<a href="javascript:doLogin()" style="flex:1;padding:14px;background:#0f5d2b;color:white;font-weight:900;border-radius:10px;text-align:center;text-decoration:none">LINK LOGIN 1</a>
-<a href="javascript:doLogin()" style="flex:1;padding:14px;background:#f59e0b;color:black;font-weight:900;border-radius:10px;text-align:center;text-decoration:none">LINK LOGIN 2</a>
-</div>
-
-<div id="status" style="font-size:11px;font-weight:700;color:#15803d;margin-top:8px">Ketik PIN KATAPANG 111111 - auto masuk</div>
+<div id="status" style="font-size:11px;font-weight:700;color:#15803d;margin-top:6px">Ketik PIN toko</div>
 <div style="margin-top:8px;background:white;padding:8px;border-radius:8px;border:1px dashed #aaa;text-align:left;font-size:10px">
 KATAPANG 111111 | ALFATHU 222222 | GADING 333333 | CIWIDEY 444444<br>BALEENDAH 555555 | SUKAMENAK 666666 | BOJONG 777777 | MARGAASIH 888888 | MASTER 999999
 </div>
@@ -46,7 +39,7 @@ KATAPANG 111111 | ALFATHU 222222 | GADING 333333 | CIWIDEY 444444<br>BALEENDAH 5
 <div id="mainArea" style="display:none">
 <div style="padding:10px;background:#fef9c3">
 <div style="display:flex;gap:6px"><input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none"><div onclick="document.getElementById('fileExcel').click()" style="flex:1;padding:13px;background:#2563eb;color:white;border-radius:10px;font-weight:900;text-align:center">📂 IMPORT</div><div onclick="exportExcel()" style="flex:1;padding:13px;background:#16a34a;color:white;border-radius:10px;font-weight:900;text-align:center">📤 EXPORT</div></div>
-<div style="display:flex;gap:6px;margin-top:6px"><input id="namaBaru" placeholder="Nama barang baru" style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:bold"><input id="stokBaru" type="number" placeholder="Awal" style="width:65px;padding:11px;border-radius:10px;border:1px solid #ccc;text-align:center;font-weight:900"><select id="satBaru" style="width:70px;padding:11px;border-radius:10px;border:1px solid #ccc"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option></select><div onclick="tambah()" style="background:#15803d;color:white;padding:11px;border-radius:10px;width:55px;font-weight:900;text-align:center">+</div></div>
+<div style="display:flex;gap:6px;margin-top:6px"><input id="namaBaru" placeholder="Nama barang" style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc;font-weight:bold"><input id="stokBaru" type="number" placeholder="Awal" style="width:65px;padding:11px;border-radius:10px;border:1px solid #ccc;text-align:center;font-weight:900"><select id="satBaru" style="width:70px;padding:11px;border-radius:10px;border:1px solid #ccc"><option>gr</option><option>kg</option><option selected>pcs</option><option>ekor</option></select><div onclick="tambah()" style="background:#15803d;color:white;padding:11px;border-radius:10px;width:55px;font-weight:900;text-align:center">+</div></div>
 <div style="display:flex;gap:6px;margin-top:6px"><input id="cari" oninput="load()" placeholder="🔍 Cari..." style="flex:1;padding:11px;border-radius:10px;border:1px solid #ccc"><div onclick="resetHarian()" style="background:#facc15;padding:11px;border-radius:10px;width:85px;font-size:11px;font-weight:900;text-align:center">🔄 RESET</div></div>
 </div>
 <div id="list" style="padding:6px;background:#f0f0f0;min-height:400px">Loading...</div>
@@ -54,32 +47,59 @@ KATAPANG 111111 | ALFATHU 222222 | GADING 333333 | CIWIDEY 444444<br>BALEENDAH 5
 </div>
 
 <script>
+// COOKIE biar refresh tetap login - work di APK yang block localStorage
+function setCookie(n,v){ try{ var d=new Date(); d.setTime(d.getTime()+7*24*60*60*1000); document.cookie=n+"="+v+";expires="+d.toUTCString()+";path=/"; }catch(e){} try{ localStorage.setItem(n,v); }catch(e){} window.name=window.name+";"+n+"="+v; }
+function getCookie(n){ try{ var m=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)')); if(m) return m[2]; }catch(e){} try{ var v=localStorage.getItem(n); if(v) return v; }catch(e){} try{ var parts=window.name.split(';'); for(var i=0;i<parts.length;i++){ var p=parts[i].split('='); if(p[0]===n) return p[1]; } }catch(e){} return null; }
+function delCookie(n){ try{ document.cookie=n+"=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/"; }catch(e){} try{ localStorage.removeItem(n); }catch(e){} }
+
 var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
 var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
 var H={"apikey":KEY,"Authorization":"Bearer "+KEY};
 var toko="KATAPANG";
 var PIN_MASTER="999999";
 var defaultPins={"KATAPANG":"111111","ALFATHU":"222222","GADING TUTUKA":"333333","CIWIDEY":"444444","BALEENDAH":"555555","SUKAMENAK":"666666","BOJONG SOANG":"777777","MARGAASIH":"888888"};
+
 function gantiToko(){ var s=document.getElementById('toko'); toko=s.value; document.getElementById('judul').innerText=toko; document.getElementById('infoToko').innerText='PIN '+toko+' = '+defaultPins[toko]; document.getElementById('status').innerText='Ketik PIN '+toko; document.getElementById('pinInput').value=''; }
+
 window.doLogin=function(){
   var el=document.getElementById('pinInput');
   var pin=el.value.replace(/[^0-9]/g,'').substring(0,6);
-  if(pin.length<6){ document.getElementById('status').innerText='PIN harus 6 digit, baru '+pin.length; return false; }
+  if(pin.length<6){ document.getElementById('status').innerText='PIN harus 6 digit!'; return false; }
   var benar=defaultPins[toko];
   if(pin===benar || pin===PIN_MASTER){
+    setCookie('toko_login',toko);
+    setCookie('verif_ok','yes');
+    setCookie('toko_pin',pin);
     document.getElementById('loginArea').style.display='none';
     document.getElementById('mainArea').style.display='block';
     document.getElementById('userInfo').style.display='block';
     document.getElementById('infoUser').innerText=toko+' | '+(pin===PIN_MASTER?'OWNER':'KEPALA TOKO')+' ✅';
     load();
   } else {
-    document.getElementById('status').innerText='❌ SALAH! '+toko+' harus '+benar;
+    document.getElementById('status').innerText='❌ PIN SALAH! Harus '+benar;
     el.value='';
   }
   return false;
 }
 function cek(){ var el=document.getElementById('pinInput'); var pin=el.value.replace(/[^0-9]/g,'').substring(0,6); el.value=pin; document.getElementById('status').innerText=pin.length+'/6'; if(pin.length===6){ setTimeout(function(){ window.doLogin(); },300); } }
-function logout(){ document.getElementById('loginArea').style.display='block'; document.getElementById('mainArea').style.display='none'; document.getElementById('userInfo').style.display='none'; document.getElementById('pinInput').value=''; }
+function logout(){ delCookie('toko_login'); delCookie('verif_ok'); delCookie('toko_pin'); document.getElementById('loginArea').style.display='block'; document.getElementById('mainArea').style.display='none'; document.getElementById('userInfo').style.display='none'; document.getElementById('pinInput').value=''; }
+
+function checkLoginAwal(){
+  var tk=getCookie('toko_login');
+  var ok=getCookie('verif_ok');
+  if(tk && ok==='yes'){
+    toko=tk;
+    try{ document.getElementById('toko').value=tk; document.getElementById('judul').innerText=tk; document.getElementById('infoToko').innerText='PIN '+tk+' = '+defaultPins[tk]; }catch(e){}
+    document.getElementById('loginArea').style.display='none';
+    document.getElementById('mainArea').style.display='block';
+    document.getElementById('userInfo').style.display='block';
+    var pin=getCookie('toko_pin');
+    document.getElementById('infoUser').innerText=tk+' | '+(pin===PIN_MASTER?'OWNER':'KEPALA TOKO')+' ✅';
+    load();
+    return true;
+  }
+  return false;
+}
 
 function setStatus(sisa,sat,nama){ sat=(sat||'pcs').toLowerCase(); nama=(nama||'').toLowerCase(); if(nama.indexOf('potongan')>=0){ if(sisa<=300) return '🚨 KRISIS'; if(sisa<=450) return '⚠️ MENIPIS'; return '✅ Aman'; } if(sat==='pcs'||sat==='ekor'){ if(sisa<=10)return'🚨 KRISIS'; if(sisa<=25)return'⚠️ MENIPIS'; if(sisa>=100)return'📦 OVER'; return'✅ Aman';} else if(sat==='kg'){ if(sisa<=5)return'🚨 KRISIS'; if(sisa<=10)return'⚠️ MENIPIS'; if(sisa>=50)return'📦 OVER'; return'✅ Aman';} else{ if(sisa<=1000)return'🚨 KRISIS'; if(sisa<=3000)return'⚠️ MENIPIS'; return'✅ Aman';} }
 
@@ -91,7 +111,7 @@ function load(){
    if(q && data[i].nama_barang.toLowerCase().indexOf(q)==-1) continue;
    var it=data[i]; var stok=Number(it.stok)||0; var masuk=Number(it.penerimaan)||0; var pakai=Number(it.terpakai)||0; var sisa=stok+masuk-pakai; var sat=it.satuan||'pcs'; var st=setStatus(sisa,sat,it.nama_barang);
    var bg=st.indexOf('KRISIS')>=0?'background:#fee2e2;':st.indexOf('MENIPIS')>=0?'background:#fef9c3;':'';
-   h+='<div class=card style="'+bg+'"><div style="display:flex;justify-content:space-between"><b>'+it.nama_barang+'</b><span onclick="editSat('+it.id+',\''+sat+'\')" style="background:#15803d;color:white;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:900">'+sat+' ✏️</span></div><div style="margin-top:8px;background:#f9fafb;padding:8px;border-radius:10px;font-size:13px;line-height:2.2"><span onclick="editAwal('+it.id+','+stok+')" style="background:#fff;padding:5px 9px;border-radius:8px;border:1px dashed #888;font-weight:bold;display:inline-block;margin:2px;font-size:12px">Awal: '+stok+' ✏️</span> <span onclick="editMasuk('+it.id+','+masuk+')" style="background:#fff;padding:5px 9px;border-radius:8px;border:1px dashed #888;font-weight:bold;display:inline-block;margin:2px;font-size:12px;color:#2563eb">Masuk: '+masuk+' ✏️</span> <span onclick="editPakai('+it.id+','+pakai+')" style="background:#fff;padding:5px 9px;border-radius:8px;border:1px dashed #888;font-weight:bold;display:inline-block;margin:2px;font-size:12px;color:#dc2626">Keluar: '+pakai+' ✏️</span><div style="font-weight:900;margin-top:4px">SISA: <span style="color:#15803d">'+sisa+'</span> '+sat+' - '+st+'</div></div><div style="display:flex;gap:6px;margin-top:8px"><div onclick="addMasuk('+it.id+','+masuk+')" style="flex:1;padding:12px;background:#2563eb;color:white;border-radius:10px;font-weight:900;text-align:center">📥 +Masuk</div><div onclick="addPakai('+it.id+','+pakai+')" style="flex:1;padding:12px;background:#dc2626;color:white;border-radius:10px;font-weight:900;text-align:center">📤 +Keluar</div><div onclick="hapus('+it.id+')" style="padding:12px;background:#fee2e2;color:#dc2626;border-radius:10px;width:45px;text-align:center;font-weight:900">✕</div></div></div>';
+   h+='<div class=card style="'+bg+'"><div style="display:flex;justify-content:space-between"><b>'+it.nama_barang+'</b><span onclick="editSat('+it.id+',\''+sat+'\')" style="background:#15803d;color:white;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:900">'+sat+' ✏️</span></div><div style="margin-top:8px;background:#f9fafb;padding:8px;border-radius:10px;font-size:13px;line-height:2.2"><span onclick="editAwal('+it.id+','+stok+')" style="background:#fff;padding:5px 9px;border-radius:8px;border:1px dashed #888;font-weight:bold;display:inline-block;margin:2px">Awal: '+stok+' ✏️</span> <span onclick="editMasuk('+it.id+','+masuk+')" style="background:#fff;padding:5px 9px;border-radius:8px;border:1px dashed #888;font-weight:bold;display:inline-block;margin:2px;color:#2563eb">Masuk: '+masuk+' ✏️</span> <span onclick="editPakai('+it.id+','+pakai+')" style="background:#fff;padding:5px 9px;border-radius:8px;border:1px dashed #888;font-weight:bold;display:inline-block;margin:2px;color:#dc2626">Keluar: '+pakai+' ✏️</span><div style="font-weight:900">SISA: '+sisa+' - '+st+'</div></div><div style="display:flex;gap:6px;margin-top:8px"><div onclick="addMasuk('+it.id+','+masuk+')" style="flex:1;padding:12px;background:#2563eb;color:white;border-radius:10px;font-weight:900;text-align:center">📥 +Masuk</div><div onclick="addPakai('+it.id+','+pakai+')" style="flex:1;padding:12px;background:#dc2626;color:white;border-radius:10px;font-weight:900;text-align:center">📤 +Keluar</div><div onclick="hapus('+it.id+')" style="padding:12px;background:#fee2e2;color:#dc2626;border-radius:10px;width:45px;text-align:center;font-weight:900">✕</div></div></div>';
   }
   if(h==='') h='<div class=card><b>Belum ada barang di '+toko+'</b></div>';
   document.getElementById('list').innerHTML=h;
@@ -107,10 +127,10 @@ function hapus(id){ if(!confirm('Hapus?')) return; fetch(URL_API+'?id=eq.'+id,{m
 function tambah(){ var n=document.getElementById('namaBaru').value.trim(); var s=parseFloat(document.getElementById('stokBaru').value||0); var sa=document.getElementById('satBaru').value; if(!n){alert('Isi nama');return;} fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:n,stok:s,penerimaan:0,terpakai:0,satuan:sa,toko:toko})}).then(function(){document.getElementById('namaBaru').value=''; document.getElementById('stokBaru').value=''; load();});}
 function resetHarian(){ if(!confirm('RESET '+toko+'?')) return; fetch(URL_API+'?select=*&toko=eq.'+toko,{headers:H}).then(function(r){return r.json();}).then(function(data){var i=0; function next(){if(i>=data.length){alert('Reset selesai'); load(); return;} var it=data[i++]; var sisa=(Number(it.stok)||0)+(Number(it.penerimaan)||0)-(Number(it.terpakai)||0); fetch(URL_API+'?id=eq.'+it.id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({stok:sisa,penerimaan:0,terpakai:0})}).then(next);} next();});}
 function exportExcel(){}
-document.getElementById('fileExcel').addEventListener('change',function(e){ var file=e.target.files[0]; if(!file) return; var reader=new FileReader(); reader.onload=function(ev){ var buf=ev.target.result; function proses(b){ var wb=XLSX.read(new Uint8Array(b),{type:'array'}); var ws=wb.Sheets[wb.SheetNames[0]]; var rows=XLSX.utils.sheet_to_json(ws,{header:1}); var janji=[]; for(var r=1;r<rows.length;r++){var row=rows[r]; if(!row||!row[0]) continue; janji.push(fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:String(row[0]).trim(),stok:parseFloat(row[1])||0,penerimaan:0,terpakai:0,satuan:String(row[2]||'pcs'),toko:toko})})); } Promise.all(janji).then(function(){alert('Import '+janji.length+' selesai'); load();}); } if(typeof XLSX==='undefined'){var s=document.createElement('script'); s.src='https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js'; s.onload=function(){proses(buf);}; document.head.appendChild(s);} else proses(buf); }; reader.readAsArrayBuffer(file); });
-gantiToko();
+document.getElementById('fileExcel').addEventListener('change',function(e){});
 
-// Auto-login tanpa klik
+// Cek login dari cookie pas load - jadi refresh gak logout!
+checkLoginAwal();
 setInterval(function(){ try{ var el=document.getElementById('pinInput'); if(!el) return; var pin=el.value.replace(/[^0-9]/g,''); if(pin.length===6 && document.getElementById('loginArea').style.display!=='none'){ window.doLogin(); } }catch(e){} },800);
 </script>
 </body>
