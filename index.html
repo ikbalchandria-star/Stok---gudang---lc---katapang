@@ -1,13 +1,14 @@
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GUDANG LABBAIK V44.4 - NO SEARCH NO EDIT</title>
+<title>GUDANG LABBAIK V44.6 - PIN HIDDEN</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 html,body{margin:0;background:#15803d;font-family:sans-serif}
 .box{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
 .card{padding:12px;border-bottom:1px solid #eee;background:#fff}
-.btnM{flex:1;padding:14px;background:#2563eb;color:#fff;border-radius:12px;font-weight:900;text-align:center}
-.btnK{flex:1;padding:14px;background:#dc2626;color:#fff;border-radius:12px;font-weight:900;text-align:center}
+.edit{padding:6px 10px;border-radius:8px;border:2px dashed #888;font-weight:900;display:inline-block;margin:2px;font-size:12px;background:#fff;cursor:pointer}
+.btnM{flex:1;padding:14px;background:#2563eb;color:#fff;border-radius:12px;font-weight:900;text-align:center;cursor:pointer}
+.btnK{flex:1;padding:14px;background:#dc2626;color:#fff;border-radius:12px;font-weight:900;text-align:center;cursor:pointer}
 </style>
 </head><body>
 <div class="box">
@@ -17,69 +18,31 @@ html,body{margin:0;background:#15803d;font-family:sans-serif}
 </select>
 <div id="judul" style="color:#bbf7d0;font-weight:900;margin-top:6px">KATAPANG</div></div>
 
-<div id="loginArea" style="padding:20px;background:#f0fdf4;text-align:center">
-<b>🔐 V44.4 - SESUAI REQUEST</b>
-<div style="background:#fff;padding:10px;border-radius:10px;margin-top:8px;text-align:left;font-size:11px;line-height:1.8;border:1px dashed #15803d">
-<b>📌 PIN (tap untuk login cepat):</b><br>
-<span onclick="isiToko('KATAPANG','111111')" style="color:#15803d;font-weight:900">KATAPANG=111111</span> | <span onclick="isiToko('ALFATHU','222222')" style="color:#15803d;font-weight:900">ALFATHU=222222</span><br>
-<span onclick="isiToko('GADING TUTUKA','333333')" style="color:#15803d;font-weight:900">GADING=333333</span> | <span onclick="isiToko('CIWIDEY','444444')" style="color:#15803d;font-weight:900">CIWIDEY=444444</span><br>
-<span onclick="isiToko('BALEENDAH','555555')" style="color:#15803d;font-weight:900">BALEENDAH=555555</span> | <span onclick="isiToko('SUKAMENAK','666666')" style="color:#15803d;font-weight:900">SUKAMENAK=666666</span><br>
-<span onclick="isiToko('BOJONG SOANG','777777')" style="color:#15803d;font-weight:900">BOJONG=777777</span> | <span onclick="isiToko('MARGAASIH','888888')" style="color:#15803d;font-weight:900">MARGAASIH=888888</span><br>
-<b style="background:#15803d;color:#fff;padding:2px 6px;border-radius:4px" onclick="isiToko('KATAPANG','999999')">OWNER=999999</b>
-</div><br>
-<input id="pinInput" type="tel" inputmode="numeric" maxlength="6" placeholder="PIN 6 digit" style="width:100%;padding:22px;border-radius:14px;border:4px solid #15803d;font-weight:900;font-size:28px;text-align:center;letter-spacing:12px;box-sizing:border-box" oninput="cek()">
-<div id="status" style="margin-top:8px;padding:8px;background:#fff;border-radius:8px;font-weight:900;color:#15803d">Ketik 6 digit = otomatis masuk</div>
-<button id="btnLogin" type="button" onclick="doLogin()" style="width:100%;padding:22px;background:#16a34a;color:#fff;font-weight:900;font-size:20px;border-radius:14px;border:none;margin-top:10px;position:relative;z-index:99999">🔓 TAP UNTUK LOGIN</button>
+<div id="loginArea" style="padding:25px;background:#f0fdf4;text-align:center">
+<b style="font-size:16px">🔐 LOGIN GUDANG</b><br>
+<span style="font-size:12px;color:#666">Pilih toko & masukkan PIN 6 digit</span><br><br>
+<input id="pinInput" type="tel" inputmode="numeric" maxlength="6" placeholder="••••••" style="width:100%;padding:22px;border-radius:14px;border:4px solid #15803d;font-weight:900;font-size:28px;text-align:center;letter-spacing:12px;box-sizing:border-box" oninput="cek()">
+<div id="status" style="margin-top:10px;padding:10px;background:#fff;border-radius:8px;font-weight:900;color:#15803d;font-size:13px">Ketik 6 digit = otomatis masuk</div>
+<button type="button" onclick="doLogin()" style="width:100%;padding:22px;background:#16a34a;color:#fff;font-weight:900;font-size:20px;border-radius:14px;border:none;margin-top:12px;box-shadow:0 4px 12px rgba(0,0,0,.2)">🔓 LOGIN</button>
+<div style="margin-top:15px;font-size:11px;color:#888">PIN hanya dibagikan via foto ke kepala toko</div>
 </div>
 
-<div id="userInfo" style="display:none;background:#dcfce7;padding:8px;text-align:center;font-size:13px;font-weight:900"><span id="infoUser"></span> | <span onclick="logout()" style="background:#fee2e2;padding:5px 10px;border-radius:6px;color:#dc2626">📦 Logout</span></div>
+<div id="userInfo" style="display:none;background:#dcfce7;padding:8px;text-align:center;font-size:13px;font-weight:900"><span id="infoUser"></span> | <span onclick="logout()" style="background:#fee2e2;padding:5px 10px;border-radius:6px;color:#dc2626">Logout</span></div>
 
 <div id="mainArea" style="display:none">
 <div style="display:flex;gap:8px;padding:10px;background:#f0fdf4">
 <div id="tabStok" style="flex:1;padding:14px;border-radius:12px;font-weight:900;text-align:center;background:#15803d;color:#fff" onclick="switchTab('stok')">📦 STOK</div>
 <div id="tabRiwayat" style="flex:1;padding:14px;border-radius:12px;font-weight:900;text-align:center;background:#fff;border:2px solid #15803d" onclick="switchTab('riwayat')">📜 RIWAYAT</div>
 </div>
-
 <div id="areaStok">
 <div style="padding:10px;background:#fefce8;display:flex;gap:8px">
 <input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none">
 <div onclick="document.getElementById('fileExcel').click()" style="flex:1;padding:14px;background:#2563eb;color:#fff;border-radius:12px;font-weight:900;text-align:center">📁 IMPORT</div>
 <div onclick="exportExcel()" style="flex:1;padding:14px;background:#16a34a;color:#fff;border-radius:12px;font-weight:900;text-align:center">📤 EXPORT</div>
 </div>
-<div id="importStatus" style="font-size:11px;font-weight:900;text-align:center;padding:4px"></div>
-<div id="list" style="background:#fff;min-height:500px">Loading...</div>
+<div id="importStatus" style="font-size:11px;font-weight:900;text-align:center"></div>
+<div id="list" style="background:#f0f0f0;min-height:500px">Loading...</div>
 </div>
-
 <div id="areaRiwayat" style="display:none;padding:8px;background:#f0fdf4;min-height:500px">
-<select id="filterMinggu" onchange="loadRiwayat()" style="width:100%;padding:12px;border-radius:10px;font-weight:900;border:2px solid #15803d"><option value="0">Minggu Ini</option><option value="1">Minggu Lalu</option><option value="all">Semua Riwayat</option></select>
-<div style="display:flex;gap:6px;margin-top:8px"><div onclick="exportRiwayat()" style="flex:1;padding:12px;background:#16a34a;color:#fff;border-radius:10px;font-weight:900;text-align:center">📤 Export Riwayat</div><div onclick="hapusRiwayat()" style="flex:1;padding:12px;background:#fee2e2;color:#dc2626;border-radius:10px;font-weight:900;text-align:center">🗑️ Hapus</div></div>
-<div id="listRiwayat" style="margin-top:8px"></div>
-</div>
-</div>
-</div>
-
-<script>
-function setCookie(n,v){try{localStorage.setItem(n,v)}catch(e){}}
-function getCookie(n){try{return localStorage.getItem(n)}catch(e){return null}}
-function delCookie(n){try{localStorage.removeItem(n)}catch(e){}}
-var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";var H={"apikey":KEY,"Authorization":"Bearer "+KEY};var toko=localStorage.getItem('toko_temp')||"KATAPANG";var defaultPins={"KATAPANG":"111111","ALFATHU":"222222","GADING TUTUKA":"333333","CIWIDEY":"444444","BALEENDAH":"555555","SUKAMENAK":"666666","BOJONG SOANG":"777777","MARGAASIH":"888888"};
-document.getElementById('toko').value=toko;document.getElementById('judul').innerText=toko;
-function isiToko(t,p){document.getElementById('toko').value=t;toko=t;document.getElementById('judul').innerText=t;localStorage.setItem('toko_temp',t);document.getElementById('pinInput').value=p;cek();setTimeout(doLogin,300);}
-function cek(){var el=document.getElementById('pinInput');var pin=(el.value||'').replace(/[^0-9]/g,'').substring(0,6);el.value=pin;var s=document.getElementById('status');s.innerText=pin.length+"/6";if(pin.length===6){s.innerText="✅ OTOMATIS MASUK...";setTimeout(doLogin,400);}}
-function doLogin(){var el=document.getElementById('pinInput');var pin=(el.value||'').replace(/[^0-9]/g,'').substring(0,6);var tk=document.getElementById('toko').value;toko=tk;var benar=defaultPins[toko]||"111111";if(pin.length<6)return;if(pin===benar||pin==="999999"){setCookie('toko_login',toko);setCookie('verif_ok','yes');document.getElementById('loginArea').style.display='none';document.getElementById('mainArea').style.display='block';document.getElementById('userInfo').style.display='block';document.getElementById('infoUser').innerText=toko+" ✅";load();}else{document.getElementById('status').innerText="❌ SALAH! PIN "+toko+" = "+benar;el.value="";}}
-function logout(){delCookie('toko_login');delCookie('verif_ok');document.getElementById('loginArea').style.display='block';document.getElementById('mainArea').style.display='none';document.getElementById('userInfo').style.display='none';}
-(function(){var tk=getCookie('toko_login');var ok=getCookie('verif_ok');if(tk&&ok==='yes'){toko=tk;document.getElementById('toko').value=tk;document.getElementById('judul').innerText=tk;document.getElementById('loginArea').style.display='none';document.getElementById('mainArea').style.display='block';document.getElementById('userInfo').style.display='block';document.getElementById('infoUser').innerText=tk+" ✅";load();}})();
-function setStatus(sisa){if(sisa<=0)return'🚨 KRISIS';if(sisa<=10)return'⚠️ MENIPIS';return'✅ Aman';}
-function switchTab(t){if(t==='stok'){document.getElementById('areaStok').style.display='block';document.getElementById('areaRiwayat').style.display='none';document.getElementById('tabStok').style.background='#15803d';document.getElementById('tabStok').style.color='#fff';document.getElementById('tabRiwayat').style.background='#fff';load();}else{document.getElementById('areaStok').style.display='none';document.getElementById('areaRiwayat').style.display='block';document.getElementById('tabRiwayat').style.background='#15803d';document.getElementById('tabRiwayat').style.color='#fff';document.getElementById('tabStok').style.background='#fff';loadRiwayat();}}
-function simpanRiwayat(nama,jenis,jumlah){try{var key='riwayat_'+toko;var all=JSON.parse(localStorage.getItem(key)||'[]');all.push({nama:nama,jenis:jenis,jumlah:parseFloat(jumlah)||0,tanggal:new Date().toISOString(),jam:new Date().toLocaleString('id-ID')});localStorage.setItem(key,JSON.stringify(all));}catch(e){}}
-function getMingguRange(k){var now=new Date();var day=now.getDay();if(day===0)day=7;var senin=new Date(now);senin.setDate(now.getDate()-day+1-k*7);senin.setHours(0,0,0,0);var minggu=new Date(senin);minggu.setDate(senin.getDate()+6);minggu.setHours(23,59,59,999);return{start:senin,end:minggu};}
-function loadRiwayat(){var filter=document.getElementById('filterMinggu').value;var key='riwayat_'+toko;var all=[];try{all=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}var filtered=[];if(filter==='all')filtered=all;else{var kk=parseInt(filter)||0;var rg=getMingguRange(kk);for(var i=0;i<all.length;i++){var d=new Date(all[i].tanggal);if(d>=rg.start&&d<=rg.end)filtered.push(all[i]);}}if(filtered.length===0){document.getElementById('listRiwayat').innerHTML='<div class=card>Belum ada riwayat minggu ini</div>';return;}var html='';filtered.sort(function(a,b){return new Date(b.tanggal)-new Date(a.tanggal);});for(var i=0;i<filtered.length;i++){var it=filtered[i];html+='<div class=card style="border-left:6px solid '+(it.jenis==='MASUK'?'#2563eb':'#dc2626')+';background:'+(it.jenis==='MASUK'?'#dbeafe':'#fee2e2')+'"><b>'+it.jenis+'</b> - '+it.nama+' <b>'+it.jumlah+'</b><br><small>'+it.jam+'</small></div>';}document.getElementById('listRiwayat').innerHTML=html;}
-function exportRiwayat(){var key='riwayat_'+toko;var all=JSON.parse(localStorage.getItem(key)||'[]');if(all.length===0){alert('Belum ada riwayat');return;}var aoa=[['Tanggal','Jam','Toko','Nama','Jenis','Jumlah']];for(var i=0;i<all.length;i++){aoa.push([new Date(all[i].tanggal).toLocaleDateString('id-ID'),all[i].jam,toko,all[i].nama,all[i].jenis,all[i].jumlah]);}var ws=XLSX.utils.aoa_to_sheet(aoa);var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Riwayat');XLSX.writeFile(wb,'Riwayat_'+toko+'.xlsx');}
-function hapusRiwayat(){if(!confirm('Hapus riwayat '+toko+'?'))return;localStorage.removeItem('riwayat_'+toko);loadRiwayat();}
-function load(){document.getElementById('list').innerHTML='⏳ Loading '+toko+'...';fetch(URL_API+'?select=*&limit=10000&toko=eq.'+toko,{headers:H}).then(function(r){return r.json();}).then(function(data){var h='';for(var i=0;i<data.length;i++){var it=data[i];var stok=Number(it.stok)||0;var masuk=Number(it.penerimaan)||0;var pakai=Number(it.terpakai)||0;var sisa=stok+masuk-pakai;var sat=it.satuan||'pcs';var st=setStatus(sisa);h+='<div class=card><b>'+it.nama_barang+'</b> ('+sat+')<br>SISA: '+sisa+' - '+st+'<br><div style="display:flex;gap:8px;margin-top:10px"><div class=btnM onclick="addMasuk('+it.id+','+masuk+',\''+it.nama_barang.replace(/'/g,"\\'")+'\')">📥 Masuk</div><div class=btnK onclick="addPakai('+it.id+','+pakai+',\''+it.nama_barang.replace(/'/g,"\\'")+'\')">📤 Keluar</div></div></div>';}if(!h)h='<div class=card>Belum ada barang</div>';document.getElementById('list').innerHTML=h;});}
-function addMasuk(id,now,nama){var v=prompt('Tambah Masuk '+nama+' berapa?');if(!v)return;var j=parseFloat(v);if(isNaN(j))return;simpanRiwayat(nama,'MASUK',j);fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:(Number(now)||0)+j})}).then(function(){load();});}
-function addPakai(id,now,nama){var v=prompt('Keluar '+nama+' berapa?');if(!v)return;var j=parseFloat(v);if(isNaN(j))return;simpanRiwayat(nama,'KELUAR',j);fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:(Number(now)||0)+j})}).then(function(){load();});}
-function exportExcel(){fetch(URL_API+'?select=*&toko=eq.'+toko,{headers:H}).then(function(r){return r.json();}).then(function(data){var aoa=[['nama_barang','stok','satuan']];for(var i=0;i<data.length;i++){aoa.push([data[i].nama_barang,data[i].stok,data[i].satuan]);}var ws=XLSX.utils.aoa_to_sheet(aoa);var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Stok');XLSX.writeFile(wb,'Stok_'+toko+'.xlsx');});}
-document.getElementById('fileExcel').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){var data=new Uint8Array(ev.target.result);var wb=XLSX.read(data,{type:'array'});var ws=wb.Sheets[wb.SheetNames[0]];var rows=XLSX.utils.sheet_to_json(ws,{header:1});var janji=[];for(var r=0;r<rows.length;r++){var row=rows[r];if(!row||!row[0])continue;if(r===0&&String(row[0]).toLowerCase().indexOf('nama')>=0)continue;janji.push(fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:String(row[0]).trim(),stok:parseFloat(row[1])||0,penerimaan:0,terpakai:0,satuan:String(row[2]||'pcs'),toko:toko})}));}Promise.all(janji).then(function(){load();alert('Import selesai');});};reader.readAsArrayBuffer(file);});
-</script>
-</body></html>
+<select id="filterMinggu" onchange="loadRiwayat()" style="width:100%;padding:12px;border-radius:10px;font-weight:900;border:2px solid #15803d"><option value="0">Minggu Ini</option><option value="1">Minggu Lalu</option><option value="all">Semua</option></select>
+<div style="display:flex;gap:6px;margin-top:8px"><div onclick="exportRiwayat()" style="flex:1;padding:12px;background:#16a34a;color:#fff;border-radius:10px;font-weight:900;text-align:center">📤 Export Riwayat</a
