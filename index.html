@@ -1,9 +1,8 @@
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>V45.0 FIX KLIK - TANPA KLIK</title>
+<title>V45.1 IMPORT PENERIMAAN - FIX KLIK</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-// TARO DI ATAS BIAR PASTI KE LOAD DULUAN
 window.TOKO="KATAPANG";
 window.PINS={"KATAPANG":"111111","ALFATHU":"222222","GADING TUTUKA":"333333","CIWIDEY":"444444","BALEENDAH":"555555","SUKAMENAK":"666666","BOJONG SOANG":"777777","MARGAASIH":"888888"};
 function getPin(){var el=document.getElementById('pinInput');if(!el)return"";return (el.value||'').replace(/[^0-9]/g,'').slice(0,6);}
@@ -51,12 +50,10 @@ function cekLogin(el){
 <div id="judul" style="color:#bbf7d0;font-weight:900;margin-top:6px">KATAPANG</div></div>
 
 <div id="loginArea" style="padding:20px;background:#f0fdf4;text-align:center">
-<b>🔐 V45.0 TANPA PERLU KLIK TOMBOL</b><br>
+<b>🔐 V45.1 IMPORT PENERIMAAN</b><br>
 <div style="background:#fef9c3;padding:8px;border-radius:8px;margin-top:6px;font-size:11px;font-weight:900;color:#dc2626">⚠️ PENTING: BUKA LINK DI CHROME!<br>Jangan dari WA! Copy link → paste di Chrome</div><br>
 <input id="pinInput" type="tel" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="KETIK 6 DIGIT PIN" oninput="cekLogin(this)" onkeyup="cekLogin(this)" onchange="cekLogin(this)" onpaste="setTimeout(function(){cekLogin(document.getElementById('pinInput'))},100)" style="width:100%;padding:24px;border-radius:14px;border:4px solid #15803d;font-weight:900;font-size:32px;text-align:center;letter-spacing:8px;box-sizing:border-box;background:#fff;color:#000">
 <div id="status" style="margin-top:10px;padding:12px;background:#fff;border-radius:8px;font-weight:900;color:#15803d;border:2px solid #15803d;min-height:40px">Ketik PIN 6 digit, otomatis masuk...</div>
-
-<!-- TOMBOL JADI LINK BIAR GAK KE BLOCK -->
 <a href="javascript:doLogin()" onclick="doLogin();return false" style="display:block;margin-top:12px;width:100%;padding:22px;background:#16a34a;color:#fff;font-weight:900;font-size:20px;border-radius:14px;text-decoration:none;text-align:center;box-sizing:border-box;border:4px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.3)">🔓 KLIK DISINI UNTUK LOGIN</a>
 <div style="margin-top:8px"><a href="javascript:doLogin()" onclick="doLogin();return false" style="display:block;padding:14px;background:#fff;border:3px solid #15803d;border-radius:10px;font-weight:900;color:#15803d;text-decoration:none">🚀 TOMBOL CADANGAN KLIK DISINI</a></div>
 <div style="margin-top:10px;background:#dcfce7;padding:10px;border-radius:8px;font-size:12px;font-weight:900">GAK PERLU KLIK! Ketik 111111 → tunggu 1 detik → OTOMATIS MASUK!</div>
@@ -65,7 +62,16 @@ function cekLogin(el){
 <div id="userInfo" style="display:none;background:#dcfce7;padding:8px;text-align:center;font-size:13px;font-weight:900"><span id="infoUser"></span> | <span onclick="logout()" style="background:#fee2e2;padding:5px 10px;border-radius:6px;color:#dc2626">Logout</span></div>
 <div id="mainArea" style="display:none">
 <div style="display:flex;gap:8px;padding:10px;background:#f0fdf4"><div id="tabStok" style="flex:1;padding:14px;border-radius:12px;font-weight:900;text-align:center;background:#15803d;color:#fff" onclick="switchTab('stok')">📦 STOK</div><div id="tabRiwayat" style="flex:1;padding:14px;border-radius:12px;font-weight:900;text-align:center;background:#fff;border:2px solid #15803d" onclick="switchTab('riwayat')">📜 RIWAYAT</div></div>
-<div id="areaStok"><div style="padding:10px;background:#fefce8;display:flex;gap:8px"><input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none"><div onclick="document.getElementById('fileExcel').click()" style="flex:1;padding:14px;background:#2563eb;color:#fff;border-radius:12px;font-weight:900;text-align:center">📁 IMPORT</div><div onclick="exportExcel()" style="flex:1;padding:14px;background:#16a34a;color:#fff;border-radius:12px;font-weight:900;text-align:center">📤 EXPORT</div></div>
+<div id="areaStok">
+<div style="padding:10px;background:#fefce8;border:2px solid #fbbf24;border-radius:12px;margin:10px">
+<div style="font-weight:900;font-size:13px;margin-bottom:8px;color:#92400e">📥 IMPORT PENERIMAAN DARI EXCEL INVOICE</div>
+<input type="file" id="filePenerimaan" accept=".xlsx,.xls" style="display:none">
+<div onclick="document.getElementById('filePenerimaan').click()" style="padding:16px;background:#fbbf24;color:#000;border-radius:12px;font-weight:900;text-align:center;border:2px solid #000;cursor:pointer">
+📦 IMPORT PENERIMAAN - FILE INVOICE<br><small style="font-weight:600">Format: Sale_Invoice...Detail.xlsx - Auto masuk sesuai nama</small>
+</div>
+<div id="infoPenerimaan" style="margin-top:8px;font-size:11px;font-weight:700;color:#15803d;background:#fff;padding:8px;border-radius:8px;display:none"></div>
+</div>
+<div style="padding:10px;background:#fefce8;display:flex;gap:8px"><input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none"><div onclick="document.getElementById('fileExcel').click()" style="flex:1;padding:14px;background:#2563eb;color:#fff;border-radius:12px;font-weight:900;text-align:center">📁 IMPORT BIASA</div><div onclick="exportExcel()" style="flex:1;padding:14px;background:#16a34a;color:#fff;border-radius:12px;font-weight:900;text-align:center">📤 EXPORT</div></div>
 <div class="searchWrap"><span>🔍</span><input id="cari" placeholder="Cari barang..." oninput="onSearch()"><div id="clearSearch" class="clearBtn" onclick="clearSearch()">✕</div></div>
 <div id="list" style="background:#fff;min-height:500px">Loading...</div></div>
 <div id="areaRiwayat" style="display:none;padding:8px;background:#f0fdf4"><select id="filterMinggu" onchange="loadRiwayat()" style="width:100%;padding:12px;border-radius:10px;font-weight:900;border:2px solid #15803d"><option value="0">Minggu Ini</option><option value="all">Semua</option></select><div id="listRiwayat" style="margin-top:8px"></div></div>
@@ -73,7 +79,6 @@ function cekLogin(el){
 </div>
 
 <script>
-// AUTO CHECK TIAP 500ms JADI GAK PERLU KLIK!
 setInterval(function(){
   try{
     var el=document.getElementById('pinInput');
@@ -87,14 +92,12 @@ setInterval(function(){
     }
   }catch(e){}
 },500);
-
 function logout(){try{localStorage.removeItem('toko_login');localStorage.removeItem('verif_ok');}catch(e){}document.getElementById('loginArea').style.display='block';document.getElementById('mainArea').style.display='none';document.getElementById('userInfo').style.display='none';document.getElementById('pinInput').value=""; document.getElementById('status').innerText="Ketik PIN 6 digit...";}
 try{
   var tk=localStorage.getItem('toko_temp');if(tk){document.getElementById('toko').value=tk;document.getElementById('judul').innerText=tk;window.TOKO=tk;}
   var tk2=localStorage.getItem('toko_login');var ok=localStorage.getItem('verif_ok');
   if(tk2&&ok==='yes'){window.TOKO=tk2;document.getElementById('toko').value=tk2;document.getElementById('judul').innerText=tk2;document.getElementById('loginArea').style.display='none';document.getElementById('mainArea').style.display='block';document.getElementById('userInfo').style.display='block';document.getElementById('infoUser').innerText=tk2+" ✅";loadStok();}
 }catch(e){}
-
 function onSearch(){var v=document.getElementById('cari').value;document.getElementById('clearSearch').style.display=v.length>0?'flex':'none';loadStok();}
 function clearSearch(){document.getElementById('cari').value='';document.getElementById('clearSearch').style.display='none';loadStok();}
 function setStatus(s){if(s<=0)return'🚨 KRISIS';if(s<=10)return'⚠️ MENIPIS';return'✅ Aman';}
@@ -112,5 +115,41 @@ function getMingguRange(k){var now=new Date();var day=now.getDay();if(day===0)da
 function loadRiwayat(){var f=document.getElementById('filterMinggu').value;var k='riwayat_'+window.TOKO;var all=[];try{all=JSON.parse(localStorage.getItem(k)||'[]');}catch(e){}var fil=[];if(f==='all')fil=all;else{var kk=parseInt(f)||0;var rg=getMingguRange(kk);for(var i=0;i<all.length;i++){var d=new Date(all[i].tanggal);if(d>=rg.start&&d<=rg.end)fil.push(all[i]);}}if(fil.length===0){document.getElementById('listRiwayat').innerHTML='<div style="padding:12px;background:#fff;border-radius:10px;margin:8px">Belum ada riwayat</div>';return;}var html='';fil.sort(function(a,b){return new Date(b.tanggal)-new Date(a.tanggal);});for(var i=0;i<fil.length;i++){var it=fil[i];html+='<div style="padding:12px;background:#fff;border-radius:10px;margin:8px;border-left:6px solid '+(it.jenis==='MASUK'?'#2563eb':'#dc2626')+'"><b>'+it.jenis+'</b> - '+it.nama+' <b>'+it.jumlah+'</b><br><small>'+it.jam+'</small></div>';}document.getElementById('listRiwayat').innerHTML=html;}
 function exportExcel(){fetch(URL_API+'?select=*&toko=eq.'+window.TOKO,{headers:H}).then(function(r){return r.json();}).then(function(data){var aoa=[['nama_barang','stok','satuan']];for(var i=0;i<data.length;i++){aoa.push([data[i].nama_barang,data[i].stok,data[i].satuan]);}var ws=XLSX.utils.aoa_to_sheet(aoa);var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Stok');XLSX.writeFile(wb,'Stok_'+window.TOKO+'.xlsx');});}
 document.getElementById('fileExcel').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){var data=new Uint8Array(ev.target.result);var wb=XLSX.read(data,{type:'array'});var ws=wb.Sheets[wb.SheetNames[0]];var rows=XLSX.utils.sheet_to_json(ws,{header:1});var janji=[];for(var r=0;r<rows.length;r++){var row=rows[r];if(!row||!row[0])continue;if(r===0&&String(row[0]).toLowerCase().indexOf('nama')>=0)continue;janji.push(fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:String(row[0]).trim(),stok:parseFloat(row[1])||0,penerimaan:0,terpakai:0,satuan:String(row[2]||'pcs'),toko:window.TOKO})}));}Promise.all(janji).then(function(){loadStok();alert('Import selesai');});};reader.readAsArrayBuffer(file);});
-</script>
-</body></html>
+
+// BARU: IMPORT PENERIMAAN DARI INVOICE EXCEL
+document.getElementById('filePenerimaan').addEventListener('change',function(e){
+  var file=e.target.files[0];
+  if(!file)return;
+  var infoEl=document.getElementById('infoPenerimaan');
+  infoEl.style.display='block';
+  infoEl.innerHTML='⏳ Membaca file '+file.name+'...';
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var data=new Uint8Array(ev.target.result);
+      var wb=XLSX.read(data,{type:'array'});
+      var ws=wb.Sheets[wb.SheetNames[0]];
+      var rows=XLSX.utils.sheet_to_json(ws,{header:1, defval:null});
+      var header={};
+      for(var i=0;i<16;i++){ if(rows[i] && rows[i][0] && rows[i][1]) header[rows[i][0]] = rows[i][1]; }
+      var noRecv = header['No. Receiving'] || header['No. Invoice'] || 'PENERIMAAN';
+      var tglRecv = header['Tgl Penerimaan'] || header['Tgl Invoice'] || new Date().toLocaleDateString('id-ID');
+      var headerRow=-1;
+      for(var i=0;i<rows.length;i++){ if(rows[i] && rows[i][0]==='SKU' && rows[i][1]==='Product'){ headerRow=i; break; } }
+      if(headerRow===-1){ alert('❌ Format salah! Header SKU/Product tidak ketemu.'); infoEl.innerHTML='❌ Format salah'; return; }
+      var items=[];
+      for(var i=headerRow+1;i<rows.length;i++){
+        var r=rows[i];
+        if(!r || !r[0] || !r[1]) continue;
+        if(String(r[0]).toLowerCase()==='catatan') break;
+        if(!String(r[0]).startsWith('BB-')) continue;
+        var qty = parseFloat(r[2])||0;
+        if(qty===0) continue;
+        items.push({ sku: String(r[0]).trim(), product: String(r[1]).trim(), qty: qty, unit: String(r[3]||'pcs').trim(), qtyBesar: r[4]||0, unitBesar: r[5]||'', weight: r[6]||0 });
+      }
+      if(items.length===0){ alert('Tidak ada item!'); return; }
+      infoEl.innerHTML='📦 '+items.length+' item dari '+noRecv+'<br>⏳ Cocokkan dengan stok '+window.TOKO+'...';
+      fetch(URL_API+'?select=*&limit=10000&toko=eq.'+window.TOKO,{headers:H}).then(function(r){return r.json();}).then(function(existingStok){
+        var map={};
+        for(var s=0;s<existingStok.length;s++){ var nm = (existingStok[s].nama_barang||'').toLowerCase().trim(); map[nm]=existingStok[s]; }
+        var konfirm='DETEKSI '+items.length+' ITEM dari '+noRecv+'\nTgl: '+
