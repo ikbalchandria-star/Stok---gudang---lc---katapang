@@ -1,6 +1,6 @@
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>V45.2 FIX IMPORT PENERIMAAN</title>
+<title>V45.3 AUTO RESET KELUAR HARIAN</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 window.TOKO="KATAPANG";
@@ -49,7 +49,7 @@ function cekLogin(el){
 <div id="judul" style="color:#bbf7d0;font-weight:900;margin-top:6px">KATAPANG</div></div>
 
 <div id="loginArea" style="padding:20px;background:#f0fdf4;text-align:center">
-<b>🔐 V45.2 FIX IMPORT</b><br>
+<b>🔐 V45.3 AUTO RESET KELUAR HARIAN</b><br>
 <div style="background:#fef9c3;padding:8px;border-radius:8px;margin-top:6px;font-size:11px;font-weight:900;color:#dc2626">⚠️ BUKA DI CHROME! Jangan dari WA!</div><br>
 <input id="pinInput" type="tel" inputmode="numeric" placeholder="KETIK 6 DIGIT PIN" oninput="cekLogin(this)" style="width:100%;padding:24px;border-radius:14px;border:4px solid #15803d;font-weight:900;font-size:32px;text-align:center;letter-spacing:8px">
 <div id="status" style="margin-top:10px;padding:12px;background:#fff;border-radius:8px;font-weight:900;color:#15803d;border:2px solid #15803d;min-height:40px">Ketik PIN 6 digit...</div>
@@ -61,7 +61,6 @@ function cekLogin(el){
 <div id="mainArea" style="display:none">
 <div style="display:flex;gap:8px;padding:10px;background:#f0fdf4"><div id="tabStok" style="flex:1;padding:14px;border-radius:12px;font-weight:900;text-align:center;background:#15803d;color:#fff" onclick="switchTab('stok')">📦 STOK</div><div id="tabRiwayat" style="flex:1;padding:14px;border-radius:12px;font-weight:900;text-align:center;background:#fff;border:2px solid #15803d" onclick="switchTab('riwayat')">📜 RIWAYAT</div></div>
 <div id="areaStok">
-
 <div style="padding:10px;background:#fefce8;border:2px solid #fbbf24;border-radius:12px;margin:10px">
 <div style="font-weight:900;font-size:13px;margin-bottom:8px;color:#92400e">📥 IMPORT PENERIMAAN DARI EXCEL INVOICE</div>
 <input type="file" id="filePenerimaan" accept=".xlsx,.xls" style="display:none">
@@ -70,7 +69,6 @@ function cekLogin(el){
 </div>
 <div id="infoPenerimaan" style="margin-top:8px;font-size:11px;font-weight:700;color:#15803d;background:#fff;padding:8px;border-radius:8px;display:none"></div>
 </div>
-
 <div style="padding:10px;background:#fefce8;display:flex;gap:8px"><input type="file" id="fileExcel" accept=".xlsx,.xls" style="display:none"><div onclick="document.getElementById('fileExcel').click()" style="flex:1;padding:14px;background:#2563eb;color:#fff;border-radius:12px;font-weight:900;text-align:center">📁 IMPORT BIASA</div><div onclick="exportExcel()" style="flex:1;padding:14px;background:#16a34a;color:#fff;border-radius:12px;font-weight:900;text-align:center">📤 EXPORT</div></div>
 <div class="searchWrap"><span>🔍</span><input id="cari" placeholder="Cari barang..." oninput="onSearch()"><div id="clearSearch" class="clearBtn" onclick="clearSearch()">✕</div></div>
 <div id="list" style="background:#fff;min-height:500px">Loading...</div></div>
@@ -96,8 +94,30 @@ function clearSearch(){document.getElementById('cari').value='';document.getElem
 function setStatus(s){if(s<=0)return'🚨 KRISIS';if(s<=10)return'⚠️ MENIPIS';return'✅ Aman';}
 function switchTab(t){if(t==='stok'){document.getElementById('areaStok').style.display='block';document.getElementById('areaRiwayat').style.display='none';document.getElementById('tabStok').style.background='#15803d';document.getElementById('tabStok').style.color='#fff';document.getElementById('tabRiwayat').style.background='#fff';window.loadStokReal();}else{document.getElementById('areaStok').style.display='none';document.getElementById('areaRiwayat').style.display='block';document.getElementById('tabRiwayat').style.background='#15803d';document.getElementById('tabRiwayat').style.color='#fff';document.getElementById('tabStok').style.background='#fff';window.loadRiwayatReal();}}
 function simpanRiwayat(n,j,jumlah){try{var k='riwayat_'+window.TOKO;var a=JSON.parse(localStorage.getItem(k)||'[]');a.push({nama:n,jenis:j,jumlah:parseFloat(jumlah)||0,tanggal:new Date().toISOString(),jam:new Date().toLocaleString('id-ID')});localStorage.setItem(k,JSON.stringify(a));}catch(e){}}
-var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";var H={"apikey":KEY,"Authorization":"Bearer "+KEY};
-function loadStokReal(){
+var URL_API="https://lgunwtgwlzggfmfjzxqm.supabase.co/rest/v1/stok";
+var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndW53dGd3bHpnZ2ZtZmp6eHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTAyMzMsImV4cCI6MjEwNjgyNjIzM30.enegbpFm3USOJ26xynabx-pJfoDk-RRrP_xUv3T0tJw";
+var H={"apikey":KEY,"Authorization":"Bearer "+KEY};
+function cekDanResetKeluarHarian(){
+  try{
+    var today=new Date();
+    var tglStr=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var key='last_reset_keluar_'+window.TOKO;
+    var last=localStorage.getItem(key);
+    if(last===tglStr) return;
+    fetch(URL_API+'?select=id&toko=eq.'+window.TOKO+'&limit=10000',{headers:H}).then(function(r){return r.json();}).then(function(data){
+      if(!data||data.length===0){localStorage.setItem(key,tglStr);return;}
+      var promises=[];
+      for(var i=0;i<data.length;i++){promises.push(fetch(URL_API+'?id=eq.'+data[i].id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:0})}));}
+      Promise.all(promises).then(function(){
+        localStorage.setItem(key,tglStr);
+        var infoEl=document.getElementById('infoPenerimaan');
+        if(infoEl){infoEl.style.display='block';infoEl.innerHTML='🔄 AUTO RESET HARIAN: Kolom Keluar di-reset jadi 0 - Ganti hari '+tglStr+' - '+data.length+' item';setTimeout(function(){infoEl.style.display='none';},6000);}
+        setTimeout(function(){if(window.loadStokRealNoCheck) window.loadStokRealNoCheck();},1000);
+      });
+    });
+  }catch(e){}
+}
+function loadStokRealNoCheck(){
   var q=(document.getElementById('cari')?.value||'').toLowerCase();
   var listEl=document.getElementById('list');
   if(listEl) listEl.innerHTML='⏳ Loading '+window.TOKO+'...';
@@ -116,34 +136,30 @@ function loadStokReal(){
     window._cacheStok=data;
   });
 }
+function loadStokReal(){try{cekDanResetKeluarHarian();}catch(e){}loadStokRealNoCheck();}
 function loadRiwayatReal(){
   var f=document.getElementById('filterMinggu').value;
   var k='riwayat_'+window.TOKO;
   var all=[];try{all=JSON.parse(localStorage.getItem(k)||'[]');}catch(e){}
   var fil=[];if(f==='all')fil=all;else{var kk=parseInt(f)||0;var rg=getMingguRange(kk);for(var i=0;i<all.length;i++){var d=new Date(all[i].tanggal);if(d>=rg.start&&d<=rg.end)fil.push(all[i]);}}
-  var el=document.getElementById('listRiwayat');
-  if(!el) return;
+  var el=document.getElementById('listRiwayat');if(!el)return;
   if(fil.length===0){el.innerHTML='<div style="padding:12px;background:#fff;border-radius:10px">Belum ada riwayat</div>';return;}
   var html='';fil.sort(function(a,b){return new Date(b.tanggal)-new Date(a.tanggal);});
   for(var i=0;i<fil.length;i++){var it=fil[i];html+='<div style="padding:12px;background:#fff;border-radius:10px;margin:8px;border-left:6px solid '+(it.jenis==='MASUK'?'#2563eb':'#dc2626')+'"><b>'+it.jenis+'</b> - '+it.nama+' <b>'+it.jumlah+'</b><br><small>'+it.jam+'</small></div>';}
   el.innerHTML=html;
 }
-window.loadStok = window.loadStokReal;
-window.loadRiwayat = window.loadRiwayatReal;
-function editAwal(id,now){var v=prompt('EDIT AWAL:'+now);if(v===null)return;fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({stok:parseFloat(v)||0})}).then(function(){loadStokReal();});}
-function editMasuk(id,now){var v=prompt('EDIT MASUK:'+now);if(v===null)return;fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:parseFloat(v)||0})}).then(function(){loadStokReal();});}
-function editPakai(id,now){var v=prompt('EDIT KELUAR:'+now);if(v===null)return;fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:parseFloat(v)||0})}).then(function(){loadStokReal();});}
+window.loadStok=window.loadStokReal;window.loadRiwayat=window.loadRiwayatReal;
 function addMasuk(id,now){
   var nama='';if(window._cacheStok){for(var i=0;i<window._cacheStok.length;i++){if(window._cacheStok[i].id===id){nama=window._cacheStok[i].nama_barang;break;}}}
-  var v=prompt('Masuk '+nama+' berapa?');if(!v)return;var j=parseFloat(v);simpanRiwayat(nama,'MASUK',j);fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:(Number(now)||0)+j})}).then(function(){loadStokReal();});
+  var v=prompt('Masuk '+nama+' berapa?');if(!v)return;var j=parseFloat(v);simpanRiwayat(nama,'MASUK',j);fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:(Number(now)||0)+j})}).then(function(){loadStokRealNoCheck();});
 }
 function addPakai(id,now){
   var nama='';if(window._cacheStok){for(var i=0;i<window._cacheStok.length;i++){if(window._cacheStok[i].id===id){nama=window._cacheStok[i].nama_barang;break;}}}
-  var v=prompt('Keluar '+nama+' berapa?');if(!v)return;var j=parseFloat(v);simpanRiwayat(nama,'KELUAR',j);fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:(Number(now)||0)+j})}).then(function(){loadStokReal();});
+  var v=prompt('Keluar '+nama+' berapa?');if(!v)return;var j=parseFloat(v);simpanRiwayat(nama,'KELUAR',j);fetch(URL_API+'?id=eq.'+id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({terpakai:(Number(now)||0)+j})}).then(function(){loadStokRealNoCheck();});
 }
 function getMingguRange(k){var now=new Date();var day=now.getDay();if(day===0)day=7;var senin=new Date(now);senin.setDate(now.getDate()-day+1-k*7);senin.setHours(0,0,0,0);var minggu=new Date(senin);minggu.setDate(senin.getDate()+6);minggu.setHours(23,59,59,999);return{start:senin,end:minggu};}
 function exportExcel(){fetch(URL_API+'?select=*&toko=eq.'+window.TOKO,{headers:H}).then(function(r){return r.json();}).then(function(data){var aoa=[['nama_barang','stok','satuan']];for(var i=0;i<data.length;i++){aoa.push([data[i].nama_barang,data[i].stok,data[i].satuan]);}var ws=XLSX.utils.aoa_to_sheet(aoa);var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Stok');XLSX.writeFile(wb,'Stok_'+window.TOKO+'.xlsx');});}
-document.getElementById('fileExcel').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){var data=new Uint8Array(ev.target.result);var wb=XLSX.read(data,{type:'array'});var ws=wb.Sheets[wb.SheetNames[0]];var rows=XLSX.utils.sheet_to_json(ws,{header:1});var janji=[];for(var r=0;r<rows.length;r++){var row=rows[r];if(!row||!row[0])continue;if(r===0&&String(row[0]).toLowerCase().indexOf('nama')>=0)continue;janji.push(fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:String(row[0]).trim(),stok:parseFloat(row[1])||0,penerimaan:0,terpakai:0,satuan:String(row[2]||'pcs'),toko:window.TOKO})}));}Promise.all(janji).then(function(){loadStokReal();alert('Import selesai');});};reader.readAsArrayBuffer(file);});
+document.getElementById('fileExcel').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){var data=new Uint8Array(ev.target.result);var wb=XLSX.read(data,{type:'array'});var ws=wb.Sheets[wb.SheetNames[0]];var rows=XLSX.utils.sheet_to_json(ws,{header:1});var janji=[];for(var r=0;r<rows.length;r++){var row=rows[r];if(!row||!row[0])continue;if(r===0&&String(row[0]).toLowerCase().indexOf('nama')>=0)continue;janji.push(fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:String(row[0]).trim(),stok:parseFloat(row[1])||0,penerimaan:0,terpakai:0,satuan:String(row[2]||'pcs'),toko:window.TOKO})}));}Promise.all(janji).then(function(){loadStokRealNoCheck();alert('Import selesai');});};reader.readAsArrayBuffer(file);});
 document.getElementById('filePenerimaan').addEventListener('change',function(e){
   var file=e.target.files[0];if(!file)return;
   var infoEl=document.getElementById('infoPenerimaan');infoEl.style.display='block';infoEl.innerHTML='⏳ Membaca '+file.name+'...';
@@ -156,7 +172,6 @@ document.getElementById('filePenerimaan').addEventListener('change',function(e){
       var rows=XLSX.utils.sheet_to_json(ws,{header:1, defval:null});
       var header={};for(var i=0;i<16;i++){if(rows[i] && rows[i][0] && rows[i][1]) header[rows[i][0]]=rows[i][1];}
       var noRecv=header['No. Receiving']||header['No. Invoice']||'PENERIMAAN';
-      var tglRecv=header['Tgl Penerimaan']||'';
       var headerRow=-1;for(var i=0;i<rows.length;i++){if(rows[i] && rows[i][0]==='SKU' && rows[i][1]==='Product'){headerRow=i;break;}}
       if(headerRow===-1){alert('Format salah!');return;}
       var items=[];for(var i=headerRow+1;i<rows.length;i++){var r=rows[i];if(!r||!r[0]||!r[1])continue;if(String(r[0]).toLowerCase()==='catatan')break;if(!String(r[0]).startsWith('BB-'))continue;var qty=parseFloat(r[2])||0;if(qty===0)continue;items.push({sku:String(r[0]).trim(),product:String(r[1]).trim(),qty:qty,unit:String(r[3]||'pcs').trim()});}
@@ -169,7 +184,7 @@ document.getElementById('filePenerimaan').addEventListener('change',function(e){
           var ex=map[it.product.toLowerCase().trim()];
           if(ex){var np=(Number(ex.penerimaan)||0)+it.qty;promises.push(fetch(URL_API+'?id=eq.'+ex.id,{method:'PATCH',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({penerimaan:np})}).then(function(){simpanRiwayat(it.product,'MASUK',it.qty);}));up++;}else{promises.push(fetch(URL_API,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({nama_barang:it.product,stok:0,penerimaan:it.qty,terpakai:0,satuan:it.unit,toko:window.TOKO})}).then(function(){simpanRiwayat(it.product,'MASUK',it.qty);}));nb++;}
         });
-        Promise.all(promises).then(function(){infoEl.innerHTML='✅ SUKSES! '+up+' update, '+nb+' baru';alert('BERHASIL!\nUpdate:'+up+'\nBaru:'+nb);loadStokReal();});
+        Promise.all(promises).then(function(){infoEl.innerHTML='✅ SUKSES! '+up+' update, '+nb+' baru';alert('BERHASIL!\nUpdate:'+up+'\nBaru:'+nb);loadStokRealNoCheck();});
       });
     }catch(err){alert('Gagal:'+err.message);}
   };reader.readAsArrayBuffer(file);
@@ -177,7 +192,4 @@ document.getElementById('filePenerimaan').addEventListener('change',function(e){
 try{
   var tk=localStorage.getItem('toko_temp');if(tk){var el=document.getElementById('toko');if(el){el.value=tk;document.getElementById('judul').innerText=tk;window.TOKO=tk;}}
   var tk2=localStorage.getItem('toko_login');var ok=localStorage.getItem('verif_ok');
-  if(tk2&&ok==='yes'){window.TOKO=tk2;var el2=document.getElementById('toko');if(el2)el2.value=tk2;document.getElementById('judul').innerText=tk2;document.getElementById('loginArea').style.display='none';document.getElementById('mainArea').style.display='block';document.getElementById('userInfo').style.display='block';document.getElementById('infoUser').innerText=tk2+" ✅";loadStokReal();}
-}catch(e){}
-</script>
-</body></html>
+  if(tk2&&ok==='yes'){window.TOKO=tk2;var el2=document.getElementById('toko');if(el2)
