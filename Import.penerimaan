@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Import Penerimaan - APK Gudang Katapang</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#f5f5f5;padding:15px}
+.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.hdr{background:linear-gradient(135deg,#15803d,#16a34a);color:#fff;border-radius:12px;padding:20px}
+.btn{background:#16a34a;color:#fff;border:none;padding:12px 20px;border-radius:8px;font-weight:700;cursor:pointer;width:100%;font-size:16px}
+.btn:disabled{opacity:0.5}
+.btn2{background:#fbbf24;color:#000}
+.input{width:100%;padding:12px;border:2px dashed #16a34a;border-radius:10px;text-align:center;background:#f0fdf4}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#15803d;color:#fff;padding:8px;text-align:left}
+td{padding:8px;border-bottom:1px solid #e5e7eb}
+.badge{padding:3px 8px;border-radius:12px;font-size:11px;font-weight:700}
+.match{background:#dcfce7;color:#166534}
+.new{background:#fef3c7;color:#92400e}
+.log{background:#111;color:#0f0;padding:10px;border-radius:8px;font-family:monospace;font-size:12px;max-height:200px;overflow:auto}
+</style>
+</head>
+<body>
+<div class="card hdr">
+<h2>📦 Import Penerimaan Barang</h2>
+<p style="opacity:0.9;font-size:14px;margin-top:4px">Upload file Excel Sale Invoice Detail - Auto masuk stok sesuai nama</p>
+<div style="margin-top:10px;background:rgba(0,0,0,0.2);padding:8px 12px;border-radius:8px;font-size:12px">
+No. Receiving: <b id="infoNo">-</b> | Tgl: <b id="infoTgl">-</b> | Total Item: <b id="infoTotal">0</b>
+</div>
+</div>
+
+<div class="card">
+<h3 style="margin-bottom:10px">1. Upload File Excel Invoice</h3>
+<input type="file" id="fileInput" accept=".xlsx,.xls" class="input">
+<p style="font-size:12px;color:#666;margin-top:8px">Format: Sale Invoice INV/10/2026/KATAPANG/00397 Detail - Sama kayak contoh kamu</p>
+</div>
+
+<div class="card" id="previewCard" style="display:none">
+<h3>2. Preview Data - Auto Mapping</h3>
+<div style="margin:10px 0;display:flex;gap:8px">
+<span class="badge match">✓ COCOK = Tambah stok</span>
+<span class="badge new">+ BARU = Bikin item baru</span>
+</div>
+<div style="overflow:auto;max-height:400px">
+<table id="previewTable">
+<thead><tr><th>SKU</th><th>Product</th><th>Qty</th><th>Unit</th><th>Status</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<button class="btn" id="btnConfirm" style="margin-top:12px">✅ KONFIRMASI & MASUKKAN KE GUDANG</button>
+<button class="btn btn2" style="margin-top:8px" onclick="location.reload()">🔄 Upload Ulang</button>
+</div>
+
+<div class="card" id="logCard" style="display:none">
+<h3>3. Log Proses</h3>
+<div id="log" class="log"></div>
+<button class="btn" style="margin-top:10px" onclick="window.location.href='index.html'">🏠 Kembali ke APK Gudang</button>
+</div>
+
+<script>
+function getExistingStock(){
+  const keys = ['gudang_stock','stok_gudang','stock','items','katapang_stock'];
+  for(let k of keys){
+    try{
+      const v = localStorage.getItem(k);
+      if(v){ return {key:k, data: JSON.parse(v)} }
+    }catch{}
+  }
+  return {key:'katapang_stock', data:[]}
+}
+
+let parsedItems = [];
+let headerInfo = {};
+
+document.getElementById('fileInput').addEventListener('change', function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt){
+    const data = new Uint8Array(evt.target.result);
+    const wb = XLSX.read(data, {type:'array'});
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(ws, {header:1, defval:null});
+    
+    headerInfo = {};
+    for(let i=0;i<16;i++){
+      if(json[i] && json[i][0] && json[i][1]){
+        headerInfo[json[i][0]] = json[i][1];
+      }
+    }
+    document.getElementById('infoNo').innerText = headerInfo['No. Receiving'] || '-';
+    document.getElementById('infoTgl').innerText = headerInfo['Tgl Penerimaan'] || '-';
+    
+    let headerRow = -1;
+    for(let i=0;i<json.length;i++){
+      if(json[i] && json[i][0]==='SKU' && json[i][1]==='Product'){
+        headerRow = i; break;
+      }
+    }
+    if(headerRow==-1){ alert('Format tidak sesuai! Header SKU/Product tidak ketemu'); return; }
+    
+    parsedItems = [];
+    for(let i=headerRow+1;i<json.length;i++){
+      const row = json[i];
+      if(!row || !row[0] || !row[1]) continue;
+      if(row[0]==='Catatan') break;
+      const sku = String(row[0]).trim();
+      const product = String(row[1]).trim();
+      const qty = Number(row[2]) || 0;
+      const unit = row[3] || '';
+      const qtyBesar = row[4] || 0;
+      const unitBesar = row[5] || '';
+      const weight = row[6] || 0;
+      if(!sku.startsWith('BB-')) continue;
+      parsedItems.push({sku, product, qty, unit, qtyBesar, unitBesar, weight});
+    }
+    document.getElementById('infoTotal').innerText = parsedItems.length;
+    renderPreview();
+  };
+  reader.readAsArrayBuffer(file);
+});
+
+function renderPreview(){
+  const existing = getExistingStock();
+  const existingMap = {};
+  existing.data.forEach(it=>{
+    const name = (it.name || it.product || it.nama || '').toLowerCase().trim();
+    const sku = (it.sku || '').toLowerCase().trim();
+    if(name) existingMap[name] = it;
+    if(sku) existingMap[sku] = it;
+  });
+  const tbody = document.querySelector('#previewTable tbody');
+  tbody.innerHTML = '';
+  parsedItems.forEach(item=>{
+    const found = existingMap[item.product.toLowerCase()] || existingMap[item.sku.toLowerCase()];
+    const status = found ? `<span class="badge match">COCOK: Stok ${found.qty||found.stok||0}</span>` : `<span class="badge new">BARU</span>`;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><b>${item.sku}</b></td><td>${item.product}</td><td><b>${item.qty}</b> ${item.unit}<br><small>${item.qtyBesar} ${item.unitBesar}</small></td><td>${item.unit}</td><td>${status}</td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('previewCard').style.display='block';
+}
+
+document.getElementById('btnConfirm').addEventListener('click', function(){
+  const existing = getExistingStock();
+  let stock = existing.data;
+  if(!Array.isArray(stock)) stock = [];
+  const logEl = document.getElementById('log');
+  document.getElementById('logCard').style.display='block';
+  logEl.innerHTML = '';
+  function log(msg){ logEl.innerHTML += `[${new Date().toLocaleTimeString()}] ${msg}<br>`; logEl.scrollTop = logEl.scrollHeight; }
+  log(`Mulai import ${parsedItems.length} item dari ${headerInfo['No. Receiving']}`);
+  log(`Key storage: ${existing.key}`);
+  let added=0, updated=0, baru=0;
+  parsedItems.forEach(item=>{
+    let idx = stock.findIndex(s=>{
+      const sName = (s.name||s.product||s.nama||'').toLowerCase().trim();
+      const sSku = (s.sku||'').toLowerCase().trim();
+      return sName === item.product.toLowerCase() || sSku === item.sku.toLowerCase();
+    });
+    if(idx>=0){
+      const oldQty = Number(stock[idx].qty || stock[idx].stok || 0);
+      const newQty = oldQty + Number(item.qty);
+      stock[idx].qty = newQty;
+      stock[idx].stok = newQty;
+      stock[idx].lastReceiving = headerInfo['No. Receiving'];
+      stock[idx].lastUpdate = new Date().toISOString();
+      log(`✓ UPDATE: ${item.product} | ${oldQty} -> ${newQty} (+${item.qty})`);
+      updated++;
+    } else {
+      const newItem = {
+        sku: item.sku, name: item.product, product: item.product,
+        qty: Number(item.qty), stok: Number(item.qty),
+        unit: item.unit, qtyBesar: item.qtyBesar, unitBesar: item.unitBesar,
+        weight: item.weight, createdFrom: headerInfo['No. Receiving'],
+        tglPenerimaan: headerInfo['Tgl Penerimaan'], createdAt: new Date().toISOString()
+      };
+      stock.push(newItem);
+      log(`+ BARU: ${item.product} | ${item.qty} ${item.unit}`);
+      baru++;
+    }
+    added++;
+  });
+  try{
+    localStorage.setItem(existing.key, JSON.stringify(stock));
+    let hist = []; try{ hist = JSON.parse(localStorage.getItem('riwayat_penerimaan')||'[]'); }catch{}
+    hist.push({noReceiving: headerInfo['No. Receiving'], noInvoice: headerInfo['No. Invoice'], tgl: headerInfo['Tgl Penerimaan'], totalItem: parsedItems.length, importedAt: new Date().toISOString(), items: parsedItems});
+    localStorage.setItem('riwayat_penerimaan', JSON.stringify(hist));
+    log(`SELESAI! ${updated} update, ${baru} baru. Total ${added} item!`);
+    alert(`Berhasil! ${updated} update, ${baru} baru. Total ${added} item masuk gudang!`);
+  }catch(e){ log(`ERROR: ${e.message}`); alert('Gagal: '+e.message); }
+});
+</script>
+</body>
+</html>
