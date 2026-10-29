@@ -2,385 +2,832 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gudang Labbaik Chicken V46</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f1f5f9;
-  color: #172033;
-}
-
-header {
-  background: #123c2b;
-  color: white;
-  padding: 18px 14px;
-  text-align: center;
-}
-
-header h2 {
-  margin: 0 0 6px;
-}
-
-header p {
-  margin: 0;
-  font-size: 12px;
-}
-
-.container {
-  padding: 12px;
-  max-width: 1000px;
-  margin: auto;
-}
-
-.card {
-  background: white;
-  padding: 15px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  box-shadow: 0 2px 7px #00000010;
-}
-
-label {
-  display: block;
-  margin: 10px 0 5px;
-  font-size: 13px;
-  font-weight: bold;
-}
-
-input, select, button {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
-  font-size: 14px;
-}
-
-button {
-  background: #176b45;
-  color: white;
-  border: none;
-  font-weight: bold;
-  margin-top: 8px;
-  cursor: pointer;
-}
-
-button:active {
-  opacity: 0.75;
-}
-
-button.secondary {
-  background: #334155;
-}
-
-button.danger {
-  background: #b91c1c;
-}
-
-.menu {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.menu button {
-  margin: 0;
-  min-height: 48px;
-}
-
-.page {
-  display: none;
-}
-
-.page.active {
-  display: block;
-}
-
-.summary {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-
-.summary div {
-  padding: 13px;
-  border-radius: 10px;
-  background: #e5f5eb;
-}
-
-.summary strong {
-  display: block;
-  font-size: 20px;
-  margin-top: 6px;
-}
-
-.table-wrap {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  font-size: 12px;
-  min-width: 550px;
-}
-
-th, td {
-  padding: 10px 8px;
-  border-bottom: 1px solid #e2e8f0;
-  text-align: left;
-}
-
-th {
-  background: #e2eee7;
-}
-
-.status-aman {
-  color: #15803d;
-  font-weight: bold;
-}
-
-.status-tipis {
-  color: #b45309;
-  font-weight: bold;
-}
-
-.status-kritis {
-  color: #b91c1c;
-  font-weight: bold;
-}
-
-#pesan {
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  display: none;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.hide {
-  display: none !important;
-}
-
-@media (min-width: 700px) {
-  .menu {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .summary {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
+*{box-sizing:border-box}
+body{margin:0;background:#f1f5f9;color:#172033;font-family:Arial,sans-serif}
+header{background:#123c2b;color:white;text-align:center;padding:18px 10px}
+header h2{margin:0 0 6px;font-size:21px}
+header p{margin:0;font-size:12px}
+.container{max-width:1000px;margin:auto;padding:12px}
+.card{background:white;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 7px #0001}
+label{display:block;font-weight:bold;font-size:13px;margin:10px 0 5px}
+input,select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;background:white}
+button{width:100%;padding:12px;border:0;border-radius:8px;background:#176b45;color:white;font-weight:bold;margin-top:8px;font-size:13px;cursor:pointer}
+button:active{opacity:.75}
+.secondary{background:#334155}
+.danger{background:#b91c1c}
+.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.menu button{margin:0;min-height:45px}
+.page{display:none}
+.page.active{display:block}
+.hide{display:none!important}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:540px;font-size:12px}
+th,td{padding:9px 7px;border-bottom:1px solid #e2e8f0;text-align:left}
+th{background:#e2eee7}
+#pesan{display:none;white-space:pre-wrap;overflow-wrap:anywhere;padding:12px;border-radius:8px;margin-bottom:10px;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}
+.stat{background:#e5f5eb;padding:12px;border-radius:9px;font-size:12px}
+.stat strong{display:block;font-size:20px;margin-top:6px}
+.aman{color:#15803d;font-weight:bold}
+.tipis{color:#b45309;font-weight:bold}
+.kritis{color:#b91c1c;font-weight:bold}
+.small{font-size:12px;color:#475569;line-height:1.5}
+@media(min-width:700px){.menu{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 
 <body>
-
 <header>
-  <h2>GUDANG LABBAIK CHICKEN</h2>
-  <p>Sistem Stok Gudang • Versi 46.0</p>
+<h2>GUDANG LABBAIK CHICKEN</h2>
+<p>SISTEM STOK GUDANG • V46.0</p>
 </header>
 
 <div class="container">
 
-  <div id="loginBox" class="card">
-    <h3>Login Toko</h3>
+<!-- LOGIN -->
+<div id="loginBox" class="card">
+<h3>Login Toko</h3>
 
-    <label>Pilih Toko</label>
-    <select id="pilihToko">
-      <option value="KATAPANG">KATAPANG</option>
-      <option value="ALFATHU">ALFATHU</option>
-      <option value="GADING TUTUKA">GADING TUTUKA</option>
-      <option value="CIWIDEY">CIWIDEY</option>
-      <option value="BALEENDAH">BALEENDAH</option>
-      <option value="SUKAMENAK">SUKAMENAK</option>
-      <option value="BOJONG SOANG">BOJONG SOANG</option>
-      <option value="MARGAASIH">MARGAASIH</option>
-    </select>
+<label>Pilih Cabang</label>
+<select id="pilihToko">
+<option>KATAPANG</option>
+<option>ALFATHU</option>
+<option>GADING TUTUKA</option>
+<option>CIWIDEY</option>
+<option>BALEENDAH</option>
+<option>SUKAMENAK</option>
+<option>BOJONG SOANG</option>
+<option>MARGAASIH</option>
+</select>
 
-    <label>PIN Login</label>
-    <input id="pinLogin" type="password"
-      inputmode="numeric" maxlength="6"
-      placeholder="Masukkan PIN 6 digit">
+<label>PIN Login</label>
+<input id="pinLogin" type="password" inputmode="numeric" maxlength="6" placeholder="Masukkan PIN">
 
-    <button onclick="login()">MASUK APLIKASI</button>
-  </div>
+<button onclick="login()">MASUK APLIKASI</button>
+</div>
 
-  <div id="appBox" class="hide">
+<!-- APLIKASI -->
+<div id="appBox" class="hide">
 
-    <div class="card">
-      <strong>Toko Aktif:</strong>
-      <span id="tokoAktif">KATAPANG</span>
-      <button class="secondary" onclick="muatStok()">
-        🔄 MUAT ULANG STOK
-      </button>
-      <button class="danger" onclick="logout()">
-        KELUAR / GANTI TOKO
-      </button>
-    </div>
+<div class="card">
+<strong>Toko aktif: </strong><span id="tokoAktif"></span>
+<button class="secondary" onclick="muatStok()">🔄 MUAT ULANG DATA</button>
+<button class="danger" onclick="logout()">KELUAR / GANTI TOKO</button>
+</div>
 
-    <div id="pesan"></div>
+<div id="pesan"></div>
 
-    <div class="menu">
-      <button onclick="bukaHalaman('stokPage')">
-        📦 DATA STOK
-      </button>
-      <button onclick="bukaHalaman('transaksiPage')">
-        🔄 TRANSAKSI
-      </button>
-      <button onclick="bukaHalaman('tambahPage')">
-        ➕ TAMBAH BARANG
-      </button>
-      <button onclick="bukaHalaman('invoicePage')">
-        📥 INVOICE DC
-      </button>
-      <button onclick="bukaHalaman('laporanPage')">
-        📊 LAPORAN
-      </button>
-      <button onclick="bukaHalaman('riwayatPage')">
-        🕘 RIWAYAT
-      </button>
-    </div>
+<div class="menu">
+<button onclick="bukaHalaman('stokPage')">📦 DATA STOK</button>
+<button onclick="bukaHalaman('transaksiPage')">🔄 TRANSAKSI</button>
+<button onclick="bukaHalaman('tambahPage')">➕ TAMBAH BARANG</button>
+<button onclick="bukaHalaman('invoicePage')">📥 INVOICE DC</button>
+<button onclick="bukaHalaman('laporanPage')">📊 LAPORAN</button>
+<button onclick="bukaHalaman('riwayatPage')">🕘 RIWAYAT</button>
+</div>
 
-    <div id="stokPage" class="page active">
-      <div class="card">
-        <h3>Data Stok Barang</h3>
-        <input id="cariBarang"
-          placeholder="Cari nama barang..."
-          oninput="tampilkanStok()">
-        <button onclick="muatStok()">REFRESH DATA</button>
-        <div class="summary">
-          <div>Jumlah Barang<strong id="jumlahBarang">0</strong></div>
-          <div>Stok Kritis<strong id="jumlahKritis">0</strong></div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Nama Barang</th>
-                <th>Stok Awal</th>
-                <th>Masuk</th>
-                <th>Keluar</th>
-                <th>Sisa</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="tabelStok">
-              <tr><td colspan="6">Belum ada data dimuat.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+<!-- STOK -->
+<section id="stokPage" class="page active">
+<div class="card">
+<h3>Data Stok Barang</h3>
+<input id="cariBarang" placeholder="Cari nama barang..." oninput="tampilkanStok()">
 
-    <div id="transaksiPage" class="page">
-      <div class="card">
-        <h3>Transaksi Barang</h3>
+<div class="stats">
+<div class="stat">Jumlah Barang<strong id="jumlahBarang">0</strong></div>
+<div class="stat">Stok Kritis<strong id="jumlahKritis">0</strong></div>
+<div class="stat">Stok Menipis<strong id="jumlahTipis">0</strong></div>
+<div class="stat">Total Sisa<strong id="totalSisa">0</strong></div>
+</div>
 
-        <label>Jenis Transaksi</label>
-        <select id="jenisTransaksi">
-          <option value="MASUK">BARANG MASUK</option>
-          <option value="KELUAR">BARANG KELUAR</option>
-        </select>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Nama Barang</th>
+<th>Stok Awal</th>
+<th>Masuk</th>
+<th>Keluar</th>
+<th>Sisa</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="tabelStok">
+<tr><td colspan="6">Silakan muat data.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
 
-        <label>Nama Barang</label>
-        <select id="barangTransaksi"></select>
+<!-- TRANSAKSI -->
+<section id="transaksiPage" class="page">
+<div class="card">
+<h3>Transaksi Barang</h3>
 
-        <label>Jumlah</label>
-        <input id="jumlahTransaksi" type="number"
-          min="0.01" step="any" placeholder="Masukkan jumlah">
+<label>Jenis Transaksi</label>
+<select id="jenisTransaksi">
+<option value="MASUK">BARANG MASUK</option>
+<option value="KELUAR">BARANG KELUAR</option>
+</select>
 
-        <button onclick="simpanTransaksi()">
-          SIMPAN TRANSAKSI
-        </button>
-      </div>
-    </div>
+<label>Nama Barang</label>
+<select id="barangTransaksi"></select>
 
-    <div id="tambahPage" class="page">
-      <div class="card">
-        <h3>Tambah Barang Baru</h3>
+<label>Jumlah</label>
+<input id="jumlahTransaksi" type="number" min="0.001" step="any" placeholder="Masukkan jumlah">
 
-        <label>Nama Barang</label>
-        <input id="namaBarangBaru"
-          placeholder="Nama barang">
+<p class="small">Transaksi akan memperbarui kolom penerimaan atau terpakai pada database.</p>
 
-        <label>Stok Awal</label>
-        <input id="stokAwalBaru" type="number"
-          min="0" step="any" value="0">
+<button onclick="simpanTransaksi()">SIMPAN TRANSAKSI</button>
+</div>
+</section>
 
-        <label>Satuan</label>
-        <select id="satuanBaru">
-          <option value="pcs">pcs</option>
-          <option value="gr">gr</option>
-          <option value="ml">ml</option>
-          <option value="kg">kg</option>
-        </select>
+<!-- TAMBAH BARANG -->
+<section id="tambahPage" class="page">
+<div class="card">
+<h3>Tambah Barang Baru</h3>
 
-        <button onclick="tambahBarang()">
-          SIMPAN BARANG BARU
-        </button>
-      </div>
-    </div>
+<label>Nama Barang</label>
+<input id="namaBarangBaru" placeholder="Nama barang">
 
-    <div id="invoicePage" class="page">
-      <div class="card">
-        <h3>Import Invoice DC</h3>
-        <p>
-          Pilih file Excel (.xlsx). Nama produk pada invoice
-          harus cocok dengan nama barang di database.
-          Jumlah yang dipakai adalah kolom Receiving Qty,
-          bukan Receiving Qty (Besar), agar tidak dihitung dua kali.
-        </p>
+<label>Stok Awal</label>
+<input id="stokAwalBaru" type="number" min="0" step="any" value="0">
 
-        <input id="fileInvoice" type="file"
-          accept=".xlsx,.xls,.csv">
+<label>Satuan</label>
+<select id="satuanBaru">
+<option value="pcs">pcs</option>
+<option value="gr">gr</option>
+<option value="ml">ml</option>
+<option value="kg">kg</option>
+</select>
 
-        <button onclick="prosesInvoice()">
-          PROSES INVOICE
-        </button>
+<button onclick="tambahBarang()">SIMPAN BARANG</button>
+</div>
+</section>
 
-        <div id="hasilInvoice"></div>
-      </div>
-    </div>
+<!-- INVOICE -->
+<section id="invoicePage" class="page">
+<div class="card">
+<h3>Import Invoice DC</h3>
 
-    <div id="laporanPage" class="page">
-      <div class="card">
-        <h3>Laporan Stok</h3>
-        <p>
-          Laporan menampilkan data stok yang sedang tersimpan
-          di database untuk toko aktif.
-        </p>
-        <button onclick="buatLaporan()">TAMPILKAN LAPORAN</button>
-        <button class="secondary" onclick="eksporCSV()">
-          EKSPOR STOK KE CSV
-        </button>
-        <div id="hasilLaporan"></div>
-      </div>
-    </div>
+<p class="small">
+Pilih file Excel atau CSV. Kolom yang digunakan: Product, Receiving Qty, dan Unit.
+Nama Product harus cocok dengan nama barang yang sudah ada.
+Kolom Receiving Qty (Besar) tidak digunakan agar tidak menghitung jumlah dua kali.
+</p>
 
-    <div id="riwayatPage" class="page">
-      <div class="card">
-        <h3>Riwayat Transaksi</h3>
-        <p>Riwayat transaksi tersimpan di perangkat ini.</p>
-        <button onclick="tampilkanRiwayat()">
-          LIHAT RIWAYAT
-        </button>
-        <div id="hasilRiwayat"></div>
-      </div>
-    </div>
+<input id="fileInvoice" type="file" accept=".xlsx,.xls,.csv">
 
-  </div>
+<button onclick="prosesInvoice()">PROSES INVOICE</button>
+<div id="hasilInvoice" class="small"></div>
+</div>
+</section>
+
+<!-- LAPORAN -->
+<section id="laporanPage" class="page">
+<div class="card">
+<h3>Laporan Stok</h3>
+<label>Filter nama barang</label>
+<input id="cariLaporan" placeholder="Cari barang dalam laporan..." oninput="buatLaporan()">
+
+<button onclick="buatLaporan()">TAMPILKAN LAPORAN</button>
+<button class="secondary" onclick="eksporCSV()">EKSPOR STOK KE CSV</button>
+<div id="hasilLaporan"></div>
+</div>
+</section>
+
+<!-- RIWAYAT -->
+<section id="riwayatPage" class="page">
+<div class="card">
+<h3>Riwayat Transaksi</h3>
+<p class="small">Riwayat pada versi ini tersimpan di perangkat yang digunakan, bukan di database bersama.</p>
+<button onclick="tampilkanRiwayat()">MUAT RIWAYAT</button>
+<button class="secondary" onclick="eksporRiwayat()">EKSPOR RIWAYAT CSV</button>
+<div id="hasilRiwayat"></div>
+</div>
+</section>
+
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <script>
+// ======================================
+// 1. PENGATURAN SUPABASE
+// ======================================
+
+const SUPABASE_URL =
+'https://lgunwtgwlzggfmfjzxqm.supabase.co';
+
+const SUPABASE_KEY =
+'TEMPELKAN_ANON_PUBLIC_KEY_V45_DI_SINI';
+
+const CABANG_PIN = {
+'KATAPANG':'111111',
+'ALFATHU':'222222',
+'GADING TUTUKA':'333333',
+'CIWIDEY':'444444',
+'BALEENDAH':'555555',
+'SUKAMENAK':'666666',
+'BOJONG SOANG':'777777',
+'MARGAASIH':'888888'
+};
+
+let tokoSekarang = '';
+let daftarStok = [];
+let sedangMemuat = false;
+
+// ======================================
+// 2. FUNGSI UMUM
+// ======================================
+
+function angka(v) {
+const n = Number(v);
+return Number.isFinite(n) ? n : 0;
+}
+
+function formatAngka(v) {
+return angka(v).toLocaleString('id-ID',{
+maximumFractionDigits:3
+});
+}
+
+function escapeHTML(v) {
+return String(v ?? '').replace(/[&<>"']/g,function(c){
+return {
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[c];
+});
+}
+
+function tampilPesan(teks,error=false) {
+const el=document.getElementById('pesan');
+el.style.display='block';
+el.style.background=error?'#fee2e2':'#dcfce7';
+el.style.color=error?'#991b1b':'#166534';
+el.textContent=teks;
+}
+
+function waktuLokal() {
+return new Date().toLocaleString('id-ID',{
+timeZone:'Asia/Jakarta'
+});
+}
+
+function kunciRiwayat() {
+return 'riwayat_'+tokoSekarang;
+}
+
+function bacaRiwayat() {
+try {
+return JSON.parse(localStorage.getItem(kunciRiwayat())||'[]');
+} catch(e) {
+return [];
+}
+
+}
+
+// ======================================
+// 3. KONEKSI DATABASE
+// ======================================
+
+async function supabaseRequest(path,options={}) {
+
+if(!SUPABASE_KEY ||
+SUPABASE_KEY==='TEMPELKAN_ANON_PUBLIC_KEY_V45_DI_SINI') {
+throw new Error('Anon/public key V45.0 belum dipasang.');
+}
+
+const headers={
+'apikey':SUPABASE_KEY,
+'Authorization':'Bearer '+SUPABASE_KEY,
+'Content-Type':'application/json',
+'Accept':'application/json',
+...(options.headers||{})
+};
+
+const response=await fetch(
+SUPABASE_URL+'/rest/v1/'+path,
+{...options,headers:headers}
+);
+
+const body=await response.text();
+
+if(!response.ok) {
+throw new Error('Supabase '+response.status+': '+body);
+}
+
+if(!body) return null;
+
+try {
+return JSON.parse(body);
+} catch(e) {
+return body;
+}
+}
+
+// ======================================
+// 4. LOGIN DAN NAVIGASI
+// ======================================
+
+function login() {
+const toko=document.getElementById('pilihToko').value;
+const pin=document.getElementById('pinLogin').value;
+
+if(CABANG_PIN[toko]!==pin && pin!=='999999') {
+alert('PIN salah. Silakan periksa kembali.');
+return;
+}
+
+tokoSekarang=toko;
+
+document.getElementById('tokoAktif').textContent=toko;
+document.getElementById('loginBox').classList.add('hide');
+document.getElementById('appBox').classList.remove('hide');
+document.getElementById('pinLogin').value='';
+
+localStorage.setItem('stok_v46_toko',toko);
+
+muatStok();
+}
+
+function logout() {
+tokoSekarang='';
+
+document.getElementById('appBox').classList.add('hide');
+document.getElementById('loginBox').classList.remove('hide');
+
+localStorage.removeItem('stok_v46_toko');
+}
+
+function bukaHalaman(id) {
+document.querySelectorAll('.page').forEach(function(el){
+el.classList.remove('active');
+});
+
+document.getElementById(id).classList.add('active');
+
+if(id==='stokPage') tampilkanStok();
+if(id==='riwayatPage') tampilkanRiwayat();
+if(id==='laporanPage') buatLaporan();
+}
+
+// ======================================
+// 5. MEMUAT DATA STOK
+// ======================================
+
+async function muatStok() {
+
+if(!tokoSekarang) {
+tampilPesan('Login terlebih dahulu.',true);
+return;
+}
+
+if(sedangMemuat) return;
+sedangMemuat=true;
+
+tampilPesan('Mengambil data dari database...');
+
+try {
+const path=
+'stok?select=id,nama_barang,toko,stok,penerimaan,terpakai,satuan'+
+'&toko=eq.'+encodeURIComponent(tokoSekarang)+
+'&order=nama_barang.asc';
+
+const data=await supabaseRequest(path);
+
+daftarStok=Array.isArray(data)?data:[];
+
+tampilkanStok();
+isiPilihanBarang();
+
+tampilPesan('Data berhasil dimuat. Total barang: '+daftarStok.length);
+
+} catch(e) {
+tampilPesan('Gagal memuat stok:\n'+e.message,true);
+} finally {
+sedangMemuat=false;
+}
+}
+
+function hitungSisa(item) {
+return angka(item.stok)+angka(item.penerimaan)-angka(item.terpakai);
+}
+
+// ======================================
+// 6. MENAMPILKAN DATA STOK
+// ======================================
+
+function tampilkanStok() {
+
+const tbody=document.getElementById('tabelStok');
+if(!tbody) return;
+
+const kata=(document.getElementById('cariBarang').value||'').toLowerCase().trim();
+
+const hasil=daftarStok.filter(function(item){
+return String(item.nama_barang||'').toLowerCase().includes(kata);
+});
+
+tbody.innerHTML='';
+
+if(!hasil.length) {
+tbody.innerHTML='<tr><td colspan="6">Barang tidak ditemukan.</td></tr>';
+}
+
+hasil.forEach(function(item){
+
+const sisa=hitungSisa(item);
+
+let status='AMAN';
+let kelas='aman';
+
+if(sisa<=0) {
+status='KRITIS';
+kelas='kritis';
+} else if(sisa<=10) {
+status='MENIPIS';
+kelas='tipis';
+}
+
+const tr=document.createElement('tr');
+
+const values=[
+item.nama_barang,
+formatAngka(item.stok),
+formatAngka(item.penerimaan),
+formatAngka(item.terpakai),
+formatAngka(sisa)+' '+(item.satuan||''),
+status
+];
+
+values.forEach(function(value,index){
+const td=document.createElement('td');
+td.textContent=value??'-';
+if(index===5) td.className=kelas;
+tr.appendChild(td);
+});
+
+tbody.appendChild(tr);
+});
+
+document.getElementById('jumlahBarang').textContent=daftarStok.length;
+
+document.getElementById('jumlahKritis').textContent=
+daftarStok.filter(x=>hitungSisa(x)<=0).length;
+
+document.getElementById('jumlahTipis').textContent=
+daftarStok.filter(x=>hitungSisa(x)>0 && hitungSisa(x)<=10).length;
+
+document.getElementById('totalSisa').textContent=
+formatAngka(daftarStok.reduce((sum,x)=>sum+hitungSisa(x),0));
+}
+
+function isiPilihanBarang() {
+const select=document.getElementById('barangTransaksi');
+select.innerHTML='';
+
+daftarStok.forEach(function(item){
+const option=document.createElement('option');
+option.value=item.id;
+option.textContent=item.nama_barang+' — sisa '+formatAngka(hitungSisa(item));
+select.appendChild(option);
+});
+}
+
+// ======================================
+// 7. RIWAYAT LOKAL
+// ======================================
+
+function simpanRiwayat(jenis,nama,jumlah,satuan) {
+const data=bacaRiwayat();
+
+data.unshift({
+waktu:waktuLokal(),
+toko:tokoSekarang,
+jenis:jenis,
+barang:nama,
+jumlah:jumlah,
+satuan:satuan||''
+});
+
+localStorage.setItem(kunciRiwayat(),JSON.stringify(data));
+}
+
+function tampilkanRiwayat() {
+const data=bacaRiwayat();
+const el=document.getElementById('hasilRiwayat');
+
+if(!data.length) {
+el.textContent='Belum ada riwayat pada perangkat ini.';
+return;
+}
+
+let html='<div class="table-wrap"><table><thead><tr>'+
+'<th>Waktu</th><th>Transaksi</th><th>Barang</th><th>Jumlah</th>'+
+'</tr></thead><tbody>';
+
+data.forEach(function(x){
+html+='<tr>'+
+'<td>'+escapeHTML(x.waktu)+'</td>'+
+'<td>'+escapeHTML(x.jenis)+'</td>'+
+'<td>'+escapeHTML(x.barang)+'</td>'+
+'<td>'+escapeHTML(formatAngka(x.jumlah)+' '+x.satuan)+'</td>'+
+'</tr>';
+});
+
+html+='</tbody></table></div>';
+el.innerHTML=html;
+}
+
+// ======================================
+// 8. TRANSAKSI MASUK DAN KELUAR
+// ======================================
+
+async function simpanTransaksi() {
+
+const id=document.getElementById('barangTransaksi').value;
+const jenis=document.getElementById('jenisTransaksi').value;
+const jumlah=angka(document.getElementById('jumlahTransaksi').value);
+
+if(!id) {
+tampilPesan('Pilih barang terlebih dahulu.',true);
+return;
+}
+
+if(jumlah<=0) {
+tampilPesan('Jumlah transaksi harus lebih dari nol.',true);
+return;
+}
+
+const item=daftarStok.find(x=>String(x.id)===String(id));
+
+if(!item) {
+tampilPesan('Data barang tidak ditemukan. Muat ulang stok.',true);
+return;
+}
+
+const sisa=hitungSisa(item);
+
+if(jenis==='KELUAR' && jumlah>sisa) {
+tampilPesan('Stok tidak cukup. Sisa saat ini: '+formatAngka(sisa),true);
+return;
+}
+
+if(!confirm(
+'Konfirmasi transaksi '+jenis+
+'\nBarang: '+item.nama_barang+
+'\nJumlah: '+formatAngka(jumlah)+' '+(item.satuan||'')
+)) return;
+
+try {
+
+const kolom=jenis==='MASUK'?'penerimaan':'terpakai';
+const nilaiBaru=angka(item[kolom])+jumlah;
+
+const path='stok?id=eq.'+encodeURIComponent(item.id)+
+'&toko=eq.'+encodeURIComponent(tokoSekarang);
+
+await supabaseRequest(path,{
+method:'PATCH',
+headers:{'Prefer':'return=representation'},
+body:JSON.stringify({[kolom]:nilaiBaru})
+});
+
+simpanRiwayat(jenis,item.nama_barang,jumlah,item.satuan);
+
+document.getElementById('jumlahTransaksi').value='';
+
+await muatStok();
+
+tampilPesan('Transaksi berhasil disimpan.');
+
+} catch(e) {
+tampilPesan('Transaksi gagal:\n'+e.message,true);
+}
+}
+
+// ======================================
+// 9. TAMBAH BARANG BARU
+// ======================================
+
+async function tambahBarang() {
+
+const nama=document.getElementById('namaBarangBaru').value.trim();
+const stokAwal=angka(document.getElementById('stokAwalBaru').value);
+const satuan=document.getElementById('satuanBaru').value;
+
+if(!nama) {
+tampilPesan('Nama barang wajib diisi.',true);
+return;
+}
+
+if(stokAwal<0) {
+tampilPesan('Stok awal tidak boleh negatif.',true);
+return;
+}
+
+const ada=daftarStok.some(function(x){
+return String(x.nama_barang).toLowerCase()===nama.toLowerCase();
+});
+
+if(ada) {
+tampilPesan('Nama barang sudah ada di toko ini.',true);
+return;
+}
+
+if(!confirm('Tambahkan barang "'+nama+'"?')) return;
+
+try {
+
+await supabaseRequest('stok',{
+method:'POST',
+headers:{'Prefer':'return=representation'},
+body:JSON.stringify([{
+nama_barang:nama,
+toko:tokoSekarang,
+stok:stokAwal,
+penerimaan:0,
+terpakai:0,
+satuan:satuan
+}])
+});
+
+simpanRiwayat('TAMBAH BARANG',nama,stokAwal,satuan);
+
+document.getElementById('namaBarangBaru').value='';
+document.getElementById('stokAwalBaru').value='0';
+
+await muatStok();
+
+tampilPesan('Barang baru berhasil ditambahkan.');
+
+} catch(e) {
+tampilPesan('Gagal menambah barang:\n'+e.message,true);
+}
+}
+
+// ======================================
+// 10. IMPORT INVOICE EXCEL / CSV
+// ======================================
+
+function normalisasi(teks) {
+return String(teks||'')
+.toLowerCase()
+.replace(/[\s_\-()]/g,'')
+.trim();
+}
+
+async function prosesInvoice() {
+
+const file=document.getElementById('fileInvoice').files[0];
+
+if(!file) {
+tampilPesan('Pilih file invoice terlebih dahulu.',true);
+return;
+}
+
+if(typeof XLSX==='undefined') {
+tampilPesan('Library Excel gagal dimuat. Periksa koneksi internet.',true);
+return;
+}
+
+try {
+
+const buffer=await file.arrayBuffer();
+const workbook=XLSX.read(buffer,{type:'array'});
+const sheet=workbook.Sheets[workbook.SheetNames[0]];
+const rows=XLSX.utils.sheet_to_json(sheet,{defval:''});
+
+if(!rows.length) {
+tampilPesan('File invoice kosong.',true);
+return;
+}
+
+const headers=Object.keys(rows[0]);
+
+const productKey=headers.find(x=>normalisasi(x)==='product');
+const qtyKey=headers.find(x=>normalisasi(x)==='receivingqty');
+const unitKey=headers.find(x=>normalisasi(x)==='unit');
+
+if(!productKey || !qtyKey || !unitKey) {
+tampilPesan(
+'Kolom invoice tidak lengkap.\n'+
+'Pastikan ada kolom Product, Receiving Qty, dan Unit.',
+true
+);
+return;
+}
+
+let cocok=[];
+let tidakCocok=[];
+let jumlahTotal=0;
+
+rows.forEach(function(row){
+
+const nama=String(row[productKey]||'').trim();
+const qty=angka(row[qtyKey]);
+const unit=String(row[unitKey]||'').trim();
+
+if(!nama || qty<=0) return;
+
+const item=daftarStok.find(function(x){
+return String(x.nama_barang||'').trim().toLowerCase()===nama.toLowerCase();
+});
+
+if(!item) {
+tidakCocok.push(nama);
+return;
+}
+
+if(unit && item.satuan &&
+unit.toLowerCase()!==String(item.satuan).toLowerCase()) {
+tidakCocok.push(nama+' (satuan invoice: '+unit+')');
+return;
+}
+
+cocok.push({
+item:item,
+qty:qty
+});
+
+jumlahTotal++;
+});
+
+if(!cocok.length) {
+document.getElementById('hasilInvoice').textContent=
+'Tidak ada barang yang cocok. Periksa nama barang dan satuan.';
+return;
+}
+
+let ringkasan='Barang cocok: '+jumlahTotal+
+'\nBarang tidak cocok: '+tidakCocok.length+
+'\n\n';
+
+ringkasan+='Daftar barang yang akan diproses:\n';
+
+cocok.forEach(function(x){
+ringkasan+=x.item.nama_barang+' +'+formatAngka(x.qty)+' '+x.item.satuan+'\n';
+});
+
+if(tidakCocok.length) {
+ringkasan+='\nBarang yang dilewati:\n'+tidakCocok.join('\n');
+}
+
+document.getElementById('hasilInvoice').textContent=ringkasan;
+
+if(!confirm(
+'Periksa daftar invoice di layar.\n'+
+'Barang cocok: '+jumlahTotal+
+'\nLanjutkan menambahkan jumlah ke stok?'
+)) return;
+
+// Proses satu per satu.
+// Bila terjadi error di tengah proses, sebagian item mungkin
+// sudah tersimpan. Periksa stok sebelum mencoba ulang.
+
+let berhasil=0;
+let gagal=[];
+
+for(const x of cocok) {
+try {
+
+const item=x.item;
+const nilaiBaru=angka(item.penerimaan)+x.qty;
+
+const path='stok?id=eq.'+encodeURIComponent(item.id)+
+'&toko=eq.'+encodeURIComponent(tokoSekarang);
+
+await supabaseRequest(path,{
+method:'PATCH',
+headers:{'Prefer':'return=representation'},
+body:JSON.stringify({penerimaan:nilaiBaru})
+});
+
+simpanRiwayat('INVOICE DC',item.nama_barang,x.qty,item.satuan);
+berhasil++;
+
+} catch(e) {
+gagal.push(x.item.nama_barang+': '+e.message);
+}
+}
+
+await muatStok();
+
+let hasil='Invoice selesai.\nBerhasil: '+berhasil+
+'\nGagal: '+gagal.length;
+
+if(gagal.length) {
+hasil+='\n\nPeriksa item gagal:\n'+gagal.join('\n');
+}
+
+docum
