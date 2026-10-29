@@ -3,936 +3,537 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gudang Labbaik Chicken V46</title>
+<title>Gudang Labbaik Chicken V46.1</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background: #f1f4f7;
-  color: #202733;
-}
-
-header {
-  background: #123d2a;
-  color: white;
-  padding: 18px 12px;
-  text-align: center;
-}
-
-header h2 {
-  margin: 0 0 6px;
-  font-size: 21px;
-}
-
-header p {
-  margin: 0;
-  font-size: 12px;
-}
-
-.container {
-  max-width: 1000px;
-  margin: auto;
-  padding: 12px;
-}
-
-.card {
-  background: white;
-  padding: 15px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  box-shadow: 0 2px 7px #00000012;
-}
-
-h3 {
-  margin-top: 0;
-  font-size: 17px;
-}
-
-input, select, button {
-  width: 100%;
-  padding: 12px;
-  margin: 5px 0;
-  border-radius: 7px;
-  font-size: 14px;
-}
-
-input, select {
-  border: 1px solid #cbd3dc;
-  background: white;
-  color: #202733;
-}
-
-button {
-  border: none;
-  background: #176b42;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  min-height: 43px;
-}
-
-button:active {
-  opacity: 0.75;
-}
-
-button.secondary {
-  background: #36556d;
-}
-
-button.danger {
-  background: #b72d2d;
-}
-
-button.orange {
-  background: #c77b13;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.menu {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 7px;
-}
-
-.menu button {
-  font-size: 12px;
-  padding: 10px 5px;
-  background: #244c39;
-}
-
-.menu button.active {
-  background: #d9a42b;
-  color: #202733;
-}
-
-.stat {
-  background: #e7f4eb;
-  padding: 12px;
-  border-radius: 8px;
-  text-align: center;
-  overflow-wrap: anywhere;
-}
-
-.stat strong {
-  display: block;
-  font-size: 20px;
-  margin-top: 6px;
-}
-
-.small {
-  font-size: 12px;
-  color: #647180;
-}
-
-.status {
-  display: block;
-  margin-top: 6px;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.aman {
-  color: #168047;
-}
-
-.menipis {
-  color: #c47700;
-}
-
-.krisis {
-  color: #c22222;
-}
-
-.table-wrap {
-  overflow-x: auto;
-  width: 100%;
-}
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-  min-width: 600px;
-  font-size: 12px;
-}
-
-th, td {
-  padding: 9px 7px;
-  border-bottom: 1px solid #e0e5e9;
-  text-align: left;
-}
-
-th {
-  background: #e9f0eb;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.message {
-  padding: 10px;
-  border-radius: 7px;
-  margin: 8px 0;
-  font-size: 13px;
-  overflow-wrap: anywhere;
-}
-
-.success {
-  background: #e1f5e7;
-  color: #145d2d;
-}
-
-.error {
-  background: #ffebeb;
-  color: #a21c1c;
-}
-
-.info {
-  background: #e7f0fc;
-  color: #244d82;
-}
-
-footer {
-  text-align: center;
-  padding: 18px;
-  font-size: 11px;
-  color: #697582;
-}
-
-label {
-  font-size: 13px;
-  font-weight: bold;
-  display: block;
-  margin-top: 8px;
-}
-
-@media (min-width: 650px) {
-  .grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .menu {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f4f7;color:#202733}
+header{background:#123d2a;color:#fff;padding:18px 12px;text-align:center}
+header h2{margin:0 0 6px;font-size:21px}
+header p{margin:0;font-size:12px}
+.container{max-width:1000px;margin:auto;padding:12px}
+.card{background:#fff;padding:15px;margin-bottom:12px;border-radius:12px;box-shadow:0 2px 7px #00000012}
+h3{margin-top:0;font-size:17px}
+input,select,button{width:100%;padding:12px;margin:5px 0;border-radius:7px;font-size:14px}
+input,select{border:1px solid #cbd3dc;background:#fff;color:#202733}
+button{border:0;background:#176b42;color:#fff;font-weight:bold;cursor:pointer;min-height:43px}
+button:active{opacity:.75}
+button.secondary{background:#36556d}
+button.danger{background:#b72d2d}
+button:disabled{opacity:.5;cursor:wait}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.menu button{font-size:12px;padding:10px 5px;background:#244c39}
+.menu button.active{background:#d9a42b;color:#202733}
+.stat{background:#e7f4eb;padding:12px;border-radius:8px;text-align:center;overflow-wrap:anywhere}
+.stat strong{display:block;font-size:20px;margin-top:6px}
+.small{font-size:12px;color:#647180}
+.aman{color:#168047}.menipis{color:#c47700}.krisis{color:#c22222}
+.table-wrap{overflow-x:auto;width:100%}
+table{border-collapse:collapse;width:100%;min-width:600px;font-size:12px}
+th,td{padding:9px 7px;border-bottom:1px solid #e0e5e9;text-align:left}
+th{background:#e9f0eb}
+.hidden{display:none!important}
+.message{padding:10px;border-radius:7px;margin:8px 0;font-size:13px;overflow-wrap:anywhere}
+.success{background:#e1f5e7;color:#145d2d}
+.error{background:#ffebeb;color:#a21c1c}
+.info{background:#e7f0fc;color:#244d82}
+footer{text-align:center;padding:18px;font-size:11px;color:#697582}
+label{font-size:13px;font-weight:bold;display:block;margin-top:8px}
+@media(min-width:650px){
+.grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.menu{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
-
 <header>
-  <h2>GUDANG LABBAIK CHICKEN</h2>
-  <p>SISTEM INFORMASI STOK GUDANG V46.0</p>
+<h2>GUDANG LABBAIK CHICKEN</h2>
+<p>SISTEM INFORMASI STOK GUDANG V46.1</p>
 </header>
 
 <div class="container">
 
-  <!-- HALAMAN LOGIN -->
-  <section id="halamanLogin" class="card">
-    <h3>LOGIN APLIKASI</h3>
-    <p class="small">Pilih cabang dan masukkan PIN untuk melanjutkan.</p>
+<section id="halamanLogin" class="card">
+<h3>LOGIN APLIKASI</h3>
+<p class="small">Pilih cabang dan masukkan PIN untuk melanjutkan.</p>
 
-    <label for="pilihCabangLogin">Pilih Cabang</label>
-    <select id="pilihCabangLogin">
-      <option value="KATAPANG">KATAPANG</option>
-      <option value="ALFATHU">ALFATHU</option>
-      <option value="GADING TUTUKA">GADING TUTUKA</option>
-      <option value="CIWIDEY">CIWIDEY</option>
-      <option value="BALEENDAH">BALEENDAH</option>
-      <option value="SUKAMENAK">SUKAMENAK</option>
-      <option value="BOJONG SOANG">BOJONG SOANG</option>
-      <option value="MARGAASIH">MARGAASIH</option>
-    </select>
+<label>Pilih Cabang</label>
+<select id="pilihCabangLogin">
+<option>KATAPANG</option>
+<option>ALFATHU</option>
+<option>GADING TUTUKA</option>
+<option>CIWIDEY</option>
+<option>BALEENDAH</option>
+<option>SUKAMENAK</option>
+<option>BOJONG SOANG</option>
+<option>MARGAASIH</option>
+</select>
 
-    <label for="pinLogin">PIN LOGIN</label>
-    <input
-      id="pinLogin"
-      type="password"
-      inputmode="numeric"
-      maxlength="6"
-      placeholder="Masukkan 6 digit PIN"
-      autocomplete="off"
-    >
+<label>PIN LOGIN</label>
+<input id="pinLogin" type="password" inputmode="numeric"
+maxlength="6" placeholder="Masukkan 6 digit PIN">
 
-    <button type="button" id="tombolLogin">
-      MASUK APLIKASI
-    </button>
+<button type="button" id="tombolLogin">MASUK APLIKASI</button>
+<div id="pesanLogin" aria-live="polite"></div>
+</section>
 
-    <div id="pesanLogin" aria-live="polite"></div>
-  </section>
+<section id="halamanAplikasi" class="hidden">
 
-  <!-- APLIKASI UTAMA -->
-  <section id="halamanAplikasi" class="hidden">
-
-    <div class="card">
-      <div class="grid">
-        <div>
-          <div class="small">CABANG AKTIF</div>
-          <strong id="cabangAktif">-</strong>
-        </div>
-        <div>
-          <div class="small">STATUS KONEKSI</div>
-          <strong id="statusKoneksi">Belum terhubung</strong>
-        </div>
-      </div>
-
-      <button type="button" id="tombolMuat" class="secondary">
-        MUAT ULANG DATA STOK
-      </button>
-
-      <button type="button" id="tombolKeluar" class="danger">
-        KELUAR / GANTI CABANG
-      </button>
-
-      <div id="pesanUtama" aria-live="polite"></div>
-    </div>
-
-    <!-- MENU -->
-    <div class="card">
-      <h3>MENU UTAMA</h3>
-
-      <div class="menu">
-        <button type="button" class="active" data-menu="stok">
-          📦 DATA STOK
-        </button>
-
-        <button type="button" data-menu="transaksi">
-          🔄 TRANSAKSI
-        </button>
-
-        <button type="button" data-menu="tambah">
-          ➕ TAMBAH BARANG
-        </button>
-
-        <button type="button" data-menu="invoice">
-          🧾 IMPOR INVOICE
-        </button>
-
-        <button type="button" data-menu="riwayat">
-          📚 RIWAYAT
-        </button>
-
-        <button type="button" data-menu="laporan">
-          📊 LAPORAN
-        </button>
-
-        <button type="button" data-menu="ekspor">
-          📥 EKSPOR DATA
-        </button>
-      </div>
-    </div>
-
-    <!-- DATA STOK -->
-    <section id="menu-stok" class="card">
-      <h3>DATA STOK BARANG</h3>
-
-      <div class="grid">
-        <div class="stat">
-          Total jenis barang
-          <strong id="totalJenis">0</strong>
-        </div>
-
-        <div class="stat">
-          Barang krisis
-          <strong id="totalKrisis">0</strong>
-        </div>
-
-        <div class="stat">
-          Barang menipis
-          <strong id="totalMenipis">0</strong>
-        </div>
-
-        <div class="stat">
-          Total stok tersedia
-          <strong id="totalStok">0</strong>
-        </div>
-      </div>
-
-      <label for="cariBarang">Cari Nama Barang</label>
-      <input
-        id="cariBarang"
-        type="search"
-        placeholder="Ketik nama barang..."
-      >
-
-      <label for="filterStatus">Filter Status</label>
-      <select id="filterStatus">
-        <option value="SEMUA">Semua Status</option>
-        <option value="KRISIS">Krisis (stok ≤ 0)</option>
-        <option value="MENIPIS">Menipis (stok 1–10)</option>
-        <option value="AMAN">Aman (stok > 10)</option>
-      </select>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>Nama Barang</th>
-              <th>Stok Awal</th>
-              <th>Penerimaan</th>
-              <th>Terpakai</th>
-              <th>Sisa Stok</th>
-              <th>Satuan</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="tabelStok">
-            <tr>
-              <td colspan="8">Silakan login dan muat data.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <p class="small">
-        Rumus sisa stok = stok awal + penerimaan − terpakai.
-        Batas menipis saat ini adalah 10 satuan.
-      </p>
-    </section>
-
-    <!-- TRANSAKSI -->
-    <section id="menu-transaksi" class="card hidden">
-      <h3>TRANSAKSI BARANG</h3>
-
-      <label for="jenisTransaksi">Jenis Transaksi</label>
-      <select id="jenisTransaksi">
-        <option value="MASUK">BARANG MASUK</option>
-        <option value="KELUAR">BARANG KELUAR</option>
-      </select>
-
-      <label for="barangTransaksi">Pilih Barang</label>
-      <select id="barangTransaksi">
-        <option value="">Pilih barang...</option>
-      </select>
-
-      <label for="jumlahTransaksi">Jumlah</label>
-      <input
-        id="jumlahTransaksi"
-        type="number"
-        min="0.001"
-        step="any"
-        placeholder="Masukkan jumlah"
-      >
-
-      <label for="satuanTransaksi">Satuan</label>
-      <input id="satuanTransaksi" type="text" readonly>
-
-      <label for="tanggalTransaksi">Tanggal Transaksi</label>
-      <input id="tanggalTransaksi" type="date">
-
-      <button type="button" id="tombolSimpanTransaksi">
-        SIMPAN TRANSAKSI
-      </button>
-
-      <div id="pesanTransaksi" aria-live="polite"></div>
-    </section>
-
-    <!-- TAMBAH BARANG -->
-    <section id="menu-tambah" class="card hidden">
-      <h3>TAMBAH BARANG BARU</h3>
-
-      <label for="namaBarangBaru">Nama Barang</label>
-      <input
-        id="namaBarangBaru"
-        type="text"
-        placeholder="Masukkan nama barang"
-      >
-
-      <label for="stokAwalBaru">Stok Awal</label>
-      <input
-        id="stokAwalBaru"
-        type="number"
-        min="0"
-        step="any"
-        value="0"
-      >
-
-      <label for="satuanBaru">Satuan</label>
-      <select id="satuanBaru">
-        <option value="pcs">pcs</option>
-        <option value="gr">gr</option>
-        <option value="ml">ml</option>
-        <option value="kg">kg</option>
-        <option value="liter">liter</option>
-        <option value="pack">pack</option>
-        <option value="dus">dus</option>
-        <option value="botol">botol</option>
-        <option value="ikat">ikat</option>
-      </select>
-
-      <button type="button" id="tombolTambahBarang">
-        SIMPAN BARANG BARU
-      </button>
-
-      <div id="pesanTambah" aria-live="polite"></div>
-    </section>
-
-    <!-- IMPOR INVOICE -->
-    <section id="menu-invoice" class="card hidden">
-      <h3>IMPOR INVOICE PEMBELIAN</h3>
-
-      <p class="small">
-        Unggah CSV yang diekspor dari Excel. Kolom yang dibaca:
-        Product atau Nama Barang, Receiving Qty, dan Unit.
-        SKU, Receiving Qty (Besar), Unit (Besar), No. Invoice,
-        dan Tgl Penerimaan dapat tersedia, tetapi jumlah yang diproses
-        hanya Receiving Qty agar tidak dihitung dua kali.
-      </p>
-
-      <p class="small">
-        Pastikan nama barang di invoice sama dengan nama barang di
-        database. Barang yang belum terdaftar akan dilewati.
-      </p>
-
-      <label for="fileInvoice">Pilih File Invoice CSV</label>
-      <input id="fileInvoice" type="file" accept=".csv,text/csv">
-
-      <button type="button" id="tombolPreviewInvoice" class="secondary">
-        PERIKSA INVOICE
-      </button>
-
-      <div id="previewInvoice"></div>
-
-      <button type="button" id="tombolProsesInvoice">
-        PROSES PENERIMAAN INVOICE
-      </button>
-
-      <div id="pesanInvoice" aria-live="polite"></div>
-    </section>
-
-    <!-- RIWAYAT -->
-    <section id="menu-riwayat" class="card hidden">
-      <h3>RIWAYAT TRANSAKSI</h3>
-
-      <p class="small">
-        Riwayat pada perangkat ini disimpan secara lokal. Transaksi
-        stok yang berhasil disimpan juga tercermin pada data stok
-        Supabase, tetapi riwayat lokal tidak otomatis muncul di
-        perangkat lain.
-      </p>
-
-      <label for="filterRiwayat">Periode Riwayat</label>
-      <select id="filterRiwayat">
-        <option value="HARI">Hari Ini</option>
-        <option value="MINGGU">7 Hari Terakhir</option>
-        <option value="SEMUA">Semua Riwayat Lokal</option>
-      </select>
-
-      <button type="button" id="tombolMuatRiwayat" class="secondary">
-        TAMPILKAN RIWAYAT
-      </button>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Waktu</th>
-              <th>Jenis</th>
-              <th>Nama Barang</th>
-              <th>Jumlah</th>
-              <th>Satuan</th>
-            </tr>
-          </thead>
-          <tbody id="tabelRiwayat">
-            <tr>
-              <td colspan="5">Belum ada riwayat.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- LAPORAN -->
-    <section id="menu-laporan" class="card hidden">
-      <h3>LAPORAN STOK</h3>
-
-      <label for="tanggalLaporan">Tanggal Laporan</label>
-      <input id="tanggalLaporan" type="date">
-
-      <button type="button" id="tombolLaporan">
-        BUAT LAPORAN HARIAN
-      </button>
-
-      <button type="button" id="tombolLaporanBulanan" class="secondary">
-        BUAT LAPORAN BULANAN
-      </button>
-
-      <div id="hasilLaporan" aria-live="polite"></div>
-    </section>
-
-    <!-- EKSPOR -->
-    <section id="menu-ekspor" class="card hidden">
-      <h3>EKSPOR DATA</h3>
-
-      <p class="small">
-        Unduh data agar bisa dibuka dengan Excel. File CSV dapat
-        dibuka menggunakan Microsoft Excel atau aplikasi spreadsheet.
-      </p>
-
-      <button type="button" id="tombolEksporStok">
-        EKSPOR DATA STOK CSV
-      </button>
-
-      <button type="button" id="tombolEksporRiwayat" class="secondary">
-        EKSPOR RIWAYAT CSV
-      </button>
-    </section>
-
-  </section>
+<div class="card">
+<div class="grid">
+<div>
+<div class="small">CABANG AKTIF</div>
+<strong id="cabangAktif">-</strong>
+</div>
+<div>
+<div class="small">STATUS KONEKSI</div>
+<strong id="statusKoneksi">Belum terhubung</strong>
+</div>
 </div>
 
-<footer>
-  Gudang Labbaik Chicken V46.0<br>
-  Gunakan akun dan akses database sesuai kewenangan.
-</footer>
+<button id="tombolMuat" class="secondary">MUAT ULANG DATA STOK</button>
+<button id="tombolKeluar" class="danger">KELUAR / GANTI CABANG</button>
+<div id="pesanUtama" aria-live="polite"></div>
+</div>
+
+<div class="card">
+<h3>MENU UTAMA</h3>
+<div class="menu">
+<button type="button" class="active" data-menu="stok">📦 DATA STOK</button>
+<button type="button" data-menu="transaksi">🔄 TRANSAKSI</button>
+<button type="button" data-menu="tambah">➕ TAMBAH BARANG</button>
+<button type="button" data-menu="invoice">🧾 IMPOR INVOICE</button>
+<button type="button" data-menu="riwayat">📚 RIWAYAT</button>
+<button type="button" data-menu="laporan">📊 LAPORAN</button>
+<button type="button" data-menu="ekspor">📥 EKSPOR DATA</button>
+</div>
+</div>
+
+<section id="menu-stok" class="card">
+<h3>DATA STOK BARANG</h3>
+<div class="grid">
+<div class="stat">Total jenis barang<strong id="totalJenis">0</strong></div>
+<div class="stat">Barang krisis<strong id="totalKrisis">0</strong></div>
+<div class="stat">Barang menipis<strong id="totalMenipis">0</strong></div>
+<div class="stat">Total stok tersedia<strong id="totalStok">0</strong></div>
+</div>
+
+<label>Cari Nama Barang</label>
+<input id="cariBarang" type="search" placeholder="Ketik nama barang...">
+
+<label>Filter Status</label>
+<select id="filterStatus">
+<option value="SEMUA">Semua Status</option>
+<option value="KRISIS">Krisis (stok ≤ 0)</option>
+<option value="MENIPIS">Menipis (stok 1–10)</option>
+<option value="AMAN">Aman (stok &gt; 10)</option>
+</select>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>No.</th><th>Nama Barang</th><th>Stok Awal</th>
+<th>Penerimaan</th><th>Terpakai</th><th>Sisa Stok</th>
+<th>Satuan</th><th>Status</th>
+</tr>
+</thead>
+<tbody id="tabelStok">
+<tr><td colspan="8">Silakan login dan muat data.</td></tr>
+</tbody>
+</table>
+</div>
+<p class="small">Sisa stok = stok awal + penerimaan − terpakai.</p>
+</section>
+
+<section id="menu-transaksi" class="card hidden">
+<h3>TRANSAKSI BARANG</h3>
+<label>Jenis Transaksi</label>
+<select id="jenisTransaksi">
+<option value="MASUK">BARANG MASUK</option>
+<option value="KELUAR">BARANG KELUAR</option>
+</select>
+<label>Pilih Barang</label>
+<select id="barangTransaksi"><option value="">Pilih barang...</option></select>
+<label>Jumlah</label>
+<input id="jumlahTransaksi" type="number" min="0.001" step="any">
+<label>Satuan</label>
+<input id="satuanTransaksi" type="text" readonly>
+<label>Tanggal Transaksi</label>
+<input id="tanggalTransaksi" type="date">
+<button id="tombolSimpanTransaksi">SIMPAN TRANSAKSI</button>
+<div id="pesanTransaksi" aria-live="polite"></div>
+</section>
+
+<section id="menu-tambah" class="card hidden">
+<h3>TAMBAH BARANG BARU</h3>
+<label>Nama Barang</label>
+<input id="namaBarangBaru" type="text">
+<label>Stok Awal</label>
+<input id="stokAwalBaru" type="number" min="0" step="any" value="0">
+<label>Satuan</label>
+<select id="satuanBaru">
+<option>pcs</option><option>gr</option><option>ml</option>
+<option>kg</option><option>liter</option><option>pack</option>
+<option>dus</option><option>botol</option><option>ikat</option>
+</select>
+<button id="tombolTambahBarang">SIMPAN BARANG BARU</button>
+<div id="pesanTambah" aria-live="polite"></div>
+</section>
+
+<section id="menu-invoice" class="card hidden">
+<h3>IMPOR INVOICE PEMBELIAN</h3>
+<p class="small">
+Unggah CSV dengan kolom Product atau Nama Barang dan Receiving Qty.
+Receiving Qty (Besar) tidak dijumlahkan untuk menghindari hitung ganda.
+Barang yang belum terdaftar akan dilewati.
+</p>
+<label>Pilih File Invoice CSV</label>
+<input id="fileInvoice" type="file" accept=".csv,text/csv">
+<button id="tombolPreviewInvoice" class="secondary">PERIKSA INVOICE</button>
+<div id="previewInvoice"></div>
+<button id="tombolProsesInvoice">PROSES PENERIMAAN INVOICE</button>
+<div id="pesanInvoice" aria-live="polite"></div>
+</section>
+
+<section id="menu-riwayat" class="card hidden">
+<h3>RIWAYAT TRANSAKSI</h3>
+<p class="small">Riwayat disimpan lokal pada perangkat ini.</p>
+<label>Periode Riwayat</label>
+<select id="filterRiwayat">
+<option value="HARI">Hari Ini</option>
+<option value="MINGGU">7 Hari Terakhir</option>
+<option value="SEMUA">Semua Riwayat Lokal</option>
+</select>
+<button id="tombolMuatRiwayat" class="secondary">TAMPILKAN RIWAYAT</button>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Waktu</th><th>Jenis</th><th>Nama Barang</th><th>Jumlah</th><th>Satuan</th></tr></thead>
+<tbody id="tabelRiwayat"><tr><td colspan="5">Belum ada riwayat.</td></tr></tbody>
+</table>
+</div>
+</section>
+
+<section id="menu-laporan" class="card hidden">
+<h3>LAPORAN STOK</h3>
+<label>Tanggal Laporan</label>
+<input id="tanggalLaporan" type="date">
+<button id="tombolLaporan">BUAT LAPORAN HARIAN</button>
+<button id="tombolLaporanBulanan" class="secondary">BUAT LAPORAN BULANAN</button>
+<div id="hasilLaporan" aria-live="polite"></div>
+</section>
+
+<section id="menu-ekspor" class="card hidden">
+<h3>EKSPOR DATA</h3>
+<p class="small">Unduh data CSV yang dapat dibuka dengan Excel.</p>
+<button id="tombolEksporStok">EKSPOR DATA STOK CSV</button>
+<button id="tombolEksporRiwayat" class="secondary">EKSPOR RIWAYAT CSV</button>
+</section>
+
+</section>
+</div>
+
+<footer>Gudang Labbaik Chicken V46.1</footer>
 
 <script>
 "use strict";
 
-/* =====================================================
-   KONFIGURASI SUPABASE
-   Salin URL dan anon/public key dari kode V45.0 Anda.
-   Jangan gunakan service_role key.
-===================================================== */
-
-const SUPABASE_URL =
-  "https://lgunwtgwlzggfmfjzxqm.supabase.co";
-
-const SUPABASE_KEY = "TEMPEL_KUNCI_ANON_PUBLIC_DARI_V45_DI_SINI"
-
-/* =====================================================
-   KONFIGURASI CABANG DAN PIN
-===================================================== */
+/* GANTI nilai di bawah dengan anon/public key dari V45.
+   Jangan gunakan service_role key. */
+const SUPABASE_URL = "https://lgunwtgwlzggfmfjzxqm.supabase.co";
+const SUPABASE_KEY = "ANON/PUBLIC_KEY_DARI_V45";
 
 const CABANG_PIN = {
-  "KATAPANG": "111111",
-  "ALFATHU": "222222",
-  "GADING TUTUKA": "333333",
-  "CIWIDEY": "444444",
-  "BALEENDAH": "555555",
-  "SUKAMENAK": "666666",
-  "BOJONG SOANG": "777777",
-  "MARGAASIH": "888888"
+"KATAPANG":"111111",
+"ALFATHU":"222222",
+"GADING TUTUKA":"333333",
+"CIWIDEY":"444444",
+"BALEENDAH":"555555",
+"SUKAMENAK":"666666",
+"BOJONG SOANG":"777777",
+"MARGAASIH":"888888"
 };
-
 const PIN_MASTER = "999999";
 
 let cabangAktif = "";
 let dataStok = [];
 let invoiceSiapDiproses = [];
-let invoiceHeader = [];
 let sedangMemproses = false;
 
 const $ = id => document.getElementById(id);
 
-function tanggalLokal() {
-  const d = new Date();
-  const tahun = d.getFullYear();
-  const bulan = String(d.getMonth() + 1).padStart(2, "0");
-  const hari = String(d.getDate()).padStart(2, "0");
-  return `${tahun}-${bulan}-${hari}`;
+function tanggalLokal(){
+ const d=new Date();
+ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+function waktuLokal(){return new Date().toLocaleString("id-ID");}
+function angka(v){const n=Number(v);return Number.isFinite(n)?n:0;}
+function fmt(v){return angka(v).toLocaleString("id-ID",{maximumFractionDigits:3});}
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+function pesan(id,teks,jenis="info"){
+ const e=$(id);if(e){e.className="message "+jenis;e.textContent=teks;}
+}
+function bersih(id){const e=$(id);if(e){e.textContent="";e.className="";}}
+function keySiap(){
+ return SUPABASE_KEY.length>30 &&
+ !SUPABASE_KEY.includes("GANTI_DENGAN") &&
+ !SUPABASE_KEY.includes("TEMPEL_KUNCI");
+}
+function riwayatKey(){return "riwayat_"+cabangAktif;}
+function bacaRiwayat(){
+ try{return JSON.parse(localStorage.getItem(riwayatKey())||"[]");}
+ catch(e){return [];}
+}
+function simpanRiwayat(item){
+ const r=bacaRiwayat();
+ r.unshift({waktu:waktuLokal(),tanggal:tanggalLokal(),...item});
+ try{localStorage.setItem(riwayatKey(),JSON.stringify(r));}catch(e){}
 }
 
-function waktuLokal() {
-  return new Date().toLocaleString("id-ID");
+async function api(path,opts={}){
+ if(!keySiap())throw new Error("Kunci anon/public Supabase belum diisi dari V45.");
+ const headers={
+  "apikey":SUPABASE_KEY,
+  "Authorization":"Bearer "+SUPABASE_KEY,
+  "Content-Type":"application/json",
+  "Accept":"application/json",
+  ...(opts.headers||{})
+ };
+ const res=await fetch(SUPABASE_URL+"/rest/v1/"+path,{...opts,headers});
+ const t=await res.text();
+ if(!res.ok){
+  let msg=t;
+  try{const j=JSON.parse(t);msg=j.message||j.details||t;}catch(e){}
+  throw new Error("Supabase "+res.status+": "+msg);
+ }
+ if(!t)return null;
+ try{return JSON.parse(t);}catch(e){return t;}
 }
 
-function angka(value) {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : 0;
+async function login(){
+ const cab=$("pilihCabangLogin").value;
+ const pin=$("pinLogin").value.trim();
+ bersih("pesanLogin");
+
+ if(!/^\d{6}$/.test(pin)){
+  pesan("pesanLogin","PIN harus terdiri dari 6 digit angka.","error");return;
+ }
+ if(pin!==PIN_MASTER&&CABANG_PIN[cab]!==pin){
+  pesan("pesanLogin","PIN salah. Periksa kembali PIN cabang.","error");return;
+ }
+ if(!keySiap()){
+  pesan("pesanLogin","Kunci Supabase belum diisi. Ganti GANTI_DENGAN_ANON_PUBLIC_KEY_DARI_V45 dengan anon/public key V45.","error");return;
+ }
+
+ cabangAktif=cab;
+ $("cabangAktif").textContent=cab;
+ $("pinLogin").value="";
+ $("halamanLogin").classList.add("hidden");
+ $("halamanAplikasi").classList.remove("hidden");
+ $("statusKoneksi").textContent="Menghubungkan...";
+ pesan("pesanUtama","Login berhasil. Memuat data stok...","info");
+ await muatStok();
 }
 
-function formatAngka(value) {
-  return angka(value).toLocaleString("id-ID", {
-    maximumFractionDigits: 3
-  });
+function logout(){
+ cabangAktif="";dataStok=[];invoiceSiapDiproses=[];
+ $("halamanAplikasi").classList.add("hidden");
+ $("halamanLogin").classList.remove("hidden");
+ $("pinLogin").value="";
+ $("statusKoneksi").textContent="Belum terhubung";
+ bersih("pesanUtama");
+ pesan("pesanLogin","Anda telah keluar dari aplikasi.","info");
 }
 
-function amanHTML(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+function sisa(x){return angka(x.stok)+angka(x.penerimaan)-angka(x.terpakai);}
+function status(n){
+ if(n<=0)return ["KRISIS","krisis"];
+ if(n<=10)return ["MENIPIS","menipis"];
+ return ["AMAN","aman"];
 }
 
-function tampilPesan(id, pesan, jenis = "info") {
-  const el = $(id);
-  if (!el) return;
-
-  el.className = "message " + jenis;
-  el.textContent = pesan;
+async function muatStok(){
+ if(!cabangAktif)return;
+ $("tombolMuat").disabled=true;
+ $("statusKoneksi").textContent="Memuat...";
+ try{
+  const path="stok?select=id,nama_barang,toko,stok,penerimaan,terpakai,satuan&toko=eq."+encodeURIComponent(cabangAktif)+"&order=nama_barang.asc";
+  const hasil=await api(path);
+  dataStok=Array.isArray(hasil)?hasil:[];
+  $("statusKoneksi").textContent="Terhubung";
+  tampilkanStok();
+  isiPilihanBarang();
+  pesan("pesanUtama","Data berhasil dimuat: "+dataStok.length+" jenis barang.","success");
+ }catch(e){
+  $("statusKoneksi").textContent="Gagal terhubung";
+  pesan("pesanUtama","Gagal memuat data: "+e.message,"error");
+ }finally{$("tombolMuat").disabled=false;}
 }
 
-function hapusPesan(id) {
-  const el = $(id);
-  if (!el) return;
+function tampilkanStok(){
+ const kata=$("cariBarang").value.trim().toLowerCase();
+ const filter=$("filterStatus").value;
+ let krisis=0,menipis=0,total=0;
+ dataStok.forEach(x=>{
+  const n=sisa(x);
+  if(n<=0)krisis++;else if(n<=10)menipis++;
+  total+=n;
+ });
+ $("totalJenis").textContent=dataStok.length;
+ $("totalKrisis").textContent=krisis;
+ $("totalMenipis").textContent=menipis;
+ $("totalStok").textContent=fmt(total);
 
-  el.textContent = "";
-  el.className = "";
+ const rows=dataStok.filter(x=>
+  String(x.nama_barang||"").toLowerCase().includes(kata)&&
+  (filter==="SEMUA"||status(sisa(x))[0]===filter)
+ );
+ $("tabelStok").innerHTML=rows.length?rows.map((x,i)=>{
+  const n=sisa(x),st=status(n);
+  return `<tr><td>${i+1}</td><td>${esc(x.nama_barang)}</td>
+  <td>${fmt(x.stok)}</td><td>${fmt(x.penerimaan)}</td>
+  <td>${fmt(x.terpakai)}</td><td><b>${fmt(n)}</b></td>
+  <td>${esc(x.satuan)}</td><td class="${st[1]}">${st[0]}</td></tr>`;
+ }).join(""):'<tr><td colspan="8">Tidak ada barang yang cocok.</td></tr>';
 }
 
-function kunciKonfigurasiAda() {
-  return (
-    SUPABASE_URL.startsWith("https://") &&
-    SUPABASE_KEY.length > 30 &&
-    !SUPABASE_KEY.includes("TEMPELKAN_ANON")
-  );
+function isiPilihanBarang(){
+ const el=$("barangTransaksi"),old=el.value;
+ el.innerHTML='<option value="">Pilih barang...</option>'+
+ dataStok.map(x=>`<option value="${esc(x.id)}">${esc(x.nama_barang)}</option>`).join("");
+ if(dataStok.some(x=>String(x.id)===old))el.value=old;
+ pilihSatuan();
+}
+function pilihSatuan(){
+ const x=dataStok.find(x=>String(x.id)===$("barangTransaksi").value);
+ $("satuanTransaksi").value=x?x.satuan:"";
+}
+async function updateBaris(x,patch){
+ await api("stok?id=eq."+encodeURIComponent(x.id),{
+  method:"PATCH",
+  headers:{"Prefer":"return=minimal"},
+  body:JSON.stringify(patch)
+ });
 }
 
-function namaRiwayatLokal() {
-  return "riwayat_" + cabangAktif;
-}
+async function simpanTransaksi(){
+ if(sedangMemproses)return;
+ const x=dataStok.find(z=>String(z.id)===$("barangTransaksi").value);
+ const jumlah=angka($("jumlahTransaksi").value);
+ const jenis=$("jenisTransaksi").value;
+ const tanggal=$("tanggalTransaksi").value||tanggalLokal();
 
-function bacaRiwayat() {
-  if (!cabangAktif) return [];
+ if(!x)return pesan("pesanTransaksi","Pilih barang terlebih dahulu.","error");
+ if(!(jumlah>0))return pesan("pesanTransaksi","Jumlah harus lebih dari nol.","error");
+ if(jenis==="KELUAR"&&sisa(x)<jumlah)return pesan("pesanTransaksi","Stok tidak cukup. Sisa saat ini "+fmt(sisa(x))+".","error");
 
-  try {
-    const isi = localStorage.getItem(namaRiwayatLokal());
-    return isi ? JSON.parse(isi) : [];
-  } catch (e) {
-    return [];
-  }
-}
-
-function simpanRiwayat(item) {
-  const riwayat = bacaRiwayat();
-
-  riwayat.unshift({
-    waktu: waktuLokal(),
-    tanggal: tanggalLokal(),
-    ...item
-  });
-
-  try {
-    localStorage.setItem(
-      namaRiwayatLokal(),
-      JSON.stringify(riwayat)
-    );
-  } catch (e) {
-    console.warn("Riwayat lokal tidak bisa disimpan", e);
-  }
-}
-
-/* =====================================================
-   KOMUNIKASI SUPABASE
-===================================================== */
-
-async function supabaseRequest(path, options = {}) {
-  if (!kunciKonfigurasiAda()) {
-    throw new Error(
-      "URL atau anon/public key belum benar. Salin dari kode V45.0."
-    );
-  }
-
-  const headers = {
-    "apikey": SUPABASE_KEY,
-    "Authorization": "Bearer " + SUPABASE_KEY,
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-    ...options.headers
-  };
-
-  const response = await fetch(
-    SUPABASE_URL + "/rest/v1/" + path,
-    {
-      ...options,
-      headers
-    }
-  );
-
-  const text = await response.text();
-
-  if (!response.ok) {
-    let detail = text;
-
-    try {
-      const parsed = JSON.parse(text);
-      detail = parsed.message || parsed.details || text;
-    } catch (e) {}
-
-    throw new Error(
-      "Supabase " + response.status + ": " + detail
-    );
-  }
-
-  if (!text) return null;
-
-  try {
-    return JSON.parse(text);
-  } catch (e) {
-    return text;
-  }
-}
-
-/* =====================================================
-   LOGIN DAN LOGOUT
-===================================================== */
-
-async function login() {
-  const cabang = $("pilihCabangLogin").value;
-  const pin = $("pinLogin").value.trim();
-
-  hapusPesan("pesanLogin");
-
-  if (!/^\d{6}$/.test(pin)) {
-    tampilPesan(
-      "pesanLogin",
-      "PIN harus terdiri dari 6 digit angka.",
-      "error"
-    );
-    return;
-  }
-
-  if (
-    pin !== PIN_MASTER &&
-    CABANG_PIN[cabang] !== pin
-  ) {
-    tampilPesan(
-      "pesanLogin",
-      "PIN salah. Periksa kembali PIN cabang.",
-      "error"
-    );
-    return;
-  }
-
-  if (!kunciKonfigurasiAda()) {
-    tampilPesan(
-      "pesanLogin",
-      "Konfigurasi Supabase belum diisi. Tempel anon/public key V45.0 pada bagian SUPABASE_KEY.",
-      "error"
-    );
-    return;
-  }
-
-  cabangAktif = cabang;
-
-  $("cabangAktif").textContent = cabangAktif;
-  $("statusKoneksi").textContent = "Menghubungkan...";
-  $("halamanLogin").classList.add("hidden");
-  $("halamanAplikasi").classList.remove("hidden");
-  $("pinLogin").value = "";
-
-  tampilPesan(
-    "pesanUtama",
-    "Login berhasil. Sedang memuat data stok...",
-    "info"
-  );
-
+ sedangMemproses=true;$("tombolSimpanTransaksi").disabled=true;
+ try{
+  const patch=jenis==="MASUK"
+   ?{penerimaan:angka(x.penerimaan)+jumlah}
+   :{terpakai:angka(x.terpakai)+jumlah};
+  await updateBaris(x,patch);
+  simpanRiwayat({jenis,nama_barang:x.nama_barang,jumlah,satuan:x.satuan,tanggal});
+  pesan("pesanTransaksi","Transaksi berhasil disimpan.","success");
+  $("jumlahTransaksi").value="";
   await muatStok();
+ }catch(e){pesan("pesanTransaksi","Gagal menyimpan: "+e.message,"error");}
+ finally{sedangMemproses=false;$("tombolSimpanTransaksi").disabled=false;}
 }
 
-function logout() {
-  cabangAktif = "";
-  dataStok = [];
-  invoiceSiapDiproses = [];
-
-  $("halamanAplikasi").classList.add("hidden");
-  $("halamanLogin").classList.remove("hidden");
-  $("pinLogin").value = "";
-
-  $("pesanLogin").textContent = "";
-  $("pesanUtama").textContent = "";
-  $("statusKoneksi").textContent = "Belum terhubung";
-
-  tampilPesan(
-    "pesanLogin",
-    "Anda telah keluar dari aplikasi.",
-    "info"
-  );
+async function tambahBarang(){
+ const nama=$("namaBarangBaru").value.trim();
+ const awal=angka($("stokAwalBaru").value);
+ const satuan=$("satuanBaru").value;
+ if(!nama)return pesan("pesanTambah","Nama barang wajib diisi.","error");
+ if(awal<0)return pesan("pesanTambah","Stok awal tidak boleh negatif.","error");
+ if(dataStok.some(x=>String(x.nama_barang).toLowerCase()===nama.toLowerCase()))
+  return pesan("pesanTambah","Nama barang sudah ada di cabang ini.","error");
+ try{
+  await api("stok",{
+   method:"POST",headers:{"Prefer":"return=minimal"},
+   body:JSON.stringify({nama_barang:nama,toko:cabangAktif,stok:awal,penerimaan:0,terpakai:0,satuan})
+  });
+  pesan("pesanTambah","Barang berhasil ditambahkan.","success");
+  $("namaBarangBaru").value="";$("stokAwalBaru").value="0";
+  await muatStok();
+ }catch(e){pesan("pesanTambah","Gagal menambah barang: "+e.message,"error");}
 }
 
-/* =====================================================
-   MEMUAT DAN MENAMPILKAN DATA STOK
-===================================================== */
-
-async function muatStok() {
-  if (!cabangAktif) return;
-
-  $("statusKoneksi").textContent = "Memuat...";
-  $("tombolMuat").disabled = true;
-
-  try {
-    const path =
-      "stok?select=id,nama_barang,toko,stok,penerimaan,terpakai,satuan" +
-      "&toko=eq." + encodeURIComponent(cabangAktif) +
-      "&order=nama_barang.asc";
-
-    const hasil = await supabaseRequest(path);
-
-    dataStok = Array.isArray(hasil) ? hasil : [];
-
-    $("statusKoneksi").textContent = "Terhubung";
-    tampilkanStok();
-    isiPilihanBarang();
-
-    tampilPesan(
-      "pesanUtama",
-      "Data berhasil dimuat. Jumlah jenis barang: " +
-      dataStok.length,
-      "success"
-    );
-  } catch (error) {
-    $("statusKoneksi").textContent = "Gagal terhubung";
-
-    tampilPesan(
-      "pesanUtama",
-      "Gagal memuat data: " + error.message,
-      "error"
-    );
-  } finally {
-    $("tombolMuat").disabled = false;
-  }
+function parseCSV(text){
+ const rows=[];let row=[],cell="",quote=false;
+ for(let i=0;i<text.length;i++){
+  const c=text[i],next=text[i+1];
+  if(c==='"'&&quote&&next==='"'){cell+='"';i++;}
+  else if(c==='"'){quote=!quote;}
+  else if(c===","&&!quote){row.push(cell);cell="";}
+  else if((c==="\n"||c==="\r")&&!quote){
+   if(c==="\r"&&next==="\n")i++;
+   row.push(cell);
+   if(row.some(v=>v.trim()!==""))rows.push(row);
+   row=[];cell="";
+  }else cell+=c;
+ }
+ row.push(cell);if(row.some(v=>v.trim()!==""))rows.push(row);
+ return rows;
 }
 
-function sisaStok(item) {
-  return angka(item.stok) +
-    angka(item.penerimaan) -
-    angka(item.terpakai);
+async function previewInvoice(){
+ const file=$("fileInvoice").files[0];
+ if(!file)return pesan("pesanInvoice","Pilih file CSV terlebih dahulu.","error");
+ try{
+  const rows=parseCSV(await file.text());
+  if(rows.length<2)throw new Error("File tidak memiliki baris data.");
+  const headers=rows[0].map(v=>v.trim().toLowerCase());
+  const idx=(...names)=>headers.findIndex(h=>names.includes(h));
+  const ni=idx("product","nama barang","nama_barang");
+  const qi=idx("receiving qty","receiving_qty","qty","jumlah");
+  const ui=idx("unit","satuan");
+  if(ni<0||qi<0)throw new Error("Kolom Product/Nama Barang dan Receiving Qty wajib tersedia.");
+
+  invoiceSiapDiproses=rows.slice(1).map(r=>({
+   nama:(r[ni]||"").trim(),
+   qty:Number(String(r[qi]||"").trim().replace(/\s/g,"").replace(",", ".")),
+   unit:ui>=0?(r[ui]||"").trim():""
+  })).filter(r=>r.nama&&r.qty>0&&Number.isFinite(r.qty));
+
+  if(!invoiceSiapDiproses.length)throw new Error("Tidak ditemukan Receiving Qty lebih dari nol.");
+
+  $("previewInvoice").innerHTML=
+   `<p class="message info">Terbaca ${invoiceSiapDiproses.length} baris barang. Periksa sebelum memproses.</p>
+   <div class="table-wrap"><table><thead><tr><th>Nama Barang</th><th>Receiving Qty</th><th>Unit</th></tr></thead><tbody>`+
+   invoiceSiapDiproses.slice(0,30).map(x=>`<tr><td>${esc(x.nama)}</td><td>${fmt(x.qty)}</td><td>${esc(x.unit)}</td></tr>`).join("")+
+   `</tbody></table></div>`;
+  pesan("pesanInvoice","Invoice siap. Pastikan datanya benar sebelum diproses.","success");
+ }catch(e){
+  invoiceSiapDiproses=[];$("previewInvoice").textContent="";
+  pesan("pesanInvoice",e.message,"error");
+ }
 }
 
-function statusStok(sisa) {
-  if (sisa <= 0) {
-    return {
-      teks: "KRISIS",
-      kelas: "krisis"
-    };
-  }
-
-  if (sisa <= 10) {
-    return {
-      teks: "MENIPIS",
-      kelas: "menipis"
-    };
-  }
-
-  return {
-    teks: "AMAN",
-    kelas: "aman"
-  };
+async function prosesInvoice(){
+ if(!invoiceSiapDiproses.length)return pesan("pesanInvoice","Periksa invoice terlebih dahulu.","error");
+ if(!confirm("Tambahkan Receiving Qty dari "+invoiceSiapDiproses.length+" baris ke penerimaan stok?"))return;
+ let berhasil=0,tidakDitemukan=0,gagal=0;
+ for(const r of invoiceSiapDiproses){
+  const x=dataStok.find(z=>String(z.nama_barang).trim().toLowerCase()===r.nama.trim().toLowerCase());
+  if(!x){tidakDitemukan++;continue;}
+  try{
+   const baru=angka(x.penerimaan)+r.qty;
+   await updateBaris(x,{penerimaan:baru});
+   x.penerimaan=baru;berhasil++;
+   simpanRiwayat({jenis:"INVOICE MASUK",nama_barang:x.nama_barang,jumlah:r.qty,satuan:x.satuan});
+  }catch(e){gagal++;}
+ }
+ invoiceSiapDiproses=[];$("previewInvoice").textContent="";
+ await muatStok();
+ pesan("pesanInvoice",`Selesai. Berhasil: ${berhasil}; barang tidak ditemukan: ${tidakDitemukan}; gagal: ${gagal}.`,gagal?"error":"success");
 }
 
-function tampilkanStok() {
-  const kata = $("cariBarang").value
-    .trim()
-    .toLowerCase();
-
-  const filter 
+function renderRiwayat(){
+ let r=bacaRiwayat(),f=$("filterRiwayat").value;
+ if(f==="HARI")r=r.filter(x=>x.tanggal===tanggalLokal());
+ if(f==="MINGGU"){
+  const min=new Date();min.setDate(
