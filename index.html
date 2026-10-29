@@ -2,365 +2,385 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Smart Warehouse V46.0 - Labbaik Chicken</title>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gudang Labbaik Chicken V46</title>
+
 <style>
-:root{--bg:#f3f5f9;--card:#fff;--text:#172033;--green:#087f5b;--red:#d63333;--orange:#e69500;--line:#e3e7ee}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:14px Arial,sans-serif}
-header{background:#073d30;color:white;padding:18px 15px}
-header h2{margin:0 0 6px;font-size:21px}
-header p{margin:0;font-size:12px;opacity:.85}
-main{max-width:900px;margin:auto;padding:12px}
-select,input,button{font:inherit;border-radius:9px;padding:11px;border:1px solid var(--line)}
-input,select{background:white;color:var(--text);width:100%;min-width:0}
-button{cursor:pointer;border:0;background:var(--green);color:white;font-weight:bold}
-button.secondary{background:#e8f2ee;color:#075c44}
-button.danger{background:#c92a2a}
-button.gray{background:#e9edf2;color:#253047}
-.row{display:flex;gap:8px;align-items:center}
-.row>*{flex:1}
-.card{background:var(--card);border-radius:13px;padding:14px;margin:11px 0;box-shadow:0 2px 8px #1720330a}
-h3{margin:0 0 12px;font-size:16px}
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.stat{background:#fff;padding:13px;border-radius:12px;border:1px solid var(--line)}
-.stat small{display:block;color:#647087;margin-bottom:7px}
-.stat strong{font-size:19px;overflow-wrap:anywhere}
-nav{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}
-nav button{font-size:12px;padding:12px 4px}
-nav button.active{background:#073d30}
-label{display:block;font-size:12px;font-weight:bold;margin:10px 0 5px}
-.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.formgrid .full{grid-column:1/-1}
-.item{border:1px solid var(--line);border-radius:10px;padding:12px;margin:8px 0;background:#fff}
-.itemtop{display:flex;justify-content:space-between;gap:8px}
-.itemname{font-weight:bold;font-size:14px;overflow-wrap:anywhere}
-.meta{color:#68758a;font-size:12px;margin-top:6px;line-height:1.6}
-.badge{display:inline-block;border-radius:6px;padding:4px 7px;font-size:11px;font-weight:bold}
-.ok{background:#d9f7e8;color:#087443}
-.warn{background:#fff0c2;color:#895900}
-.critical{background:#ffe0e0;color:#b42323}
-.actions{display:flex;gap:6px;margin-top:10px}
-.actions button{flex:1;font-size:12px;padding:9px 4px}
-.hidden{display:none!important}
-.muted{color:#68758a;font-size:12px;line-height:1.5}
-table{border-collapse:collapse;width:100%;font-size:12px}
-th,td{border-bottom:1px solid var(--line);padding:9px 6px;text-align:left}
-th{background:#f1f5f4}
-.tablewrap{overflow-x:auto}
-.notice{background:#fff4d6;border:1px solid #f1d88b;padding:11px;border-radius:9px;line-height:1.5}
-footer{text-align:center;color:#748095;font-size:11px;padding:18px}
-@media(min-width:650px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.formgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+  color: #172033;
+}
+
+header {
+  background: #123c2b;
+  color: white;
+  padding: 18px 14px;
+  text-align: center;
+}
+
+header h2 {
+  margin: 0 0 6px;
+}
+
+header p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.container {
+  padding: 12px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 7px #00000010;
+}
+
+label {
+  display: block;
+  margin: 10px 0 5px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+button {
+  background: #176b45;
+  color: white;
+  border: none;
+  font-weight: bold;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+button:active {
+  opacity: 0.75;
+}
+
+button.secondary {
+  background: #334155;
+}
+
+button.danger {
+  background: #b91c1c;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.menu button {
+  margin: 0;
+  min-height: 48px;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.summary div {
+  padding: 13px;
+  border-radius: 10px;
+  background: #e5f5eb;
+}
+
+.summary strong {
+  display: block;
+  font-size: 20px;
+  margin-top: 6px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 12px;
+  min-width: 550px;
+}
+
+th, td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+th {
+  background: #e2eee7;
+}
+
+.status-aman {
+  color: #15803d;
+  font-weight: bold;
+}
+
+.status-tipis {
+  color: #b45309;
+  font-weight: bold;
+}
+
+.status-kritis {
+  color: #b91c1c;
+  font-weight: bold;
+}
+
+#pesan {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.hide {
+  display: none !important;
+}
+
+@media (min-width: 700px) {
+  .menu {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .summary {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 </style>
 </head>
+
 <body>
+
 <header>
-<h2>📦 SMART WAREHOUSE</h2>
-<p>LABBAIK CHICKEN · V46.0 LOCAL TEST</p>
+  <h2>GUDANG LABBAIK CHICKEN</h2>
+  <p>Sistem Stok Gudang • Versi 46.0</p>
 </header>
-<main>
-<div class="card">
-<label>Pilih Cabang</label>
-<select id="branch" onchange="switchBranch()">
-<option>KATAPANG</option><option>ALFATHU</option>
-<option>GADING TUTUKA</option><option>CIWIDEY</option>
-<option>BALEENDAH</option><option>SUKAMENAK</option>
-<option>BOJONG SOANG</option><option>MARGAASIH</option>
-</select>
-<p class="muted">Mode uji lokal: data cabang disimpan di browser perangkat ini.</p>
+
+<div class="container">
+
+  <div id="loginBox" class="card">
+    <h3>Login Toko</h3>
+
+    <label>Pilih Toko</label>
+    <select id="pilihToko">
+      <option value="KATAPANG">KATAPANG</option>
+      <option value="ALFATHU">ALFATHU</option>
+      <option value="GADING TUTUKA">GADING TUTUKA</option>
+      <option value="CIWIDEY">CIWIDEY</option>
+      <option value="BALEENDAH">BALEENDAH</option>
+      <option value="SUKAMENAK">SUKAMENAK</option>
+      <option value="BOJONG SOANG">BOJONG SOANG</option>
+      <option value="MARGAASIH">MARGAASIH</option>
+    </select>
+
+    <label>PIN Login</label>
+    <input id="pinLogin" type="password"
+      inputmode="numeric" maxlength="6"
+      placeholder="Masukkan PIN 6 digit">
+
+    <button onclick="login()">MASUK APLIKASI</button>
+  </div>
+
+  <div id="appBox" class="hide">
+
+    <div class="card">
+      <strong>Toko Aktif:</strong>
+      <span id="tokoAktif">KATAPANG</span>
+      <button class="secondary" onclick="muatStok()">
+        🔄 MUAT ULANG STOK
+      </button>
+      <button class="danger" onclick="logout()">
+        KELUAR / GANTI TOKO
+      </button>
+    </div>
+
+    <div id="pesan"></div>
+
+    <div class="menu">
+      <button onclick="bukaHalaman('stokPage')">
+        📦 DATA STOK
+      </button>
+      <button onclick="bukaHalaman('transaksiPage')">
+        🔄 TRANSAKSI
+      </button>
+      <button onclick="bukaHalaman('tambahPage')">
+        ➕ TAMBAH BARANG
+      </button>
+      <button onclick="bukaHalaman('invoicePage')">
+        📥 INVOICE DC
+      </button>
+      <button onclick="bukaHalaman('laporanPage')">
+        📊 LAPORAN
+      </button>
+      <button onclick="bukaHalaman('riwayatPage')">
+        🕘 RIWAYAT
+      </button>
+    </div>
+
+    <div id="stokPage" class="page active">
+      <div class="card">
+        <h3>Data Stok Barang</h3>
+        <input id="cariBarang"
+          placeholder="Cari nama barang..."
+          oninput="tampilkanStok()">
+        <button onclick="muatStok()">REFRESH DATA</button>
+        <div class="summary">
+          <div>Jumlah Barang<strong id="jumlahBarang">0</strong></div>
+          <div>Stok Kritis<strong id="jumlahKritis">0</strong></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama Barang</th>
+                <th>Stok Awal</th>
+                <th>Masuk</th>
+                <th>Keluar</th>
+                <th>Sisa</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tabelStok">
+              <tr><td colspan="6">Belum ada data dimuat.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="transaksiPage" class="page">
+      <div class="card">
+        <h3>Transaksi Barang</h3>
+
+        <label>Jenis Transaksi</label>
+        <select id="jenisTransaksi">
+          <option value="MASUK">BARANG MASUK</option>
+          <option value="KELUAR">BARANG KELUAR</option>
+        </select>
+
+        <label>Nama Barang</label>
+        <select id="barangTransaksi"></select>
+
+        <label>Jumlah</label>
+        <input id="jumlahTransaksi" type="number"
+          min="0.01" step="any" placeholder="Masukkan jumlah">
+
+        <button onclick="simpanTransaksi()">
+          SIMPAN TRANSAKSI
+        </button>
+      </div>
+    </div>
+
+    <div id="tambahPage" class="page">
+      <div class="card">
+        <h3>Tambah Barang Baru</h3>
+
+        <label>Nama Barang</label>
+        <input id="namaBarangBaru"
+          placeholder="Nama barang">
+
+        <label>Stok Awal</label>
+        <input id="stokAwalBaru" type="number"
+          min="0" step="any" value="0">
+
+        <label>Satuan</label>
+        <select id="satuanBaru">
+          <option value="pcs">pcs</option>
+          <option value="gr">gr</option>
+          <option value="ml">ml</option>
+          <option value="kg">kg</option>
+        </select>
+
+        <button onclick="tambahBarang()">
+          SIMPAN BARANG BARU
+        </button>
+      </div>
+    </div>
+
+    <div id="invoicePage" class="page">
+      <div class="card">
+        <h3>Import Invoice DC</h3>
+        <p>
+          Pilih file Excel (.xlsx). Nama produk pada invoice
+          harus cocok dengan nama barang di database.
+          Jumlah yang dipakai adalah kolom Receiving Qty,
+          bukan Receiving Qty (Besar), agar tidak dihitung dua kali.
+        </p>
+
+        <input id="fileInvoice" type="file"
+          accept=".xlsx,.xls,.csv">
+
+        <button onclick="prosesInvoice()">
+          PROSES INVOICE
+        </button>
+
+        <div id="hasilInvoice"></div>
+      </div>
+    </div>
+
+    <div id="laporanPage" class="page">
+      <div class="card">
+        <h3>Laporan Stok</h3>
+        <p>
+          Laporan menampilkan data stok yang sedang tersimpan
+          di database untuk toko aktif.
+        </p>
+        <button onclick="buatLaporan()">TAMPILKAN LAPORAN</button>
+        <button class="secondary" onclick="eksporCSV()">
+          EKSPOR STOK KE CSV
+        </button>
+        <div id="hasilLaporan"></div>
+      </div>
+    </div>
+
+    <div id="riwayatPage" class="page">
+      <div class="card">
+        <h3>Riwayat Transaksi</h3>
+        <p>Riwayat transaksi tersimpan di perangkat ini.</p>
+        <button onclick="tampilkanRiwayat()">
+          LIHAT RIWAYAT
+        </button>
+        <div id="hasilRiwayat"></div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="stats">
-<div class="stat"><small>Jenis Barang</small><strong id="sItems">0</strong></div>
-<div class="stat"><small>Total Stok Tersisa</small><strong id="sBalance">0</strong></div>
-<div class="stat"><small>Stok Menipis/Kritis</small><strong id="sLow">0</strong></div>
-<div class="stat"><small>Transaksi Hari Ini</small><strong id="sMoves">0</strong></div>
-</div>
-
-<nav>
-<button class="active" onclick="showTab('stock',this)">📦 STOK</button>
-<button onclick="showTab('move',this)">🔄 TRANSAKSI</button>
-<button onclick="showTab('invoice',this)">🧾 INVOICE DC</button>
-<button onclick="showTab('report',this)">📊 LAPORAN</button>
-<button onclick="showTab('history',this)">📜 RIWAYAT</button>
-<button onclick="showTab('tools',this)">⚙️ DATA</button>
-</nav>
-
-<section id="stock" class="tab">
-<div class="card">
-<h3>Daftar Stok Barang</h3>
-<input id="search" placeholder="Cari nama barang atau SKU..." oninput="renderStock()">
-<div id="stockList"></div>
-</div>
-<div class="card">
-<h3>➕ Tambah Barang</h3>
-<div class="formgrid">
-<div><label>SKU / Kode</label><input id="newSku" placeholder="Contoh: BRG001"></div>
-<div><label>Nama Barang</label><input id="newName" placeholder="Nama barang"></div>
-<div><label>Satuan</label><select id="newUnit"><option>pcs</option><option>kg</option><option>gr</option><option>ml</option><option>liter</option><option>pack</option><option>dus</option></select></div>
-<div><label>Stok Awal</label><input id="newStock" type="number" min="0" value="0"></div>
-<div><label>Stok Minimum</label><input id="newMin" type="number" min="0" value="10"></div>
-<div class="full"><button onclick="addItem()">SIMPAN BARANG</button></div>
-</div>
-</div>
-</section>
-
-<section id="move" class="tab hidden">
-<div class="card">
-<h3>🔄 Transaksi Stok</h3>
-<p class="muted">Transaksi keluar hanya memerlukan nama barang dan jumlah. Tidak perlu nama petugas atau alasan.</p>
-<label>Jenis Transaksi</label>
-<select id="moveType"><option value="MASUK">Barang Masuk</option><option value="KELUAR">Barang Keluar / Pemakaian</option></select>
-<label>Nama Barang</label><select id="moveItem"></select>
-<label>Jumlah</label><input id="moveQty" type="number" min="0.001" step="any" placeholder="Masukkan jumlah">
-<label>Catatan opsional</label><input id="moveNote" placeholder="Contoh: penerimaan supplier">
-<br><br><button style="width:100%" onclick="saveMove()">SIMPAN TRANSAKSI</button>
-</div>
-</section>
-
-<section id="invoice" class="tab hidden">
-<div class="card">
-<h3>🧾 Impor Invoice Penerimaan DC</h3>
-<div class="notice">Pilih file Excel invoice. Sistem mencari kolom SKU, Product, Receiving Qty, dan Unit. SKU invoice harus cocok dengan SKU barang yang sudah terdaftar.</div>
-<label>File invoice (.xlsx, .xls, .csv)</label>
-<input id="invoiceFile" type="file" accept=".xlsx,.xls,.csv">
-<br><br><button style="width:100%" onclick="previewInvoice()">PERIKSA INVOICE</button>
-<div id="invoicePreview"></div>
-</div>
-</section>
-
-<section id="report" class="tab hidden">
-<div class="card">
-<h3>📊 Laporan</h3>
-<div class="row">
-<div><label>Dari tanggal</label><input type="date" id="dateFrom"></div>
-<div><label>Sampai tanggal</label><input type="date" id="dateTo"></div>
-</div>
-<br><button style="width:100%" onclick="renderReport()">TAMPILKAN LAPORAN</button>
-<div id="reportResult"></div>
-</div>
-<div class="card">
-<h3>Rekap Bulanan</h3>
-<label>Pilih bulan</label><input type="month" id="monthPick">
-<button style="width:100%;margin-top:8px" onclick="renderMonth()">TAMPILKAN REKAP BULANAN</button>
-<div id="monthResult"></div>
-</div>
-</section>
-
-<section id="history" class="tab hidden">
-<div class="card">
-<h3>📜 Riwayat Transaksi</h3>
-<div class="row">
-<select id="historyFilter" onchange="renderHistory()"><option value="SEMUA">Semua Transaksi</option><option value="MASUK">Barang Masuk</option><option value="KELUAR">Barang Keluar</option></select>
-<input id="historyDate" type="date" onchange="renderHistory()">
-</div>
-<div id="historyList"></div>
-</div>
-</section>
-
-<section id="tools" class="tab hidden">
-<div class="card">
-<h3>📥 Impor Data Barang</h3>
-<p class="muted">Impor Excel/CSV dengan kolom nama_barang atau Product, SKU opsional, stok atau Stok Awal, satuan atau Unit, stok_minimum opsional. Impor tidak menghapus barang yang sudah ada.</p>
-<input id="stockFile" type="file" accept=".xlsx,.xls,.csv">
-<br><br><button style="width:100%" onclick="importStock()">IMPOR BARANG</button>
-</div>
-<div class="card">
-<h3>📤 Ekspor Data</h3>
-<button style="width:100%" onclick="exportStock()">EKSPOR STOK KE EXCEL</button>
-<br><br><button style="width:100%" onclick="exportHistory()">EKSPOR RIWAYAT KE EXCEL</button>
-</div>
-<div class="card">
-<h3>🛡️ Cadangkan Data Lokal</h3>
-<button style="width:100%" onclick="backupData()">UNDUH CADANGAN JSON</button>
-<label>Pulihkan cadangan JSON</label><input type="file" id="restoreFile" accept=".json">
-<br><br><button class="secondary" style="width:100%" onclick="restoreData()">PULIHKAN CADANGAN</button>
-</div>
-<div class="card">
-<h3>🔄 Pergantian Hari</h3>
-<p class="muted">Pada saat aplikasi dibuka setelah berganti tanggal, sistem akan menyimpan saldo akhir kemarin sebagai stok berjalan, lalu mengatur ulang penghitung masuk dan keluar harian. Ini bukan tugas server otomatis: aplikasi harus dibuka agar pemeriksaan dilakukan.</p>
-<button class="secondary" style="width:100%" onclick="rollover(true)">PROSES PERGANTIAN HARI SEKARANG</button>
-</div>
-<div class="card">
-<h3>⚠️ Reset Data Uji</h3>
-<p class="muted">Hanya menghapus data cabang yang sedang dipilih dari penyimpanan lokal. Tidak dapat dibatalkan. Jangan gunakan jika data masih diperlukan.</p>
-<button class="danger" style="width:100%" onclick="clearBranch()">HAPUS DATA CABANG INI</button>
-</div>
-</section>
-
-<footer>Smart Warehouse V46.0 · Prototipe lokal · Periksa hasil sebelum dipakai operasional.</footer>
-</main>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <script>
-const BRANCHES=['KATAPANG','ALFATHU','GADING TUTUKA','CIWIDEY','BALEENDAH','SUKAMENAK','BOJONG SOANG','MARGAASIH'];
-const $=id=>document.getElementById(id);
-const today=()=>new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Jakarta'});
-const now=()=>new Date().toISOString();
-const key=()=> 'labbaik_v46_'+$('branch').value;
-let db={items:[],moves:[],days:[]};
-let invoiceRows=[];
-
-function load(){
- try{db=JSON.parse(localStorage.getItem(key()))||{items:[],moves:[],days:[]}}catch(e){db={items:[],moves:[],days:[]}}
- if(!db.items)db.items=[];
- if(!db.moves)db.moves=[];
- if(!db.days)db.days=[];
- rollover(false);renderAll();
-}
-function persist(){localStorage.setItem(key(),JSON.stringify(db));renderAll()}
-function switchBranch(){load()}
-function showTab(id,btn){
- document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));
- $(id).classList.remove('hidden');
- document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
- btn.classList.add('active');renderAll();
-}
-function balance(i){return Number(i.opening||0)+Number(i.inTotal||0)-Number(i.outTotal||0)}
-function fmt(n){return Number(n||0).toLocaleString('id-ID',{maximumFractionDigits:3})}
-function addItem(){
- const sku=$('newSku').value.trim(),name=$('newName').value.trim();
- const unit=$('newUnit').value,opening=Number($('newStock').value||0),min=Number($('newMin').value||0);
- if(!name)return alert('Nama barang wajib diisi.');
- if(opening<0||min<0)return alert('Jumlah tidak boleh negatif.');
- if(sku&&db.items.some(i=>i.sku.toLowerCase()===sku.toLowerCase()))return alert('SKU sudah terdaftar.');
- db.items.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),sku,name,unit,opening,inTotal:0,outTotal:0,min,created:today()});
- $('newSku').value='';$('newName').value='';$('newStock').value='0';
- persist();alert('Barang berhasil ditambahkan.');
-}
-function renderStock(){
- const q=($('search').value||'').toLowerCase();
- const list=db.items.filter(i=>(i.name+' '+i.sku).toLowerCase().includes(q));
- $('stockList').innerHTML=list.length?list.map(i=>{
- const b=balance(i),status=b<=0?'<span class="badge critical">KRITIS</span>':b<=Number(i.min||0)?'<span class="badge warn">MENIPIS</span>':'<span class="badge ok">AMAN</span>';
- return `<div class="item"><div class="itemtop"><div><div class="itemname">${esc(i.name)}</div><div class="meta">SKU: ${esc(i.sku||'-')} · Satuan: ${esc(i.unit)}</div></div><div>${status}</div></div><div class="meta">Stok awal: ${fmt(i.opening)} · Masuk: ${fmt(i.inTotal)} · Keluar: ${fmt(i.outTotal)}<br><b>Saldo: ${fmt(b)} ${esc(i.unit)}</b> · Minimum: ${fmt(i.min)}</div><div class="actions"><button onclick="quickMove('${i.id}','MASUK')">+ MASUK</button><button onclick="quickMove('${i.id}','KELUAR')">− KELUAR</button><button class="gray" onclick="editMin('${i.id}')">MINIMUM</button></div></div>`;
- }).join(''):'<p class="muted">Belum ada barang atau barang tidak ditemukan.</p>';
-}
-function renderOptions(){
- $('moveItem').innerHTML=db.items.map(i=>`<option value="${i.id}">${esc(i.name)} (${esc(i.unit)})</option>`).join('');
-}
-function quickMove(id,type){
- $('moveType').value=type;$('moveItem').value=id;
- $('moveQty').value='';showTab('move',document.querySelectorAll('nav button')[1]);
-}
-function editMin(id){
- const i=db.items.find(x=>x.id===id);if(!i)return;
- const v=prompt('Masukkan stok minimum untuk '+i.name,i.min||0);
- if(v===null)return;if(v.trim()===''||!Number.isFinite(Number(v))||Number(v)<0)return alert('Angka minimum tidak valid.');
- i.min=Number(v);persist();
-}
-function saveMove(){
- const i=db.items.find(x=>x.id===$('moveItem').value),type=$('moveType').value,qty=Number($('moveQty').value);
- if(!i)return alert('Tambahkan barang terlebih dahulu.');
- if(!Number.isFinite(qty)||qty<=0)return alert('Jumlah harus lebih dari 0.');
- if(type==='KELUAR'&&qty>balance(i))return alert('Stok tidak mencukupi. Saldo saat ini: '+fmt(balance(i)));
- if(type==='MASUK')i.inTotal=Number(i.inTotal||0)+qty;else i.outTotal=Number(i.outTotal||0)+qty;
- db.moves.push({id:Date.now()+Math.random(),date:today(),time:now(),type,sku:i.sku,name:i.name,qty,unit:i.unit,note:$('moveNote').value||'',source:'MANUAL',branch:$('branch').value});
- $('moveQty').value='';$('moveNote').value='';persist();alert('Transaksi berhasil disimpan.');
-}
-function rollover(force){
- const t=today(),last=localStorage.getItem(key()+'_rollDate');
- if(!force&&last===t)return;
- if(last&&last!==t){
-  const prior=db.items.map(i=>({name:i.name,sku:i.sku,unit:i.unit,opening:i.opening,in:i.inTotal,out:i.outTotal,ending:balance(i)}));
-  db.days.push({date:last,branch:$('branch').value,items:prior});
-  db.items.forEach(i=>{i.opening=balance(i);i.inTotal=0;i.outTotal=0});
- }
- localStorage.setItem(key()+'_rollDate',t);
- if(force)alert('Pemeriksaan pergantian hari selesai. Jika tanggal belum berganti, penghitung harian tidak direset.');
- persist();
-}
-function renderStats(){
- $('sItems').textContent=db.items.length;
- $('sBalance').textContent=fmt(db.items.reduce((s,i)=>s+balance(i),0));
- $('sLow').textContent=db.items.filter(i=>balance(i)<=Number(i.min||0)).length;
- $('sMoves').textContent=db.moves.filter(m=>m.date===today()).length;
-}
-function renderHistory(){
- const f=$('historyFilter').value,d=$('historyDate').value;
- let a=[...db.moves].reverse().filter(m=>(f==='SEMUA'||m.type===f)&&(!d||m.date===d));
- $('historyList').innerHTML=a.length?'<div class="tablewrap"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Barang</th><th>Jumlah</th></tr></thead><tbody>'+a.map(m=>`<tr><td>${m.date}<br>${new Date(m.time).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</td><td>${m.type}</td><td>${esc(m.name)}<br><small>${esc(m.sku||'')}</small></td><td>${fmt(m.qty)} ${esc(m.unit)}</td></tr>`).join('')+'</tbody></table></div>':'<p class="muted">Belum ada transaksi.</p>';
-}
-function sumMoves(a,type){return a.filter(m=>m.type===type).reduce((s,m)=>s+Number(m.qty),0)}
-function reportTable(a){
- return `<p>Jumlah transaksi: <b>${a.length}</b></p><p>Total barang masuk: <b>${fmt(sumMoves(a,'MASUK'))}</b></p><p>Total barang keluar: <b>${fmt(sumMoves(a,'KELUAR'))}</b></p>`;
-}
-function renderReport(){
- const from=$('dateFrom').value,to=$('dateTo').value;
- if(!from||!to||from>to)return alert('Pilih rentang tanggal yang benar.');
- const a=db.moves.filter(m=>m.date>=from&&m.date<=to);
- $('reportResult').innerHTML=`<h3>${from} s.d. ${to}</h3>`+reportTable(a);
-}
-function renderMonth(){
- const m=$('monthPick').value;if(!m)return alert('Pilih bulan.');
- const a=db.moves.filter(x=>x.date.startsWith(m));
- $('monthResult').innerHTML=`<h3>${m}</h3>`+reportTable(a);
-}
-function renderAll(){
- renderStats();renderStock();renderOptions();renderHistory();
-}
-function esc(s){
- return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-function readFile(file){
- return new Promise((resolve,reject)=>{
-  const r=new FileReader();r.onload=e=>{
-   try{
-    if(file.name.toLowerCase().endsWith('.csv')){
-     const lines=e.target.result.split(/\r?\n/).filter(Boolean);
-     const data=lines.map(line=>line.split(',').map(v=>v.trim().replace(/^"|"$/g,'')));
-     resolve(data);
-    }else{
-     if(!window.XLSX)throw new Error('Library Excel tidak termuat. Periksa koneksi internet.');
-     const wb=XLSX.read(e.target.result,{type:'array'});
-     resolve(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''}));
-    }
-   }catch(err){reject(err)}
-  };r.onerror=reject;
-  if(file.name.toLowerCase().endsWith('.csv'))r.readAsText(file);else r.readAsArrayBuffer(file);
- });
-}
-function norm(s){return String(s??'').trim().toLowerCase().replace(/[\s_-]+/g,'')}
-async function previewInvoice(){
- const f=$('invoiceFile').files[0];if(!f)return alert('Pilih file invoice terlebih dahulu.');
- try{
-  const rows=await readFile(f);
-  const h=rows.findIndex(r=>r.some(c=>norm(c)==='sku')&&r.some(c=>['receivingqty','qtypenerimaan'].includes(norm(c))));
-  if(h<0)return alert('Kolom SKU dan Receiving Qty tidak ditemukan.');
-  const heads=rows[h].map(norm);
-  const col=(names)=>heads.findIndex(x=>names.includes(x));
-  const skuC=col(['sku']),nameC=col(['product','nama_barang','namabarang','item']),qtyC=col(['receivingqty','qtypenerimaan']),unitC=col(['unit','satuan']);
-  invoiceRows=rows.slice(h+1).filter(r=>r[skuC]!==''&&Number(r[qtyC])>0).map(r=>({sku:String(r[skuC]).trim(),name:String(r[nameC]||'').trim(),qty:Number(r[qtyC]),unit:String(r[unitC]||'').trim()}));
-  if(!invoiceRows.length)return alert('Tidak ada baris penerimaan valid.');
-  $('invoicePreview').innerHTML=`<p>Baris invoice: <b>${invoiceRows.length}</b></p><div class="tablewrap"><table><tr><th>SKU</th><th>Barang</th><th>Qty</th><th>Unit</th></tr>${invoiceRows.slice(0,12).map(r=>`<tr><td>${esc(r.sku)}</td><td>${esc(r.name)}</td><td>${fmt(r.qty)}</td><td>${esc(r.unit)}</td></tr>`).join('')}</table></div><br><button style="width:100%" onclick="applyInvoice()">KONFIRMASI PENERIMAAN</button>`;
- }catch(e){alert('Gagal membaca invoice: '+e.message)}
-}
-function applyInvoice(){
- const unmatched=invoiceRows.filter(r=>!db.items.some(i=>i.sku&&i.sku.toLowerCase()===r.sku.toLowerCase()));
- if(unmatched.length){
-  const detail=unmatched.slice(0,8).map(x=>x.sku+' - '+x.name).join('\n');
-  if(!confirm('Ada '+unmatched.length+' SKU belum terdaftar. Barang tersebut akan dilewati. Lanjutkan?\n'+detail))return;
- }
- let count=0;
- invoiceRows.forEach(r=>{
-  const i=db.items.find(x=>x.sku&&x.sku.toLowerCase()===r.sku.toLowerCase());
-  if(!i)return;
-  if(r.unit&&norm(r.unit)!==norm(i.unit)){
-   console.warn('Satuan invoice berbeda:',r.sku,r.unit,i.unit);
-  }
-  i.inTotal=Number(i.inTotal||0)+r.qty;
-  db.moves.push({id:Date.now()+Math.random(),date:today(),time:now(),type:'MASUK',sku:i.sku,name:i.name,qty:r.qty,unit:i.unit,note:'Penerimaan invoice DC',source:'INVOICE DC',branch:$('branch').value});
-  count++;
- });
- persist();invoiceRows=[];$('invoicePreview').innerHTML='';
- alert('Penerimaan tersimpan untuk '+count+' jenis barang. Periksa satuan dan jumlah sebelum digunakan.');
-}
-async function importStock(){
- const f=$('stockFile').files[0];if(!f)return alert('Pilih file barang.');
- try{
-  const rows=await readFile(f);
-  const h=rows.findIndex(r=>r.some(c=>['nama_barang','product','namabarang'].includes(norm(c))));
-  if(h<0)return alert('Kolom nama_barang atau Product tidak ditemukan.');
-  const heads=rows[h].map(norm);
-  const col=names=>heads.findIndex(x=>names.includes(x));
-  const skuC=col(['sku','kode']),nameC=col(['nama_barang','product','namabarang']),qtyC=
